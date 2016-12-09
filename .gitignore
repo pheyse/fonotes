@@ -73,3 +73,6 @@ $RECYCLE.BIN/
 /AndroidProject/build
 /AndroidProject/captures
 .externalNativeBuild
+
+# Java Project
+/JavaProject/bin
