@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FliesenUIProject
+	formatVersion="1"
+    title="My Project" 
+    startScreenID="login"
+    margin="20" 
+    darkTheme="false" 
+    themePrimaryPalette="grey" 
+    themeAccentPalette="blue" 
+    themeBackgroundPalette="grey" 
+    themeWarnPalette="red"
+>
+		<output sourceDirPath="..\\JavaProject\\gen_src" flavor="Java"/>
+</FliesenUIProject>

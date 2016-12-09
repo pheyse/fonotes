@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto>
+	<field id="id" type="string" previewValue="1234" />
+	<field id="label" type="string" previewValue="1234" />
+</dto>

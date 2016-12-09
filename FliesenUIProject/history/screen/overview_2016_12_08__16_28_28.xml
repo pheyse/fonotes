@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="Overview" parameterDTO="parameter">
+    <dto id="parameter" type="overviewParameter" />
+    <dto id="items" type="overviewList" /> 
+	<container orientation="row">
+		<bar>
+			<cell size="100">
+				<label id="info" text="Fonotes - Phone Notes" style="large"/>
+			</cell>
+		</bar>
+        <bar>
+            <cell size="100">
+                <table id="notesTable" dto="items.items" idDTOField="id" style="normal" backgroundColorDTOField="color">
+                    <column size="100" text="Note">
+                        <tableLabel textDTOField="label" />
+                    </column>
+                    <eventParameter value="parameter" />
+                </table>
+            </cell>
+        </bar>
+    </container>
+</screen>

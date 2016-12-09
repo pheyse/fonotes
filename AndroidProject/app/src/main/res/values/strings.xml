@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Fonotes</string>
+    <string name="title_activity_permissions">Permissions Required</string>
+    <string name="title_activity_web_server">Fonotes Web Server</string>
+</resources>

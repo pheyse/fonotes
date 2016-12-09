@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="Note Details" parameterDTO="parameter">
+    <dto id="parameter" type="detailsParameter" />
+    <dto id="colors" type="idAndLabelList" />
+	<container orientation="row">
+		<bar id="viewNoteName">
+			<cell size="100">
+				<button id="backButton" text="Back to overview">
+                    <eventParameter value="parameter"/>
+                </button>
+				<label id="noteNameLabel" text="My Note 123" style="medium"/>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+                <label id="colorLabel" text="Note Color:" />
+                <selectBox id="colorSelectBox" dto="colors.items" idDTOField="id" labelDTOField="label">
+                    <eventParameter value="parameter" />
+                </selectBox>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+				<button id="editNameButton" text="Edit name">
+                    <eventParameter value="parameter"/>
+                </button>
+				<button id="editTextButton" text="Edit text" primary="true">
+                    <eventParameter value="parameter"/>
+                </button>
+				<button id="deleteButton" text="Delete note">
+                    <eventParameter value="parameter"/>
+                </button>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+                <space height="30" />
+			</cell>
+		</bar>
+
+
+        <bar id="viewNotePanel">
+			<cell size="100">
+				<markdownView id="noteView" text="My note text" />
+			</cell>
+		</bar>
+        <bar>
+			<cell size="100">
+                <container id="editNotePanel" orientation="row" >
+                    <bar>
+                    	<cell size="100">
+                            <button id="saveNoteTextButton" text="Save" primary="true">
+                                <eventParameter value="parameter" />
+                                <eventParameter value="editNoteTextArea.text"/>
+                            </button>
+                            <button id="cancelEditNoteTextButton" text="Cancel"/>
+                        </cell>
+                    </bar>
+                    <bar>
+                    	<cell size="100">
+                            <textArea id="editNoteTextArea" text="my note text" height="300"/>
+                        </cell>
+                    </bar>
+                </container>
+			</cell>
+		</bar>
+
+	
+    </container>
+</screen>

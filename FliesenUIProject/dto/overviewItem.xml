@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto>
+	<field id="id" type="string" previewValue="ID" />
+	<field id="label" type="string" previewValue="My Notes" />
+	<field id="color" type="string" previewValue="#ff0000" />
+</dto>

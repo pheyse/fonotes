@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="Note Details" parameterDTO="parameter">
+    <dto id="parameter" type="detailsParameter" />
+    <dto id="colors" type="idAndLabelList" />
+	<container orientation="row">
+		<bar>
+			<cell size="100">
+				<label id="noteName" text="My Note 123" style="large"/>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+				<button id="editNameButton" text="Edit name" />
+				<button id="editTextButton" text="Edit text" primary="true"/>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+                <selectBox id="colorSelectBox" dto="colors.items" idDTOField="id" labelDTOField="label" />
+
+			</cell>
+		</bar>
+
+        
+        <bar>
+			<cell size="80">
+				<textField id="myTextField" labelText="my text field" text="Hello" />
+			</cell>
+			<cell size="20">
+				<button id="myButton" text="Click Me" primary="true"/>
+			</cell>
+		</bar>
+    </container>
+</screen>

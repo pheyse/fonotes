@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto>
+	<field id="noteName" type="string" previewValue="myNote" />
+	<field id="password" type="string" previewValue="5678" />
+</dto>

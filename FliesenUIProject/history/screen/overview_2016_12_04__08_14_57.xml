@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="My Screen" >
+    <dto id="items" type="overviewList" /> 
+	<container orientation="row">
+		<bar>
+			<cell size="100">
+				<label id="info" text="FoNotes - Phone Notes" style="large"/>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+				<button id="newNoteButton" text="New Note" />
+			</cell>
+		</bar>
+        <bar>
+            <cell size="100">
+                <table id="notesTable" dto="items.items" idDTOField="id" style="normal" backgroundColorDTOField="color">
+                    <column size="100" text="Note">
+                        <tableLabel textDTOField="label" />
+                    </column>
+                </table>
+            </cell>
+        </bar>
+    </container>
+</screen>

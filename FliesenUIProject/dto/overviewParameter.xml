@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto>
+	<field id="password" type="string" previewValue="1234" />
+</dto>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto>
+	<field id="text" type="string" previewValue="hello" />
+</dto>
