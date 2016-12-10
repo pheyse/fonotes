@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="de.bright_side.fonotes"
+<manifest package="com.bright_side_it.fonotes"
           xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -19,15 +19,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".android.view.PermissionsActivity"
+            android:name="com.bright_side_it.fonotes.android.view.PermissionsActivity"
             android:label="@string/title_activity_permissions">
         </activity>
         <activity
-            android:name=".android.view.WebServerActivity"
+            android:name="com.bright_side_it.fonotes.android.view.WebServerActivity"
             android:label="@string/title_activity_web_server">
         </activity>
         <service
-            android:name=".android.service.WebServerService"
+            android:name="com.bright_side_it.fonotes.android.service.WebServerService"
             android:enabled="true"
             android:exported="false">
         </service>
