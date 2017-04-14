@@ -7,5 +7,6 @@
 /*Generated! Do not modify!*/     void onLoaded(LoginReply reply, FLUIClientPropertiesDTO clientProperties);
 /*Generated! Do not modify!*/     void onInputDialogResult(LoginReply reply, String referenceID, String dialogResult);
 /*Generated! Do not modify!*/     void onConfirmDialogResult(LoginReply reply, String referenceID, boolean confirmed);
+/*Generated! Do not modify!*/     void onListChooserResult(LoginReply reply, String referenceID, java.util.List<String> selectedIDs);
 /*Generated! Do not modify!*/     void onLoginButtonClicked(LoginReply reply, String passwordTextFieldText);
 /*Generated! Do not modify!*/ }

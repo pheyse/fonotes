@@ -83,17 +83,4 @@ public class DirNamesLogicTest {
 		assertEquals(originalName, decodedName);
 	}
 	
-	@Test
-	public void test_NoteInfo_normal() throws Exception{
-		DirNamesLogic logic = new DirNamesLogic();
-		NoteInfo originalNoteInfo = new NoteInfo();
-		originalNoteInfo.setName("Schöner Name!**");
-		originalNoteInfo.setColor("ffccaa");
-		String encodedName = logic.toFilename(originalNoteInfo);
-		verifyAllowedChars(encodedName);
-		NoteInfo decodedNoteInfo = logic.toNoteInfo(encodedName);
-		assertEquals(originalNoteInfo.getName(), decodedNoteInfo.getName());
-		assertEquals(originalNoteInfo.getColor(), decodedNoteInfo.getColor());
-	}
-
 }

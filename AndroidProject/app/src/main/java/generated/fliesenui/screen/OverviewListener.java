@@ -9,7 +9,7 @@
 /*Generated! Do not modify!*/     void onLoaded(OverviewReply reply, FLUIClientPropertiesDTO clientProperties, OverviewParameterDTO parameter);
 /*Generated! Do not modify!*/     void onInputDialogResult(OverviewReply reply, String referenceID, String dialogResult);
 /*Generated! Do not modify!*/     void onConfirmDialogResult(OverviewReply reply, String referenceID, boolean confirmed);
-/*Generated! Do not modify!*/     void onStartWebServerButtonClicked(OverviewReply reply);
-/*Generated! Do not modify!*/     void onAboutButtonClicked(OverviewReply reply, OverviewParameterDTO parameter);
+/*Generated! Do not modify!*/     void onListChooserResult(OverviewReply reply, String referenceID, java.util.List<String> selectedIDs);
+/*Generated! Do not modify!*/     void onMenuButtonClicked(OverviewReply reply, OverviewParameterDTO parameter);
 /*Generated! Do not modify!*/     void onNotesTableRowClicked(OverviewReply reply, String rowID, OverviewParameterDTO parameter);
 /*Generated! Do not modify!*/ }

@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Date;
 
+import com.bright_side_it.filesystemfacade.facade.FSFFile;
+import com.bright_side_it.filesystemfacade.nativefs.NativeFS;
 import com.bright_side_it.fonotes.BuildConfig;
 import com.bright_side_it.fonotes.android.service.WebServerService;
 import com.bright_side_it.fonotes.android.view.WebServerActivity;
@@ -45,6 +47,11 @@ public class AndroidPlatform implements Platform {
 		if (!dir.exists()) dir.mkdirs();
 		if (!dir.exists()) throw new Exception("Directory >>" + dir + "<< does not exist and could not be created");
 		return dir;
+	}
+
+	@Override
+	public FSFFile getApplicationDataFSFDir() throws Exception {
+		return new NativeFS().createByPath(getApplicationDataDir().getAbsolutePath());
 	}
 
 	private static String singleExceptionToString(Throwable exception){
@@ -111,6 +118,11 @@ public class AndroidPlatform implements Platform {
 	@Override
 	public void log(String message){
 		Log.d(LOG_TAG, message);
+	}
+
+	@Override
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis();
 	}
 
 }

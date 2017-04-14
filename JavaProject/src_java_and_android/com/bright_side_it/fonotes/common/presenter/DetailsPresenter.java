@@ -1,13 +1,23 @@
 package com.bright_side_it.fonotes.common.presenter;
 
+import java.sql.Savepoint;
 import java.util.Date;
+import java.util.List;
+
 
 import com.bright_side_it.fonotes.common.base.Platform;
+import com.bright_side_it.fonotes.common.base.TextAndCursorPos;
+import com.bright_side_it.fonotes.common.base.TextUtil;
 import com.bright_side_it.fonotes.common.dao.FonotesDAO;
 import com.bright_side_it.fonotes.common.logic.ColorLogic;
 import com.bright_side_it.fonotes.common.model.NoteInfo;
 
 import generated.fliesenui.core.FLUIClientPropertiesDTO;
+import generated.fliesenui.core.FLUIKeyEvent;
+import generated.fliesenui.core.FLUIKeyEvent.KeyType;
+import generated.fliesenui.core.FLUIUtil;
+import generated.fliesenui.core.KeyModifier;
+import generated.fliesenui.core.TextHighlighting;
 import generated.fliesenui.dto.DetailsParameterDTO;
 import generated.fliesenui.dto.DetailsParameterDTOBuilder;
 import generated.fliesenui.dto.EditStateDTO;
@@ -16,6 +26,17 @@ import generated.fliesenui.dto.IdAndLabelListDTOBuilder;
 import generated.fliesenui.dto.OverviewParameterDTOBuilder;
 import generated.fliesenui.screen.DetailsListener;
 import generated.fliesenui.screen.DetailsReply;
+
+/*
+  text area to do:
+	  
+	  set background color
+	  XML:
+	     -  pass parameter (in general and) on save 
+	     OK set height --> put a scroll area around it (maybe just use logic of IDE...)
+	     OK disable syntax highlighting
+	     OK show/hide line numbers
+ */
 
 public class DetailsPresenter implements DetailsListener{
 	private FonotesDAO dao;
@@ -51,11 +72,11 @@ public class DetailsPresenter implements DetailsListener{
 		reply.setBackButtonVisible(true);
 		reply.setColorsDTO(IdAndLabelListDTOBuilder.construct(colorLogic.getColorIDsAndLabels()));
 		reply.setNoteNameLabelText(noteInfo.getName());
-		reply.setColorSelectBoxSelectedID(noteInfo.getColor());
+		reply.setColorSelectBoxSelectedID(noteInfo.getColorID());
 		reply.setNoteViewText(content);
 		reply.setEditStateDTO(EditStateDTOBuilder.construct(content, false));
-		reply.setNoteViewBackgroundColor("#" + noteInfo.getColor());
-		reply.setEditNoteTextAreaBackgroundColor("#" + noteInfo.getColor());
+		reply.setNoteViewBackgroundColor("#" + colorLogic.getColorHexSoftFromColorID(noteInfo.getColorID()));
+//		reply.setEditNoteTextAreaBackgroundColor("#" + colorLogic.getColorHexSoftFromColorID(noteInfo.getColorID()));
 		if ((autoSaveText != null) && (!autoSaveText.isEmpty())){
 			startEdit(reply, parameter, autoSaveText);
 			reply.setEditNoteInfoLabelText("Auto-saved text recovered");
@@ -200,13 +221,14 @@ public class DetailsPresenter implements DetailsListener{
 			return;
 		}
 		try{
-			dao.setNoteColor(parameter.getNoteName(), itemID);
+			dao.setNoteColorID(parameter.getNoteName(), itemID);
 		} catch (Exception e){
 			commonPresenter.handleError(reply, "Could not update note color", e);
 			return;
 		}
-		reply.setNoteViewBackgroundColor("#" + itemID);
-		reply.setEditNoteTextAreaBackgroundColor("#" + itemID);
+		
+		reply.setNoteViewBackgroundColor("#" + new ColorLogic().getColorHexSoftFromColorID(itemID));
+//		reply.setEditNoteTextAreaBackgroundColor("#" + new ColorLogic().getColorHexSoftFromColorID(itemID));
 	}
 	
 	@Override
@@ -275,17 +297,17 @@ public class DetailsPresenter implements DetailsListener{
 
 	@Override
 	public void onAutosaveTimer(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText, EditStateDTO editState) {
-		log("onAutosaveTimer");
+//		log("onAutosaveTimer");
 		if (!verifyParameterPassword(reply, parameter)){
 			return;
 		}
 		if (editNoteTextAreaText.equals(editState.getText())){
-			log("aute save not necessary");
+//			log("aute save not necessary");
 			return;
 		}
 		try{
 			dao.setAutoSaveText(parameter.getNoteName(), editNoteTextAreaText);
-			log("auto save text written");
+//			log("auto save text written");
 		} catch (Exception e){
 			commonPresenter.handleError(reply, "Could not set auto save text", e);
 			return;
@@ -298,4 +320,46 @@ public class DetailsPresenter implements DetailsListener{
 		System.out.println("DetailsPresenter> " + message);
 	}
 
+	@Override
+	public void onListChooserResult(DetailsReply reply, String referenceID, List<String> selectedIDs) {
+	}
+
+	@Override
+	public void onBackPressed(DetailsReply reply, DetailsParameterDTO parameter) {
+		onBackButtonClicked(reply, parameter);
+	}
+
+	/*
+	@Override
+	public void onEditNoteTextAreaKeyEvent(DetailsReply reply, FLUIKeyEvent keyEvent, DetailsParameterDTO parameter) {
+		log("onEditNoteTextAreaKeyEvent>event = '" + keyEvent);
+	
+		TextAndCursorPos result = null;
+		TextAndCursorPos textAndCursorPos = new TextAndCursorPos(keyEvent.getEditorText(), keyEvent.getLine(), keyEvent.getPosInLine());
+		if (FLUIUtil.matchesKeyEvent(keyEvent, 'D', true, true, false)){
+			log("onEditNoteTextAreaKeyEvent>event = copy line");
+			result = TextUtil.copyLineDown(textAndCursorPos);
+		} else if (FLUIUtil.matchesKeyEvent(keyEvent, KeyType.CURSOR_DOWN, true, false, true)){
+			log("onEditNoteTextAreaKeyEvent>event = copy line down");
+			result = TextUtil.copyLineDown(textAndCursorPos);
+		} else if (FLUIUtil.matchesKeyEvent(keyEvent, KeyType.CURSOR_UP, true, false, true)){
+			log("onEditNoteTextAreaKeyEvent>event = copy line up");
+			result = TextUtil.copyLineUp(textAndCursorPos);
+		} else if (FLUIUtil.matchesKeyEvent(keyEvent, KeyType.CURSOR_DOWN, false, false, true)){
+			log("onEditNoteTextAreaKeyEvent>event = move line down");
+			result = TextUtil.moveLineDown(textAndCursorPos);
+		} else if (FLUIUtil.matchesKeyEvent(keyEvent, KeyType.CURSOR_UP, false, false, true)){
+			log("onEditNoteTextAreaKeyEvent>event = move line up");
+			result = TextUtil.moveLineUp(textAndCursorPos);
+		} else if (FLUIUtil.matchesKeyEvent(keyEvent, 'S', true, false, false)){
+			log("onEditNoteTextAreaKeyEvent>event = save");
+			onSaveNoteTextButtonClicked(reply, parameter, keyEvent.getEditorText());
+		}
+		if (result != null){
+			reply.setEditNoteTextAreaText(result.getText());
+			reply.setEditNoteTextAreaCursorPos(result.getLine(), result.getPosInLine());
+		}
+	}
+	*/
+	
 }

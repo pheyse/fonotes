@@ -1,5 +1,7 @@
 package com.bright_side_it.fonotes.common.presenter;
 
+import java.util.List;
+
 import generated.fliesenui.core.FLUIClientPropertiesDTO;
 import generated.fliesenui.dto.OverviewParameterDTO;
 import generated.fliesenui.screen.AboutListener;
@@ -242,6 +244,16 @@ public class AboutPresenter implements AboutListener{
 	@Override
 	public void onBackButtonClicked(AboutReply reply, OverviewParameterDTO parameter) {
 		reply.openScreenOverview(parameter);
+	}
+
+	@Override
+	public void onListChooserResult(AboutReply reply, String referenceID, List<String> selectedIDs) {
+		
+	}
+
+	@Override
+	public void onBackPressed(AboutReply reply, OverviewParameterDTO parameter) {
+		onBackButtonClicked(reply, parameter);
 	}
 
 }

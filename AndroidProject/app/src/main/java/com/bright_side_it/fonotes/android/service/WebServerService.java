@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bright_side_it.fonotes.R;
+import com.bright_side_it.fonotes.android.base.AndroidPlatform;
 import com.bright_side_it.fonotes.android.base.FonotesAndroidBase;
 import com.bright_side_it.fonotes.android.view.MainActivity;
 
@@ -60,7 +61,7 @@ public class WebServerService extends Service {
 			return;
 		}
 		String password = generatePassword();
-		jettyServer = new FonotesAndroidJettyServer(this, PORT, FonotesAndroidBase.createScreenManager(this, password, false));
+		jettyServer = new FonotesAndroidJettyServer(this, PORT, FonotesAndroidBase.createScreenManager(this, new AndroidPlatform(this), password, false));
 		log("startWebServer: server created");
 
 		infoString = "Password = " + password + "\n" + jettyServer.getIPAddressInfoString(PORT);

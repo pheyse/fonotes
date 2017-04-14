@@ -2,6 +2,8 @@ package com.bright_side_it.fonotes.java.base;
 
 import java.io.File;
 
+import com.bright_side_it.filesystemfacade.facade.FSFFile;
+import com.bright_side_it.filesystemfacade.nativefs.NativeFS;
 import com.bright_side_it.fonotes.common.base.Platform;
 
 public class JavaPlatform implements Platform{
@@ -31,6 +33,16 @@ public class JavaPlatform implements Platform{
 	@Override
 	public void log(String message) {
 		System.out.println("Fonotes> " + message);
+	}
+
+	@Override
+	public FSFFile getApplicationDataFSFDir() throws Exception {
+		return new NativeFS().createByPath(getApplicationDataDir().getAbsolutePath());
+	}
+
+	@Override
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis();
 	}
 
 }

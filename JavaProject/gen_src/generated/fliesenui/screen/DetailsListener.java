@@ -9,6 +9,7 @@
 /*Generated! Do not modify!*/     void onLoaded(DetailsReply reply, FLUIClientPropertiesDTO clientProperties, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onInputDialogResult(DetailsReply reply, String referenceID, String dialogResult);
 /*Generated! Do not modify!*/     void onConfirmDialogResult(DetailsReply reply, String referenceID, boolean confirmed);
+/*Generated! Do not modify!*/     void onListChooserResult(DetailsReply reply, String referenceID, java.util.List<String> selectedIDs);
 /*Generated! Do not modify!*/     void onBackButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onEditNameButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onEditTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
@@ -17,4 +18,5 @@
 /*Generated! Do not modify!*/     void onCancelEditNoteTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onAutosaveTimer(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText, EditStateDTO editState);
 /*Generated! Do not modify!*/     void onColorSelectBoxChanged(DetailsReply reply, String itemID, DetailsParameterDTO parameter);
+/*Generated! Do not modify!*/     void onBackPressed(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/ }

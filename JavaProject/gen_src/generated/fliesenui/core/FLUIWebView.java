@@ -13,6 +13,8 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
+import generated.fliesenui.core.JarImageStreamURLConnection;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
@@ -34,7 +36,8 @@ public class FLUIWebView extends Region {
     private int height;
     private static final String PROTOCOL_PREFIX_UNSAFE = "unsafe";
     private static final String PROTOCOL_NAME_IMAGE_STREAM = "imagestream";
-
+    private static final String FILE_IN_JAR_PREFIX = "jar:file:";
+    
     private String currentScreenID;
 	private FLUIScreenManager screenManager;
 	private boolean singlePageApp = false;
@@ -277,7 +280,7 @@ public class FLUIWebView extends Region {
     }
     
     private class ImageStreamProtocolHandler extends URLStreamHandler {
-    	private String protocol;
+		private String protocol;
 
 		public ImageStreamProtocolHandler(String protocol) {
     		this.protocol = protocol;
@@ -289,9 +292,19 @@ public class FLUIWebView extends Region {
     		if ((url != null) && (screenManager != null)){
     			log("openConnection: path = >>" + url.getPath() + "<<");
     			String path = url.getPath();
+    			if (path.startsWith(FILE_IN_JAR_PREFIX)){
+        			log("openConnection: it is a path in a jar");
+    				int pos = path.indexOf("!");
+    				if (pos >= 0){
+    					return new JarImageStreamURLConnection(url, path.substring(pos + 1), screenManager.getListener());
+    				} else {
+    					log("openConnection: could not find location in jar");
+    				}
+    			}
     			if (PROTOCOL_PREFIX_UNSAFE.equals(protocol)){
     				path = path.substring(PROTOCOL_NAME_IMAGE_STREAM.length() + 1);
     			}
+    			log("openConnection: used path = >>" + path + "<<");
     			return new ImageStreamURLConnection(url, screenManager, path);
     		}
     		return null;

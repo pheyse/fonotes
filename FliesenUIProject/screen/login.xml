@@ -9,7 +9,9 @@
 
 		<bar>
 			<cell size="60">
-				<textField id="passwordTextField" labelText="Password" text="" />
+				<textField id="passwordTextField" labelText="Password" text="">
+                    <onEnter buttonToClick="loginButton" />
+                </textField>
 			</cell>
 			<cell size="20">
 				<button id="loginButton" text="Login" primary="true">

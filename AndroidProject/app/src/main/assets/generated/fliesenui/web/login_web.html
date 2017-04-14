@@ -8,14 +8,29 @@
 		<link rel="stylesheet" href="cmlib/codemirror.css">
 		<link rel="stylesheet" href="cmlib/show-hint.css">
 		<link rel="stylesheet" href="lib/flui.css">
+		<script type="text/javascript">
+    console.log("Page loaded: " + new Date());
+    history.pushState(null, null, window.location.pathname);
+        window.addEventListener('popstate', function (e) {
+            history.pushState(null, null, window.location.pathname);
+    	       backButtonPressed();
+        }, false);
+
+    backButtonPressed = function(){
+        currentScreenID = "login";
+        eval(currentScreenID + "$backButtonPressed();");
+        console.log("called funtion BackButtonPressed. currentScreenID = '" + currentScreenID + "'");
+    }
+</script>
 	</head>
-	<body ng-app="app" ng-controller="login_Ctrl" id="screenLoginPanel" style="margin-left:20px;margin-right:20px">
+	<body ng-app="app" ng-controller="login_Ctrl" id="screenLoginPanel" style="margin-left:0px;margin-right:0px">
 		<script src="lib/angular.min.js"></script>
 		<script src="lib/angular-animate.min.js"></script>
 		<script src="lib/angular-aria.min.js"></script>
 		<script src="lib/angular-messages.min.js"></script>
 		<script src="lib/angular-material.min.js"></script>
 		<script src="lib/showdown.min.js"></script>
+		<script src="lib/strings.js"></script>
 		<script src="cmlib/codemirror.js"></script>
 		<script src="cmlib/xml.js"></script>
 		<script src="cmlib/active-line.js"></script>
@@ -42,6 +57,7 @@ var getClientProperties = function(){
     
     try{
         result.userAgent = navigator.userAgent;
+        result.language = navigator.language;
         if ("WebBrowser" == browserMode){
             result.screenAvailableWidthInPixels = window.screen.availWidth;
             result.screenAvailableHeightInPixels = window.screen.availHeight;
@@ -78,6 +94,18 @@ var getClientProperties = function(){
     }
     return JSON.stringify(result);
 }
+
+
+
+currentLanguage = "DEFAULT";
+
+getText = function(stringID){
+    var result = STRINGS[currentLanguage + ":" + stringID];
+    if (result === undefined){
+        result = STRINGS["DEFAULT:" + stringID];
+    }
+    return result;
+}
         </script>
 		<script src="login_part1.js"></script>
 
@@ -93,7 +121,7 @@ var getClientProperties = function(){
 				<span>
 					<md-input-container class="md-block">
 						<label>{{login_passwordTextField_propertyLabel}}</label>
-						<input ng-model="login_passwordTextField_propertyText" style="width:99%; background: {{login_passwordTextField_propertyBackgroundColor}}" ng-show="login_passwordTextField_propertyVisible"/>
+						<input ng-model="login_passwordTextField_propertyText" style="width:99%; {{login_passwordTextField_propertyBackgroundColor}}" ng-show="login_passwordTextField_propertyVisible" ng-keyup="$event.keyCode == 13 && login_widgetButtonLoginButtonClicked();"/>
 					</md-input-container>
 				</span>
 			</div>

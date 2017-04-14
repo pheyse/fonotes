@@ -8,5 +8,7 @@
 /*Generated! Do not modify!*/     void onLoaded(AboutReply reply, FLUIClientPropertiesDTO clientProperties, OverviewParameterDTO parameter);
 /*Generated! Do not modify!*/     void onInputDialogResult(AboutReply reply, String referenceID, String dialogResult);
 /*Generated! Do not modify!*/     void onConfirmDialogResult(AboutReply reply, String referenceID, boolean confirmed);
+/*Generated! Do not modify!*/     void onListChooserResult(AboutReply reply, String referenceID, java.util.List<String> selectedIDs);
 /*Generated! Do not modify!*/     void onBackButtonClicked(AboutReply reply, OverviewParameterDTO parameter);
+/*Generated! Do not modify!*/     void onBackPressed(AboutReply reply, OverviewParameterDTO parameter);
 /*Generated! Do not modify!*/ }

@@ -90,6 +90,132 @@ app.controller("details_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         });
     };
 
+    $scope.showListChooser = function(parameter){
+    	$scope.listChooserReferenceID = parameter.referenceID;
+    	$scope.listChooserTitle = parameter.title;
+    	$scope.listChooserMultiselect = parameter.multiSelect;
+    	$scope.listChooserShowIcons = parameter.showIcons;
+    	$scope.listChooserOKText = parameter.okText;
+    	$scope.listChooserCancelText = parameter.cancelText;
+    	$scope.listChooserItems = parameter.items;
+    	$scope.listChooserShowFilter = parameter.showFilter;
+        $scope.listChooserFilter = "";
+    	
+        $mdDialog.show({
+            controller: ListChooserDialogController,
+            parent: angular.element(document.body),
+            scope: $scope,
+            preserveScope: true, 
+            clickOutsideToClose:true,
+            template:
+			     '<md-dialog aria-label="{{listChooserTitle}}" style="width: 80%;height: 80%;">'
+               + '  <form ng-cloak>'
+               + '    <md-toolbar>'
+               + '      <div class="md-toolbar-tools">'
+               + '        <h2>{{listChooserTitle}}</h2>'
+               + '      </div>'
+               + '    </md-toolbar>'
+               + '    <md-dialog-content>'
+               + '      <div class="md-dialog-content">'
+               + '	    <span ng-show="listChooserShowFilter" > '
+               + '			<md-input-container class="md-block" flex-gt-sm>'
+               + '				<label>Search</label>'
+               + '				<input ng-model="listChooserFilter" style="width:99%">'
+               + '			  </md-input-container>'
+               + '		</span>'
+               + '		<table style="width:100%; overflow-y: scroll;">'
+               + '			<tr ng-repeat="i in listChooserItems | filter : {\'label\' : listChooserFilter}" '
+               + '			    ng-click="listChooser_rowClicked($event, i.id, i)" '
+               + '			    style="border-color:#999999;border-bottom-style: solid;border-width: 1px; background-color:{{rowBackgroundColor}}" '
+               + '			    layout="row" '
+               + '			    layout-wrap="" '
+               + '			    ng-init="rowBackgroundColor=\'white\';" '
+               + '			    ng-mouseleave="rowHover=false;rowBackgroundColor=\'white\';"'
+               + '			    ng-mouseover="rowHover=true;rowBackgroundColor=\'#f3f3f3\';">'
+               + '			    <td ng-if="listChooserMultiselect && i.selected"  style="min-height:60px; padding-left:15px; padding-top:15px;"><img src="img/_checkbox_checked.png"   width="20"/></td>'
+               + '			    <td ng-if="listChooserMultiselect && !i.selected" style="min-height:60px; padding-left:15px; padding-top:15px;"><img src="img/_checkbox_unchecked.png" width="20"/></td>'
+               + '			    <td ng-if="listChooserShowIcons" style="min-height:60px; padding-left:15px; padding-top:15px;"><img ng-src="img/{{imageAssetIDToName[i.imageAssetID]}}" width="40px" height="40px"/></td>'
+               + '				<td style="word-wrap: break-word;min-height:60px; padding-left:15px; padding-top:15px;">{{i.label}}</td>'
+               + '			</tr>'
+               + '		</table>'
+               + '      </div>'
+               + '    </md-dialog-content>'
+               + ''
+               + '    <md-dialog-actions layout="row">'
+               + '      <span flex></span>'
+               + '      <md-button ng-click="cancel();">'
+               + '       {{listChooserCancelText}}'
+               + '      </md-button>'
+               + '      <md-button ng-click="listChooser_okClicked();hide();" ng-visible="listChooserMultiselect">'
+               + '        {{listChooserOKText}}'
+               + '      </md-button>'
+               + '    </md-dialog-actions>'
+               + '  </form>'
+               + '</md-dialog>'
+        })
+        .then(function(answer) {
+        }, function() {
+              $scope.listChooser_cancelled();
+        });
+    }
+      
+    function ListChooserDialogController($scope, $mdDialog) {
+        $scope.hide = function() {
+    	    $mdDialog.hide();
+    	};
+    	$scope.cancel = function() {
+    	    $mdDialog.cancel();
+    	};
+        $scope.answer = function(answer) {
+    	    $mdDialog.hide(answer);
+    	};
+    	    
+    	$scope.listChooser_rowClicked = function (event, itemID, item) {
+    	    if (!event.defaultPrevented) {
+    	        console.log("clicked row with itemID = " + itemID + ", old selected = " + item.selected);
+                if ($scope.listChooserMultiselect){
+    	            item.selected = !item.selected;
+    	        	console.log("new selected = " + item.selected);
+    	        } else if (!$scope.listChooserMultiselect){
+    	            //:clear old selection
+    	        	for (i = 0; i < $scope.listChooserItems.length; i++){
+    	        	    $scope.listChooserItems[i].selected = false;
+    	            }
+    	            //: select item
+        	        item.selected = !item.selected;
+        	        	  
+        	        $scope.listChooser_okClicked();        		  
+    	        	$mdDialog.hide("");
+    	        }
+    	    }
+        };
+    } 
+      
+    $scope.listChooser_okClicked = function () {
+        console.log("clicked ok");
+        var selectedIDs = [];
+	       for (i = 0; i < $scope.listChooserItems.length; i++){
+            var item = $scope.listChooserItems[i];
+            if (item.selected){
+//			    console.log("selected id: " + item.id);
+            selectedIDs.push(item.id);
+            }
+        }
+        console.log("selected ids: " + selectedIDs);
+        var request = details$createRequest("onListChooserResult");
+        request.parameters["referenceID"] = $scope.listChooserReferenceID;
+        request.parameters["selectedIDs"] = selectedIDs;
+        details$executeRequest(request);
+    }
+
+    $scope.listChooser_cancelled = function () {
+	    console.log("list chooser: cancelled");
+        var request = details$createRequest("onListChooserResult");
+        request.parameters["referenceID"] = $scope.listChooserReferenceID;
+        request.parameters["selectedIDs"] = null;
+        details$executeRequest(request);
+    }
+      
 
     $scope.details_widgetButtonBackButtonClicked = function () {
         var request = details$createRequest("widgetButtonBackButtonClicked");
@@ -186,14 +312,14 @@ var details$setInitialValues = function(){
     scope.details_deleteButton_propertyVisible = true;
     scope.details_null_propertyVisible = true;
     scope.details_noteView_propertyText = "My note text";
-    scope.details_noteView_propertyBackgroundColor = "#ffffff";
+    scope.details_noteView_propertyBackgroundColor = "";
     scope.details_noteView_propertyVisible = true;
     scope.details_saveNoteTextButton_propertyText = "Save";
     scope.details_saveNoteTextButton_propertyVisible = true;
     scope.details_cancelEditNoteTextButton_propertyText = "Cancel";
     scope.details_cancelEditNoteTextButton_propertyVisible = true;
     scope.details_editNoteTextArea_propertyText = "my note text";
-    scope.details_editNoteTextArea_propertyBackgroundColor = "#ffffff";
+    scope.details_editNoteTextArea_propertyBackgroundColor = "";
     scope.details_editNoteTextArea_propertyVisible = true;
     scope.details_editNoteInfoLabel_propertyText = "";
     scope.details_editNoteInfoLabel_propertyVisible = true;
@@ -253,6 +379,7 @@ details$executeOnLoadWhenControllerIsReady = function(){
 details$createRequest = function(actionName){
     request = new Object();
     request.action = actionName;
+    request.currentLanguage = currentLanguage;
     request.screenID = "details";
     request.parameters = new Object();
     return request;
@@ -326,7 +453,8 @@ details_setNoteViewText = function (text){
     var converter = new showdown.Converter();
     converter.setOption('tables', 'true');
     converter.setOption('literalMidWordUnderscores', 'true');
-    html = converter.makeHtml(text);
+    var lineBreakText = text.replace(new RegExp("\n", "g"), "\n<br/>");
+    html = converter.makeHtml(lineBreakText);
     target = document.getElementById("details_markdownViewNoteView");
     target.innerHTML = html;
 };
@@ -500,8 +628,22 @@ var details$openScreenMultiPageApp = function(screenToOpen, openParameter){
     window.open(screenToOpenURL, "_self");
 }
 
+details$backButtonPressed = function(){
+    console.log("Screen details: Back pressed.");
+    var $scope = angular.element(document.getElementById('screenDetailsPanel')).scope();
+    var request = details$createRequest("onBackPressed");
+    request.parameters["parameter"] = details$getParameter_dto();
+    details$executeRequest(request);
+};
+
+details$updateViews = function(){
+};
+
 details$processReply = function(jsonString){
     var reply = JSON.parse(jsonString);
+    if (typeof reply.languageToSet != "undefined") {
+        currentLanguage = reply.languageToSet;
+    }
     var scope = angular.element(document.getElementById('screenDetailsPanel')).scope();
     for (i = 0, len = reply.dtosToSet.length; i < len; i++) {
         var dtoValue = reply.dtoValues[reply.dtosToSet[i]];
@@ -609,6 +751,9 @@ details$processReply = function(jsonString){
     if (typeof confirmDialogParameters != "undefined") {
         scope.showConfirm(confirmDialogParameters.referenceID, confirmDialogParameters.title, confirmDialogParameters.textContent, confirmDialogParameters.okText, confirmDialogParameters.cancelText);
     }
-    setTimeout(function() {scope.$digest();}, 0);
+    if (typeof reply.listChooserParameters != "undefined") {
+        scope.showListChooser(reply.listChooserParameters);
+    }
+    setTimeout(function() {scope.$digest();details$updateViews();}, 0);
 
 };

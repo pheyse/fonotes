@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screen title="My Screen" parameterDTO="parameter">
+    <listenToBackAction>
+        <eventParameter value="parameter"/>
+    </listenToBackAction>
     <dto id="parameter" type="overviewParameter" />
 	<container orientation="row">
 		<bar>
-			<cell size="100">
+			<cell size="5" />
+			<cell size="95">
 				<label id="info" text="About Fonotes" style="large"/>
 			</cell>
 		</bar>
         <bar>
-			<cell size="100">
+			<cell size="5" />
+			<cell size="95">
 				<button id="backButton" text="Back to overview">
                     <eventParameter value="parameter" />
                 </button>
 			</cell>
 		</bar>
 		<bar>
-			<cell size="100">
+            <cell size="5" />
+			<cell size="95">
 				<markdownView id="aboutText" text="..."/>
 			</cell>
 		</bar>

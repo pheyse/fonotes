@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="My Screen" >
+	<container orientation="row">
+		<bar>
+			<cell size="100">
+				<label id="info" text="Fonotes - Phone Notes" style="large"/>
+			</cell>
+		</bar>
+
+		<bar>
+			<cell size="60">
+				<textField id="passwordTextField" labelText="Password" text="">
+                    <onEnter buttonToClick="loginButtonloginButton" />
+                </textField>
+			</cell>
+			<cell size="20">
+				<button id="loginButton" text="Login" primary="true">
+                    <eventParameter value="passwordTextField.text" />
+                </button>
+			</cell>
+            <cell size="20">
+            </cell>
+		</bar>
+    </container>
+</screen>

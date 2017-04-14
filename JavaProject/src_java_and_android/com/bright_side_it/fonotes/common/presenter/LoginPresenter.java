@@ -1,5 +1,7 @@
 package com.bright_side_it.fonotes.common.presenter;
 
+import java.util.List;
+
 import com.bright_side_it.fonotes.common.base.Platform;
 
 import generated.fliesenui.core.FLUIClientPropertiesDTO;
@@ -36,6 +38,10 @@ public class LoginPresenter implements LoginListener {
 			return;
 		}
 		reply.setErrorDialog("Wrong password", "This password is not correct");
+	}
+
+	@Override
+	public void onListChooserResult(LoginReply reply, String referenceID, List<String> selectedIDs) {
 	}
 
 }

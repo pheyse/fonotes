@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="Note Details" parameterDTO="parameter">
+    <dto id="parameter" type="detailsParameter" />
+    <dto id="colors" type="idAndLabelList" />
+    <dto id="editState" type="editState" />
+    <listenToBackAction>
+        <eventParameter value="parameter"/>
+    </listenToBackAction>
+    <timer id="autosaveTimer" intervalInMillis="5000" active="false">
+        <eventParameter value="parameter"/>
+        <eventParameter value="editNoteTextArea.text" />
+        <eventParameter value="editState" />
+    </timer>
+	<container orientation="row">
+		<bar id="viewNoteName">
+            <cell size="5" />
+			<cell size="95">
+				<button id="backButton" text="Back to overview">
+                    <eventParameter value="parameter"/>
+                </button>
+				<label id="noteNameLabel" text="My Note 123" style="medium"/>
+			</cell>
+		</bar>
+		<bar>
+            <cell size="5" />
+			<cell size="95" id="colorBar">
+                <label id="colorLabel" text="Note Color:" />
+                <selectBox id="colorSelectBox" dto="colors.items" idDTOField="id" labelDTOField="label">
+                    <eventParameter value="parameter" />
+                </selectBox>
+			</cell>
+		</bar>
+		<bar>
+            <cell size="5" />
+			<cell size="95" id="buttonBar">
+				<button id="editNameButton" text="Edit name">
+                    <eventParameter value="parameter"/>
+                </button>
+				<button id="editTextButton" text="Edit text" primary="true">
+                    <eventParameter value="parameter"/>
+                </button>
+				<button id="deleteButton" text="Delete note">
+                    <eventParameter value="parameter"/>
+                </button>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+                <space height="30" />
+			</cell>
+		</bar>
+
+
+        <bar id="viewNotePanel">
+            <cell size="5" />
+			<cell size="95">
+				<markdownView id="noteView" text="My note text" />
+			</cell>
+		</bar>
+        <bar>
+            <cell size="5" />
+			<cell size="95">
+                <container id="editNotePanel" orientation="row" visible="false">
+                    <bar>
+                    	<cell size="100">
+                            <button id="saveNoteTextButton" text="Save" primary="true">
+                                <eventParameter value="parameter" />
+                                <eventParameter value="editNoteTextArea.text"/>
+                            </button>
+                            <button id="cancelEditNoteTextButton" text="Cancel">
+                                <eventParameter value="parameter" />
+                            </button>
+                        </cell>
+                    </bar>
+                    <bar>
+                    	<cell size="100">
+                            <textEditor id="editNoteTextArea" text="my note text" height="300">
+                                <listenToKeyPress keyChar="d" control="true" shift="true" alt="false">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyPress>
+                                <listenToKeyDown keyCode="CursorDown" control="true" shift="false" alt="true">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                <listenToKeyDown keyCode="CursorDown" control="false" shift="false" alt="true">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                            </textEditor>
+                            <!--
+                                <textArea id="editNoteTextArea" text="my note text" height="300"/>
+							-->
+                        </cell>
+                    </bar>
+                    <bar>
+                    	<cell size="100">
+                            <label id="editNoteInfoLabel" text=""/>
+                        </cell>
+                    </bar>
+                </container>
+			</cell>
+		</bar>
+
+	
+    </container>
+</screen>

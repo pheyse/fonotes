@@ -3,6 +3,9 @@
     <dto id="parameter" type="detailsParameter" />
     <dto id="colors" type="idAndLabelList" />
     <dto id="editState" type="editState" />
+    <listenToBackAction>
+        <eventParameter value="parameter"/>
+    </listenToBackAction>
     <timer id="autosaveTimer" intervalInMillis="5000" active="false">
         <eventParameter value="parameter"/>
         <eventParameter value="editNoteTextArea.text" />
@@ -10,7 +13,8 @@
     </timer>
 	<container orientation="row">
 		<bar id="viewNoteName">
-			<cell size="100">
+            <cell size="5" />
+			<cell size="95">
 				<button id="backButton" text="Back to overview">
                     <eventParameter value="parameter"/>
                 </button>
@@ -18,7 +22,8 @@
 			</cell>
 		</bar>
 		<bar>
-			<cell size="100" id="colorBar">
+            <cell size="5" />
+			<cell size="95" id="colorBar">
                 <label id="colorLabel" text="Note Color:" />
                 <selectBox id="colorSelectBox" dto="colors.items" idDTOField="id" labelDTOField="label">
                     <eventParameter value="parameter" />
@@ -26,7 +31,8 @@
 			</cell>
 		</bar>
 		<bar>
-			<cell size="100" id="buttonBar">
+            <cell size="5" />
+			<cell size="95" id="buttonBar">
 				<button id="editNameButton" text="Edit name">
                     <eventParameter value="parameter"/>
                 </button>
@@ -46,12 +52,14 @@
 
 
         <bar id="viewNotePanel">
-			<cell size="100">
+            <cell size="5" />
+			<cell size="95">
 				<markdownView id="noteView" text="My note text" />
 			</cell>
 		</bar>
         <bar>
-			<cell size="100">
+            <cell size="5" />
+			<cell size="95">
                 <container id="editNotePanel" orientation="row" visible="false">
                     <bar>
                     	<cell size="100">
@@ -66,7 +74,28 @@
                     </bar>
                     <bar>
                     	<cell size="100">
-                            <textArea id="editNoteTextArea" text="my note text" height="300"/>
+                            <textArea id="editNoteTextArea" text="my note text" height="300">
+                                <!--
+                                <listenToKeyDown keyChar="D" control="true" shift="true" alt="false">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                <listenToKeyDown keyChar="S" control="true" shift="false" alt="false">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                <listenToKeyDown keyCode="CursorDown" control="true" shift="false" alt="true">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                <listenToKeyDown keyCode="CursorDown" control="false" shift="false" alt="true">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                <listenToKeyDown keyCode="CursorUp" control="true" shift="false" alt="true">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                <listenToKeyDown keyCode="CursorUp" control="false" shift="false" alt="true">
+                                    <eventParameter value="parameter" />
+                                </listenToKeyDown>
+                                -->
+                            </textArea>
                         </cell>
                     </bar>
                     <bar>

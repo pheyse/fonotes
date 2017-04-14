@@ -2,6 +2,8 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import com.google.gson.Gson;
 /*Generated! Do not modify!*/ import java.util.Map;
+/*Generated! Do not modify!*/ import java.util.List;
+/*Generated! Do not modify!*/ import java.util.ArrayList;
 /*Generated! Do not modify!*/ import java.util.TreeMap;
 /*Generated! Do not modify!*/ import java.io.ByteArrayOutputStream;
 /*Generated! Do not modify!*/ import java.io.InputStream;
@@ -26,6 +28,8 @@
 /*Generated! Do not modify!*/     private FLUIWebView webView;
 /*Generated! Do not modify!*/     private boolean singlePageApp = true;
 /*Generated! Do not modify!*/     private FLUIScreenManagerListener listener;
+/*Generated! Do not modify!*/     private boolean recording = false;
+/*Generated! Do not modify!*/     private FLUIActionRecording actionRecording;
 /*Generated! Do not modify!*/     private FLUIWebCallHandler fluiWebCallHandler = new FLUIWebCallHandler(this);
 /*Generated! Do not modify!*/     private Map<String, FLUIScreen> screenIDToViewMap = new TreeMap<String, FLUIScreen>();
 /*Generated! Do not modify!*/ 
@@ -57,6 +61,20 @@
 /*Generated! Do not modify!*/         this.singlePageApp = singlePageApp;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void startRecording() {
+/*Generated! Do not modify!*/         actionRecording = new FLUIActionRecording();
+/*Generated! Do not modify!*/         actionRecording.setRequests(new ArrayList<FLUIRequest>());
+/*Generated! Do not modify!*/         actionRecording.setReplies(new ArrayList<FLUIReplyDTO>());
+/*Generated! Do not modify!*/         recording = true;
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void stopRecording() {
+/*Generated! Do not modify!*/         recording = false;
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public FLUIActionRecording getActionRecording() {
+/*Generated! Do not modify!*/         return actionRecording;
+/*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/     public boolean isSinglePageApp() {
 /*Generated! Do not modify!*/         return singlePageApp;
 /*Generated! Do not modify!*/     }
@@ -83,6 +101,16 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void handleWebUpload(FLUIWebCall webCall, String requestJSON, String uploadFilename, InputStream uploadFileInputStream) throws Exception {
 /*Generated! Do not modify!*/         fluiWebCallHandler.handleUpload(webCall, requestJSON, uploadFilename, uploadFileInputStream);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public FLUIReplyDTO onScreenRequest(FLUIScreenRequest request, String uploadFileName, InputStream uploadFileInputStream, boolean clearRecordedActions){
+/*Generated! Do not modify!*/         String requestJSON = new Gson().toJson(request.getRequest());
+/*Generated! Do not modify!*/         String replyJSON = onRequest(requestJSON, uploadFileName, uploadFileInputStream);
+/*Generated! Do not modify!*/         FLUIReplyDTO result = new Gson().fromJson(replyJSON, FLUIReplyDTO.class);
+/*Generated! Do not modify!*/         if (clearRecordedActions){
+/*Generated! Do not modify!*/             result.setRecordedActions(new ArrayList<FLUIReplyAction>());
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         return result;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void openStartScreen() {
@@ -209,10 +237,21 @@
 /*Generated! Do not modify!*/         String replyJSON = null;
 /*Generated! Do not modify!*/         try{
 /*Generated! Do not modify!*/             FLUIRequest request = new Gson().fromJson(requestJSON, FLUIRequest.class);
+/*Generated! Do not modify!*/             if (request == null){
+/*Generated! Do not modify!*/                 throw new Exception("request is null, requestJSON = >>" + requestJSON + "<<");
+/*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             listener.onRequest(request);
 /*Generated! Do not modify!*/             FLUIScreen view = screenIDToViewMap.get(request.getScreenID());
+/*Generated! Do not modify!*/             FLUIAbstractReply reply;
 /*Generated! Do not modify!*/             if (view != null){
-/*Generated! Do not modify!*/                 replyJSON = view.onFLUIRequest(request, uploadFileName, uploadFileInputStream);
+/*Generated! Do not modify!*/                 reply = view.onFLUIRequest(recording, request, uploadFileName, uploadFileInputStream);
+/*Generated! Do not modify!*/                 if (reply != null){
+/*Generated! Do not modify!*/                     replyJSON = new Gson().toJson(reply.getReplyDTO());
+/*Generated! Do not modify!*/                     if (recording){;
+/*Generated! Do not modify!*/                         actionRecording.getRequests().add(request);
+/*Generated! Do not modify!*/                         actionRecording.getReplies().add(reply.getReplyDTO());
+/*Generated! Do not modify!*/                     };
+/*Generated! Do not modify!*/                 }
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             if (replyJSON != null){
 /*Generated! Do not modify!*/                 reply(request.getScreenID(), replyJSON);

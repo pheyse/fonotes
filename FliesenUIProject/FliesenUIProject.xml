@@ -3,7 +3,7 @@
 	formatVersion="1"
     title="My Project" 
     startScreenID="login"
-    margin="20" 
+    margin="0" 
     darkTheme="false" 
     themePrimaryPalette="blue" 
     themeAccentPalette="blue" 
