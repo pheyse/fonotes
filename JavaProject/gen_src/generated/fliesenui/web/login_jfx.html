@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿#<!DOCTYPE html>
 <html lang="en"  >
 	<head>
 		<title>My Screen</title>
@@ -29,6 +29,7 @@
 		<script src="lib/angular-aria.min.js"></script>
 		<script src="lib/angular-messages.min.js"></script>
 		<script src="lib/angular-material.min.js"></script>
+        <script src="lib/angular-sanitize.min.js"></script>
 		<script src="lib/showdown.min.js"></script>
 		<script src="lib/strings.js"></script>
 		<script src="cmlib/codemirror.js"></script>
@@ -39,11 +40,12 @@
 		<script src="cmlib/matchtags.js"></script>
 		<script src="cmlib/xml-fold.js"></script>
 		<script src="cmlib/show-hint.js"></script>
+	    <script src="lib/flui-util.js"></script>
 		<script type="text/javascript">
             browserMode = "JavaFX";
             htmlFileSuffix = "jfx";
             singlePageApp = false;
-            var app = angular.module('app', ['ngMaterial']).config(function($mdThemingProvider) {
+            var app = angular.module('app', ['ngMaterial', 'ngSanitize']).config(function($mdThemingProvider) {
                 $mdThemingProvider.theme('default')
                     .primaryPalette('blue')
                     .accentPalette('blue')
@@ -111,7 +113,7 @@ getText = function(stringID){
 
 
 		        <div id="box1cm" style="width: 1cm; height: 1cm; position: absolute; left: -100%; top: -100%;"></div>
-<div layout="row" layout-wrap="" layout-align="space-between center">
+<div layout-wrap="" layout-align="space-between center" layout="row">
 			<div flex="100">
 				<span>
 					<h1 ng-show="login_info_propertyVisible" style="white-space: pre-wrap;">{{login_info_propertyText}}</h1>

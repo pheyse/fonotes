@@ -27,7 +27,7 @@
         <script src="lib/angular-aria.min.js"></script>
         <script src="lib/angular-messages.min.js"></script>
         <script src="lib/angular-material.min.js"></script>
-        <script src="lib/showdown.min.js"></script>
+        <script src="lib/angular-sanitize.min.js"></script>
         <script src="lib/strings.js"></script>
         <script src="cmlib/codemirror.js"></script>
         <script src="cmlib/xml.js"></script>
@@ -37,11 +37,12 @@
         <script src="cmlib/matchtags.js"></script>
         <script src="cmlib/xml-fold.js"></script>
         <script src="cmlib/show-hint.js"></script>
+        <script src="lib/flui-util.js"></script>
         <script type="text/javascript">
             browserMode = "WebBrowser";
             htmlFileSuffix = "web";
             singlePageApp = true;
-            var app = angular.module('app', ['ngMaterial']).config(function($mdThemingProvider) {
+            var app = angular.module('app', ['ngMaterial', 'ngSanitize']).config(function($mdThemingProvider) {
                 $mdThemingProvider.theme('default')
                     .primaryPalette('blue')
                     .accentPalette('blue')
@@ -64,10 +65,18 @@
                 scope.$apply(function(){
                     scope.visible = false;
                 });
+                scope = angular.element(document.getElementById('screenMarkdownHelpPanel')).scope();
+                scope.$apply(function(){
+                    scope.visible = false;
+                });
                 scope = angular.element(document.getElementById('screenOverviewPanel')).scope();
                 scope.$apply(function(){
                     scope.visible = false;
                 });
+            
+                //: scroll to top
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             
                 //: set initial values
                 if (screenToOpen == 'about') {
@@ -78,6 +87,9 @@
                 }
                 if (screenToOpen == 'login') {
                     login$setInitialValues();
+                }
+                if (screenToOpen == 'markdownHelp') {
+                    markdownHelp$setInitialValues();
                 }
                 if (screenToOpen == 'overview') {
                     overview$setInitialValues();
@@ -95,6 +107,14 @@
                     }
                     if (screenToOpen == 'details') {
                         scope = angular.element(document.getElementById('screenDetailsPanel')).scope();
+                        if ((typeof openParameter != "undefined") && (openParameter != null)) {
+                            scope.parameter = openParameter;
+                        } else {
+                            scope.parameter = null;
+                        }
+                    }
+                    if (screenToOpen == 'markdownHelp') {
+                        scope = angular.element(document.getElementById('screenMarkdownHelpPanel')).scope();
                         if ((typeof openParameter != "undefined") && (openParameter != null)) {
                             scope.parameter = openParameter;
                         } else {
@@ -137,6 +157,14 @@
                         });
                         currentScreenID = "login";
                         login$executeOnLoadRequest();
+                    }
+                    if (screenToOpen == 'markdownHelp') {
+                        scope = angular.element(document.getElementById('screenMarkdownHelpPanel')).scope();
+                        scope.$apply(function(){
+                            scope.visible = true;
+                        });
+                        currentScreenID = "markdownHelp";
+                        markdownHelp$executeOnLoadRequest();
                     }
                     if (screenToOpen == 'overview') {
                         scope = angular.element(document.getElementById('screenOverviewPanel')).scope();
@@ -210,27 +238,21 @@
         <div ng-controller="about_Ctrl" id="screenAboutPanel" style="position:absolute;width: 98%;margin-left:0px;margin-right:0px;" ng-show="visible" ng-cloak="">
             <!-- ######################## Beginning: HTML code of Screen 'about' ################################# -->
             <script src="about_part1.js"></script>
-            <div layout="row" layout-wrap="" layout-align="space-between center">
-        			<div flex="5">
-        				<span/>
+            <div layout-wrap="" layout-align="space-between center" layout="row">
+        			<div flex="15">
+        				<span>
+        					<md-button class="md-raised" ng-click="about_widgetButtonBackButtonClicked();" ng-show="about_backButton_propertyVisible">
+        						<img ng-src="img/{{about_backButton_propertyImageSource}}"/>
+        						<span>{{about_backButton_propertyText}}</span>
+        					</md-button>
+        				</span>
         			</div>
-        			<div flex="95">
+        			<div flex="85">
         				<span>
         					<h1 ng-show="about_info_propertyVisible" style="white-space: pre-wrap;">{{about_info_propertyText}}</h1>
         				</span>
         			</div>
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="95">
-        				<span>
-        					<md-button class="md-raised" ng-click="about_widgetButtonBackButtonClicked();" ng-show="about_backButton_propertyVisible">{{about_backButton_propertyText}}</md-button>
-        				</span>
-        			</div>
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="95">
+        			<div flex="100">
         				<span>
         					<md-card ng-show="about_aboutText_propertyVisible">
         						<span style="{{about_aboutText_propertyBackgroundColor}}">
@@ -247,77 +269,87 @@
         <div ng-controller="details_Ctrl" id="screenDetailsPanel" style="position:absolute;width: 98%;margin-left:0px;margin-right:0px;" ng-show="visible" ng-cloak="">
             <!-- ######################## Beginning: HTML code of Screen 'details' ################################# -->
             <script src="details_part1.js"></script>
-            <div layout="row" layout-wrap="" layout-align="space-between center">
-        			<div flex="5" ng-show="details_viewNoteName_propertyVisible">
-        				<span/>
-        			</div>
-        			<div flex="95" ng-show="details_viewNoteName_propertyVisible">
-        				<span>
-        					<md-button class="md-raised" ng-click="details_widgetButtonBackButtonClicked();" ng-show="details_backButton_propertyVisible">{{details_backButton_propertyText}}</md-button>
-        					<h2 ng-show="details_noteNameLabel_propertyVisible" style="white-space: pre-wrap;">{{details_noteNameLabel_propertyText}}</h2>
-        				</span>
-        			</div>
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="95">
-        				<span ng-show="details_colorBar_propertyVisible">
-        					<span ng-show="details_colorLabel_propertyVisible" style="white-space: pre-wrap;">{{details_colorLabel_propertyText}}</span>
-        					<select ng-model="details_colorSelectBox_selectedItem" ng-options="i.label for i in colors.items" ng-change="details_colorSelectBox_changed(details_colorSelectBox_selectedItem.id)"></select>
-        				</span>
-        			</div>
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="95">
-        				<span ng-show="details_buttonBar_propertyVisible">
-        					<md-button class="md-raised" ng-click="details_widgetButtonEditNameButtonClicked();" ng-show="details_editNameButton_propertyVisible">{{details_editNameButton_propertyText}}</md-button>
-        					<md-button class="md-raised md-primary" ng-click="details_widgetButtonEditTextButtonClicked();" ng-show="details_editTextButton_propertyVisible">{{details_editTextButton_propertyText}}</md-button>
-        					<md-button class="md-raised" ng-click="details_widgetButtonDeleteButtonClicked();" ng-show="details_deleteButton_propertyVisible">{{details_deleteButton_propertyText}}</md-button>
-        				</span>
-        			</div>
-        			<div flex="100">
-        				<span>
-        					<div style="height:30px"></div>
-        				</span>
-        			</div>
-        			<div flex="5" ng-show="details_viewNotePanel_propertyVisible">
-        				<span/>
-        			</div>
-        			<div flex="95" ng-show="details_viewNotePanel_propertyVisible">
-        				<span>
-        					<md-card ng-show="details_noteView_propertyVisible">
-        						<span style="{{details_noteView_propertyBackgroundColor}}">
-        							<span id="details_markdownViewNoteView"></span>
-        						</span>
-        					</md-card>
-        				</span>
-        			</div>
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="95">
-        				<span>
-        					<div layout="row" layout-wrap="" layout-align="space-between center" ng-show="details_editNotePanel_propertyVisible">
-        						<div flex="100">
-        							<span>
-        								<md-button class="md-raised md-primary" ng-click="details_widgetButtonSaveNoteTextButtonClicked();" ng-show="details_saveNoteTextButton_propertyVisible">{{details_saveNoteTextButton_propertyText}}</md-button>
-        								<md-button class="md-raised" ng-click="details_widgetButtonCancelEditNoteTextButtonClicked();" ng-show="details_cancelEditNoteTextButton_propertyVisible">{{details_cancelEditNoteTextButton_propertyText}}</md-button>
-        							</span>
+            <div layout-wrap="" layout-align="space-between center">
+        			<span style="position:fixed; top:0; left:0; height:3.0cm; width: 100%;">
+        				<div flex="100">
+        					<span>
+        						<div layout-wrap="" layout-align="space-between center" layout="row">
+        							<div flex="100" ng-show="details_buttonBar_propertyVisible">
+        								<span>
+        									<md-button class="md-raised" ng-click="details_widgetButtonBackButtonClicked();" ng-show="details_backButton_propertyVisible">
+        										<img ng-src="img/{{details_backButton_propertyImageSource}}" height="20px"/>
+        										<span>{{details_backButton_propertyText}}</span>
+        									</md-button>
+        									<md-button class="md-raised md-primary" ng-click="details_widgetButtonEditTextButtonClicked();" ng-show="details_editTextButton_propertyVisible">{{details_editTextButton_propertyText}}</md-button>
+        									<md-button class="md-raised" ng-click="details_widgetButtonEditNameButtonClicked();" ng-show="details_editNameButton_propertyVisible">{{details_editNameButton_propertyText}}</md-button>
+        									<md-button class="md-raised" ng-click="details_widgetButtonDeleteButtonClicked();" ng-show="details_deleteButton_propertyVisible">
+        										<img ng-src="img/{{details_deleteButton_propertyImageSource}}"/>
+        										<span>{{details_deleteButton_propertyText}}</span>
+        									</md-button>
+        								</span>
+        							</div>
+        							<div flex="5">
+        								<span/>
+        							</div>
+        							<div flex="95">
+        								<span ng-show="details_colorBar_propertyVisible">
+        									<span ng-show="details_colorLabel_propertyVisible" style="white-space: pre-wrap;">{{details_colorLabel_propertyText}}</span>
+        									<select ng-model="details_colorSelectBox_selectedItem" ng-options="i.label for i in colors.items" ng-change="details_colorSelectBox_changed(details_colorSelectBox_selectedItem.id)"></select>
+        								</span>
+        							</div>
+        							<div flex="100">
+        								<span ng-show="details_viewNoteName_propertyVisible">
+        									<h2 ng-show="details_noteNameLabel_propertyVisible" style="white-space: pre-wrap;">{{details_noteNameLabel_propertyText}}</h2>
+        								</span>
+        							</div>
+        							<div flex="100">
+        								<span>
+        									<div style="height:30px"></div>
+        								</span>
+        							</div>
         						</div>
-        						<div flex="100">
-        							<span>
-        								<textarea ng-model="details_editNoteTextArea_propertyText" ng-show="details_editNoteTextArea_propertyVisible" style="resize:none; width:99%; height:300px;   {{details_editNoteTextArea_propertyBackgroundColor}}" id="details_editNoteTextArea"></textarea>
-        							</span>
+        					</span>
+        				</div>
+        			</span>
+        			<span style="position:fixed; overflow: auto;top: 3.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
+        				<div flex="100">
+        					<span>
+        						<div layout-wrap="" layout-align="space-between center" layout="row">
+        							<div flex="100" ng-show="details_viewNotePanel_propertyVisible">
+        								<span>
+        									<md-card ng-show="details_noteView_propertyVisible">
+        										<span style="{{details_noteView_propertyBackgroundColor}}">
+        											<span id="details_markdownViewNoteView"></span>
+        										</span>
+        									</md-card>
+        								</span>
+        							</div>
+        							<div flex="100">
+        								<span>
+        									<div layout-wrap="" layout-align="space-between center" layout="row" ng-show="details_editNotePanel_propertyVisible">
+        										<div flex="100">
+        											<span>
+        												<md-button class="md-raised md-primary" ng-click="details_widgetButtonSaveNoteTextButtonClicked();" ng-show="details_saveNoteTextButton_propertyVisible">{{details_saveNoteTextButton_propertyText}}</md-button>
+        												<md-button class="md-raised" ng-click="details_widgetButtonCancelEditNoteTextButtonClicked();" ng-show="details_cancelEditNoteTextButton_propertyVisible">{{details_cancelEditNoteTextButton_propertyText}}</md-button>
+        											</span>
+        										</div>
+        										<div flex="100">
+        											<span>
+        												<textarea ng-model="details_editNoteTextArea_propertyText" ng-show="details_editNoteTextArea_propertyVisible" style="resize:none; width:99%; height:300px;   {{details_editNoteTextArea_propertyBackgroundColor}}" id="details_editNoteTextArea"></textarea>
+        											</span>
+        										</div>
+        										<div flex="100">
+        											<span>
+        												<span ng-show="details_editNoteInfoLabel_propertyVisible" style="white-space: pre-wrap;">{{details_editNoteInfoLabel_propertyText}}</span>
+        											</span>
+        										</div>
+        									</div>
+        								</span>
+        							</div>
         						</div>
-        						<div flex="100">
-        							<span>
-        								<span ng-show="details_editNoteInfoLabel_propertyVisible" style="white-space: pre-wrap;">{{details_editNoteInfoLabel_propertyText}}</span>
-        							</span>
-        						</div>
-        					</div>
-        				</span>
-        			</div>
+        					</span>
+        				</div>
+        			</span>
         		</div>
         
             <script src="details_part2.js"></script>
@@ -326,7 +358,7 @@
         <div ng-controller="login_Ctrl" id="screenLoginPanel" style="position:absolute;width: 98%;margin-left:0px;margin-right:0px;" ng-show="visible" ng-cloak="">
             <!-- ######################## Beginning: HTML code of Screen 'login' ################################# -->
             <script src="login_part1.js"></script>
-            <div layout="row" layout-wrap="" layout-align="space-between center">
+            <div layout-wrap="" layout-align="space-between center" layout="row">
         			<div flex="100">
         				<span>
         					<h1 ng-show="login_info_propertyVisible" style="white-space: pre-wrap;">{{login_info_propertyText}}</h1>
@@ -353,55 +385,109 @@
             <script src="login_part2.js"></script>
             <!-- ######################## End: HTML code of Screen 'login' ################################# -->
         </div>
+        <div ng-controller="markdownHelp_Ctrl" id="screenMarkdownHelpPanel" style="position:absolute;width: 98%;margin-left:0px;margin-right:0px;" ng-show="visible" ng-cloak="">
+            <!-- ######################## Beginning: HTML code of Screen 'markdownHelp' ################################# -->
+            <script src="markdownHelp_part1.js"></script>
+            <div layout-wrap="" layout-align="space-between center" layout="row">
+        			<div flex="15">
+        				<span>
+        					<md-button class="md-raised" ng-click="markdownHelp_widgetButtonBackButtonClicked();" ng-show="markdownHelp_backButton_propertyVisible">
+        						<img ng-src="img/{{markdownHelp_backButton_propertyImageSource}}"/>
+        						<span>{{markdownHelp_backButton_propertyText}}</span>
+        					</md-button>
+        				</span>
+        			</div>
+        			<div flex="85">
+        				<span>
+        					<h1 ng-show="markdownHelp_info_propertyVisible" style="white-space: pre-wrap;">{{markdownHelp_info_propertyText}}</h1>
+        				</span>
+        			</div>
+        			<div flex="100">
+        				<span>
+        					<md-card ng-show="markdownHelp_markdownHelpText_propertyVisible">
+        						<span style="{{markdownHelp_markdownHelpText_propertyBackgroundColor}}">
+        							<span id="markdownHelp_markdownViewMarkdownHelpText"></span>
+        						</span>
+        					</md-card>
+        				</span>
+        			</div>
+        		</div>
+        
+            <script src="markdownHelp_part2.js"></script>
+            <!-- ######################## End: HTML code of Screen 'markdownHelp' ################################# -->
+        </div>
         <div ng-controller="overview_Ctrl" id="screenOverviewPanel" style="position:absolute;width: 98%;margin-left:0px;margin-right:0px;" ng-show="visible" ng-cloak="">
             <!-- ######################## Beginning: HTML code of Screen 'overview' ################################# -->
             <script src="overview_part1.js"></script>
-            <div layout="row" layout-wrap="" layout-align="space-between center">
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="75">
-        				<span>
-        					<h1 ng-show="overview_info_propertyVisible" style="white-space: pre-wrap;">{{overview_info_propertyText}}</h1>
-        				</span>
-        			</div>
-        			<div flex="20">
-        				<span>
-        					<md-button class="md-raised" ng-click="overview_widgetButtonMenuButtonClicked();" ng-show="overview_menuButton_propertyVisible">{{overview_menuButton_propertyText}}</md-button>
-        				</span>
-        			</div>
-        			<div flex="5" ng-show="overview_sortInfoBar_propertyVisible">
-        				<span/>
-        			</div>
-        			<div flex="95" ng-show="overview_sortInfoBar_propertyVisible">
-        				<span>
-        					<span ng-show="overview_sortInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_sortInfoText_propertyText}}</span>
-        				</span>
-        			</div>
-        			<div flex="5" ng-show="overview_colorFilterInfoBar_propertyVisible">
-        				<span/>
-        			</div>
-        			<div flex="95" ng-show="overview_colorFilterInfoBar_propertyVisible">
-        				<span>
-        					<span ng-show="overview_colorFilterInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_colorFilterInfoText_propertyText}}</span>
-        				</span>
-        			</div>
-        			<div flex="5">
-        				<span/>
-        			</div>
-        			<div flex="95">
-        				<span>
-        					<div style="width:100%; ">
-        						<table style="width:100%">
-        							<tr ng-repeat="i in items.items" ng-mouseleave="rowHover=false;rowBackgroundColor=i.color;" ng-mouseover="rowHover=true;rowBackgroundColor='#f3f3f3';" ng-click="overview_tableNotesTableRowClicked($index, $event)" style="border-color:#999999;border-bottom-style: solid;border-width: 1px; background-color:{{rowBackgroundColor}}" layout="row" layout-wrap="" ng-init="rowBackgroundColor=i.color;">
-        								<td style="width:90%;word-wrap: break-word;min-height:60px; padding-left:15px; padding-top:15px;">
-        									<span style="white-space: pre-wrap;">{{ i.label }}</span>
-        								</td>
-        							</tr>
-        						</table>
-        					</div>
-        				</span>
-        			</div>
+            <div layout-wrap="" layout-align="space-between center" ng-show="overview_topContainer_propertyVisible">
+        			<span style="position:fixed; top:0; left:0; height:3.0cm; width: 100%;">
+        				<div flex="100">
+        					<span>
+        						<div layout-wrap="" layout-align="space-between center" layout="row">
+        							<div flex="5">
+        								<span/>
+        							</div>
+        							<div flex="75">
+        								<span>
+        									<h2 ng-show="overview_info_propertyVisible" style="white-space: pre-wrap;">{{overview_info_propertyText}}</h2>
+        								</span>
+        							</div>
+        							<div flex="20">
+        								<span>
+        									<md-button class="md-raised" ng-click="overview_widgetButtonMenuButtonClicked();" ng-show="overview_menuButton_propertyVisible">{{overview_menuButton_propertyText}}</md-button>
+        								</span>
+        							</div>
+        							<div flex="5" ng-show="overview_sortInfoBar_propertyVisible">
+        								<span/>
+        							</div>
+        							<div flex="95" ng-show="overview_sortInfoBar_propertyVisible">
+        								<span>
+        									<span ng-show="overview_sortInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_sortInfoText_propertyText}}</span>
+        								</span>
+        							</div>
+        							<div flex="5" ng-show="overview_colorFilterInfoBar_propertyVisible">
+        								<span/>
+        							</div>
+        							<div flex="95" ng-show="overview_colorFilterInfoBar_propertyVisible">
+        								<span>
+        									<span ng-show="overview_colorFilterInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_colorFilterInfoText_propertyText}}</span>
+        								</span>
+        							</div>
+        						</div>
+        					</span>
+        				</div>
+        			</span>
+        			<span style="position:fixed; overflow: auto;top: 3.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
+        				<div flex="5">
+        					<span/>
+        				</div>
+        				<div flex="95">
+        					<span>
+        						<div flex="100">
+        							<table style="width:100%">
+        								<tr>
+        									<td style="width:10%">Filter:</td>
+        									<td style="width:83%">
+        										<input id="overview_tableNotesTableFilterTextInputField" style="width:90%" ng-model="overview_notesTableFilterText" onkeydown="overview_tableNotesTableFilterTextOnKeyDown(event)"/>
+        									</td>
+        									<td style="width:7%">
+        										<md-button class="fliesenUIButton fliesenUIButtonExtendSmall" ng-click="overview_tableNotesTableOnInfoButtonClicked();">?</md-button>
+        									</td>
+        								</tr>
+        							</table>
+        						</div>
+        						<div style="width:100%; ">
+        							<table style="width:100%">
+        								<tr ng-repeat="i in items.items | overview_tableNotesTableFilter:overview_notesTableFilterText" ng-mouseleave="rowHover=false;rowBackgroundColor=i.color;" ng-mouseover="rowHover=true;rowBackgroundColor='#f3f3f3';" ng-click="overview_tableNotesTableRowClicked($index, $event)" style="border-color:#999999;border-bottom-style: solid;border-width: 1px; background-color:{{rowBackgroundColor}}" layout="row" ng-init="rowBackgroundColor=i.color;">
+        									<td style="width:90.0%;word-wrap: break-word;min-height:0.8cm; padding-left:0.38cm; padding-top:0.38cm;">
+        										<span style="white-space: pre-wrap;">{{ i.label }}</span>
+        									</td>
+        								</tr>
+        							</table>
+        						</div>
+        					</span>
+        				</div>
+        			</span>
         		</div>
         
             <script src="overview_part2.js"></script>

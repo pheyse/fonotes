@@ -2,7 +2,79 @@
 var overview$controllerReady = false;
 var overview$logDebugBuffer = "";
 var overview$parameterDTO;
+var overview$tableNotesTableTopItemIndex = null;
+var overview$tableNotesTableFilteredIDs = null;
 
+overview_tableNotesTableFilterTextOnKeyDown = function (event) {
+    if (event.keyCode == 13){
+        var scope = angular.element(document.getElementById('screenOverviewPanel')).scope();
+        if (overview$tableNotesTableTopItemIndex != null){
+            scope.overview_tableNotesTableRowClicked(0, event);
+        }
+        return;
+    }
+
+    if ((event.keyCode != 32) || (!event.ctrlKey)){
+        return;
+    }
+    event.preventDefault();
+    var inputField = document.getElementById("overview_tableNotesTableFilterTextInputField");
+    var currentText = inputField.value;
+    var cursorPos = inputField.selectionStart;
+    var scope = angular.element(document.getElementById('screenOverviewPanel')).scope();
+    var columnNames = [scope.overview_notesTableColumn0Text];
+    try{
+        var updatedTextAndCursor = updateTextAndCursorToNextColumn(currentText, cursorPos, columnNames);
+
+        inputField.value = updatedTextAndCursor.text;
+        inputField.selectionStart = updatedTextAndCursor.cursorPos;
+        inputField.selectionEnd = updatedTextAndCursor.cursorPos;
+
+        scope["overview_notesTableFilterText"] = updatedTextAndCursor.text;
+        setTimeout(function() {scope.$digest();}, 0);
+    } catch (e){
+        console.log("error: " + e + ", " + JSON.stringify(e));
+    }
+}
+app.filter('overview_tableNotesTableFilter', function () {
+    return function (dataArray, filterTextRaw) {
+        if (!dataArray) return;
+        /* when term is cleared, return full array*/
+        if (!filterTextRaw) {
+            overview$tableNotesTableTopItemIndex = null;
+            overview$tableNotesTableFilteredIDs = null;
+            return dataArray
+        }
+        var filterText = filterTextRaw.trim().toLowerCase();
+        if (filterText.length == 0){
+            overview$tableNotesTableTopItemIndex = null;
+            overview$tableNotesTableFilteredIDs = null;
+            return dataArray
+        }
+        var scope = angular.element(document.getElementById('screenOverviewPanel')).scope();
+        var columnNames = [scope.overview_notesTableColumn0Text];
+        var searchTermsMap = createSearchTermsMap(filterText, columnNames);
+
+        var result = dataArray.filter(function(item){
+            existingItems = new Object();
+            existingItems["c0"] = item.label;
+
+            if (filterBySearchTerms(existingItems, searchTermsMap)){
+                return true;
+            } else {
+                return false;
+            }
+        });
+        if ((result != null) && (result.length != 0)){
+            overview$tableNotesTableTopItemIndex = findIndex(dataArray, result[0].id, "id");
+            overview$tableNotesTableFilteredIDs = createListFromProperty(result, "id");
+        } else {
+            overview$tableNotesTableTopItemIndex = null;
+            id = null;
+        }
+        return result;
+    }
+});
 app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
     overview$setInitialValues();
     $scope.http = $http;
@@ -42,7 +114,7 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
          );
      }
     }
-    $scope.showInputDialog = function(referenceID, title, textContent, label, initialValueText, okText, cancelText) {
+    $scope.showInputDialog = function(referenceID, callbackData, title, textContent, label, initialValueText, okText, cancelText) {
         var confirm = $mdDialog.prompt()
           .title(title)
           .textContent(textContent)
@@ -55,6 +127,7 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         $mdDialog.show(confirm).then(function(result) {
             var request = overview$createRequest("onInputDialogResult");
             request.parameters["referenceID"] = referenceID;
+            request.parameters["callbackData"] = callbackData;
             if (typeof result != "undefined"){
                 request.parameters["result"] = result;
                 overview$executeRequest(request);
@@ -65,11 +138,12 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         }, function() {
             var request = overview$createRequest("onInputDialogResult");
             request.parameters["referenceID"] = referenceID;
+            request.parameters["callbackData"] = callbackData;
             overview$executeRequest(request);
         });
     };
 
-    $scope.showConfirm = function(referenceID, title, textContent, okText, cancelText) {
+    $scope.showConfirm = function(referenceID, callbackData, title, textContent, okText, cancelText) {
         var confirm = $mdDialog.confirm()
               .title(title)
               .textContent(textContent)
@@ -81,17 +155,20 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
             var request = overview$createRequest("onConfirmDialogResult");
             request.parameters["referenceID"] = referenceID;
             request.parameters["result"] = true;
+            request.parameters["callbackData"] = callbackData;
             overview$executeRequest(request);
         }, function() {
             var request = overview$createRequest("onConfirmDialogResult");
             request.parameters["referenceID"] = referenceID;
             request.parameters["result"] = false;
+            request.parameters["callbackData"] = callbackData;
             overview$executeRequest(request);
         });
     };
 
     $scope.showListChooser = function(parameter){
     	$scope.listChooserReferenceID = parameter.referenceID;
+    	$scope.listChooserCallbackData = parameter.callbackData;
     	$scope.listChooserTitle = parameter.title;
     	$scope.listChooserMultiselect = parameter.multiSelect;
     	$scope.listChooserShowIcons = parameter.showIcons;
@@ -109,7 +186,7 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
             clickOutsideToClose:true,
             template:
 			     '<md-dialog aria-label="{{listChooserTitle}}" style="width: 80%;height: 80%;">'
-               + '  <form ng-cloak>'
+               + '  <form ng-cloak style="background-color: grey;">'
                + '    <md-toolbar>'
                + '      <div class="md-toolbar-tools">'
                + '        <h2>{{listChooserTitle}}</h2>'
@@ -146,7 +223,7 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
                + '      <md-button ng-click="cancel();">'
                + '       {{listChooserCancelText}}'
                + '      </md-button>'
-               + '      <md-button ng-click="listChooser_okClicked();hide();" ng-visible="listChooserMultiselect">'
+               + '      <md-button ng-click="hide();listChooser_okClicked();" ng-visible="listChooserMultiselect">'
                + '        {{listChooserOKText}}'
                + '      </md-button>'
                + '    </md-dialog-actions>'
@@ -184,8 +261,8 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
     	            //: select item
         	        item.selected = !item.selected;
         	        	  
-        	        $scope.listChooser_okClicked();        		  
     	        	$mdDialog.hide("");
+        	        $scope.listChooser_okClicked();        		  
     	        }
     	    }
         };
@@ -204,6 +281,7 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         console.log("selected ids: " + selectedIDs);
         var request = overview$createRequest("onListChooserResult");
         request.parameters["referenceID"] = $scope.listChooserReferenceID;
+        request.parameters["callbackData"] = $scope.listChooserCallbackData;
         request.parameters["selectedIDs"] = selectedIDs;
         overview$executeRequest(request);
     }
@@ -212,6 +290,7 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
 	    console.log("list chooser: cancelled");
         var request = overview$createRequest("onListChooserResult");
         request.parameters["referenceID"] = $scope.listChooserReferenceID;
+        request.parameters["callbackData"] = $scope.listChooserCallbackData;
         request.parameters["selectedIDs"] = null;
         overview$executeRequest(request);
     }
@@ -223,11 +302,26 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         overview$executeRequest(request);
     }
 
+    $scope.overview_tableNotesTableOnInfoButtonClicked = function () {
+        var message = new Object();
+        message.typeID = 101;
+        message.title = "Quick Filter Info";
+        message.text = "Type any text to filter. Add preciding '-' to filter out.  Add column name and ':' like 'myColumn:x' to filter in a column.  ";
+        message.text += "Use quotes (\") for spaces in column name or texts.  Press enter to select(click) first item in table.  ";
+        message.text += "Press ctrl+space for auto-complete of column names or next column name.";
+
+        $scope.showMessage(message);
+    }
+
     $scope.overview_tableNotesTableRowClicked = function (index, event) {
         if (!event.defaultPrevented) {
             var request = overview$createRequest("onNotesTableRowClicked");
             request.parameters["parameter"] = overview$getParameter_dto();
-            request.parameters["rowID"] = $scope.items.items[index].id;
+            if (overview$tableNotesTableFilteredIDs != null){
+                request.parameters["rowID"] = overview$tableNotesTableFilteredIDs[index];
+            } else {
+                request.parameters["rowID"] = $scope.items.items[index].id;
+            }
             overview$executeRequest(request);
         }
     }
@@ -268,11 +362,14 @@ var overview$setInitialValues = function(){
     scope.overview_colorFilterInfoText_propertyVisible = true;
     scope.overview_sortInfoBar_propertyVisible = true;
     scope.overview_colorFilterInfoBar_propertyVisible = false;
+    scope.overview_topContainer_propertyVisible = true;
     scope.overview_notesTableColumn0Text = "Note";
 }
 
 var overview$createImageAssetIDToNameMap = function(){
     result = new Object();
+    result["back"] = "back.png";
+    result["delete"] = "delete.png";
     return result;
 }
 
@@ -414,10 +511,40 @@ overview$initDTOTypeDetailsParameterForPreview = function(index){
     result.password = "5678" + "(" + index + ")";
     return result;
 };
+overview$initDTOTypeDetailsParameterListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = overview$initDTOTypeDetailsParameterForPreview(0);
+    result.items[1] = overview$initDTOTypeDetailsParameterForPreview(1);
+    result.items[2] = overview$initDTOTypeDetailsParameterForPreview(2);
+    result.items[3] = overview$initDTOTypeDetailsParameterForPreview(3);
+    result.items[4] = overview$initDTOTypeDetailsParameterForPreview(4);
+    result.items[5] = overview$initDTOTypeDetailsParameterForPreview(5);
+    result.items[6] = overview$initDTOTypeDetailsParameterForPreview(6);
+    result.items[7] = overview$initDTOTypeDetailsParameterForPreview(7);
+    result.items[8] = overview$initDTOTypeDetailsParameterForPreview(8);
+    result.items[9] = overview$initDTOTypeDetailsParameterForPreview(9);
+    return result;
+};
 overview$initDTOTypeEditStateForPreview = function(index){
     var result = new Object();
     result.text = "hello" + "(" + index + ")";
     result.inEditMode = true;
+    return result;
+};
+overview$initDTOTypeEditStateListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = overview$initDTOTypeEditStateForPreview(0);
+    result.items[1] = overview$initDTOTypeEditStateForPreview(1);
+    result.items[2] = overview$initDTOTypeEditStateForPreview(2);
+    result.items[3] = overview$initDTOTypeEditStateForPreview(3);
+    result.items[4] = overview$initDTOTypeEditStateForPreview(4);
+    result.items[5] = overview$initDTOTypeEditStateForPreview(5);
+    result.items[6] = overview$initDTOTypeEditStateForPreview(6);
+    result.items[7] = overview$initDTOTypeEditStateForPreview(7);
+    result.items[8] = overview$initDTOTypeEditStateForPreview(8);
+    result.items[9] = overview$initDTOTypeEditStateForPreview(9);
     return result;
 };
 overview$initDTOTypeIdAndLabelForPreview = function(index){
@@ -441,11 +568,41 @@ overview$initDTOTypeIdAndLabelListForPreview = function(index){
     result.items[9] = overview$initDTOTypeIdAndLabelForPreview(9);
     return result;
 };
+overview$initDTOTypeIdAndLabelListListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = overview$initDTOTypeIdAndLabelListForPreview(0);
+    result.items[1] = overview$initDTOTypeIdAndLabelListForPreview(1);
+    result.items[2] = overview$initDTOTypeIdAndLabelListForPreview(2);
+    result.items[3] = overview$initDTOTypeIdAndLabelListForPreview(3);
+    result.items[4] = overview$initDTOTypeIdAndLabelListForPreview(4);
+    result.items[5] = overview$initDTOTypeIdAndLabelListForPreview(5);
+    result.items[6] = overview$initDTOTypeIdAndLabelListForPreview(6);
+    result.items[7] = overview$initDTOTypeIdAndLabelListForPreview(7);
+    result.items[8] = overview$initDTOTypeIdAndLabelListForPreview(8);
+    result.items[9] = overview$initDTOTypeIdAndLabelListForPreview(9);
+    return result;
+};
 overview$initDTOTypeOverviewItemForPreview = function(index){
     var result = new Object();
     result.id = "ID" + "(" + index + ")";
     result.label = "My Notes" + "(" + index + ")";
     result.color = "#ff0000" + "(" + index + ")";
+    return result;
+};
+overview$initDTOTypeOverviewItemListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = overview$initDTOTypeOverviewItemForPreview(0);
+    result.items[1] = overview$initDTOTypeOverviewItemForPreview(1);
+    result.items[2] = overview$initDTOTypeOverviewItemForPreview(2);
+    result.items[3] = overview$initDTOTypeOverviewItemForPreview(3);
+    result.items[4] = overview$initDTOTypeOverviewItemForPreview(4);
+    result.items[5] = overview$initDTOTypeOverviewItemForPreview(5);
+    result.items[6] = overview$initDTOTypeOverviewItemForPreview(6);
+    result.items[7] = overview$initDTOTypeOverviewItemForPreview(7);
+    result.items[8] = overview$initDTOTypeOverviewItemForPreview(8);
+    result.items[9] = overview$initDTOTypeOverviewItemForPreview(9);
     return result;
 };
 overview$initDTOTypeOverviewListForPreview = function(index){
@@ -463,9 +620,39 @@ overview$initDTOTypeOverviewListForPreview = function(index){
     result.items[9] = overview$initDTOTypeOverviewItemForPreview(9);
     return result;
 };
+overview$initDTOTypeOverviewListListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = overview$initDTOTypeOverviewListForPreview(0);
+    result.items[1] = overview$initDTOTypeOverviewListForPreview(1);
+    result.items[2] = overview$initDTOTypeOverviewListForPreview(2);
+    result.items[3] = overview$initDTOTypeOverviewListForPreview(3);
+    result.items[4] = overview$initDTOTypeOverviewListForPreview(4);
+    result.items[5] = overview$initDTOTypeOverviewListForPreview(5);
+    result.items[6] = overview$initDTOTypeOverviewListForPreview(6);
+    result.items[7] = overview$initDTOTypeOverviewListForPreview(7);
+    result.items[8] = overview$initDTOTypeOverviewListForPreview(8);
+    result.items[9] = overview$initDTOTypeOverviewListForPreview(9);
+    return result;
+};
 overview$initDTOTypeOverviewParameterForPreview = function(index){
     var result = new Object();
     result.password = "1234" + "(" + index + ")";
+    return result;
+};
+overview$initDTOTypeOverviewParameterListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = overview$initDTOTypeOverviewParameterForPreview(0);
+    result.items[1] = overview$initDTOTypeOverviewParameterForPreview(1);
+    result.items[2] = overview$initDTOTypeOverviewParameterForPreview(2);
+    result.items[3] = overview$initDTOTypeOverviewParameterForPreview(3);
+    result.items[4] = overview$initDTOTypeOverviewParameterForPreview(4);
+    result.items[5] = overview$initDTOTypeOverviewParameterForPreview(5);
+    result.items[6] = overview$initDTOTypeOverviewParameterForPreview(6);
+    result.items[7] = overview$initDTOTypeOverviewParameterForPreview(7);
+    result.items[8] = overview$initDTOTypeOverviewParameterForPreview(8);
+    result.items[9] = overview$initDTOTypeOverviewParameterForPreview(9);
     return result;
 };
 
@@ -588,6 +775,13 @@ overview$processReply = function(jsonString){
         this[textEditorName].showHint({hint:function(){return hintValue;}});
     }
 
+    for (key in reply.tableCheckedRowIDs){
+        scope[key] = new Object();
+        for (i in reply.tableCheckedRowIDs[key]){
+            scope[key][reply.tableCheckedRowIDs[key][i]] = true;
+        }
+    }
+
     var screenToOpen = reply.screenToOpen;
     if (typeof screenToOpen != "undefined") {
         overview$openScreen(screenToOpen, reply.openParameter);
@@ -616,12 +810,12 @@ overview$processReply = function(jsonString){
 
     var inputDialogParameters = reply.inputDialogParameters;
     if (typeof inputDialogParameters != "undefined") {
-        scope.showInputDialog(inputDialogParameters.referenceID, inputDialogParameters.title, inputDialogParameters.textContent, inputDialogParameters.label, inputDialogParameters.initialValueText, inputDialogParameters.okText, inputDialogParameters.cancelText);
+        scope.showInputDialog(inputDialogParameters.referenceID, inputDialogParameters.callbackData, inputDialogParameters.title, inputDialogParameters.textContent, inputDialogParameters.label, inputDialogParameters.initialValueText, inputDialogParameters.okText, inputDialogParameters.cancelText);
     }
 
     var confirmDialogParameters = reply.confirmDialogParameters;
     if (typeof confirmDialogParameters != "undefined") {
-        scope.showConfirm(confirmDialogParameters.referenceID, confirmDialogParameters.title, confirmDialogParameters.textContent, confirmDialogParameters.okText, confirmDialogParameters.cancelText);
+        scope.showConfirm(confirmDialogParameters.referenceID, confirmDialogParameters.callbackData, confirmDialogParameters.title, confirmDialogParameters.textContent, confirmDialogParameters.okText, confirmDialogParameters.cancelText);
     }
     if (typeof reply.listChooserParameters != "undefined") {
         scope.showListChooser(reply.listChooserParameters);

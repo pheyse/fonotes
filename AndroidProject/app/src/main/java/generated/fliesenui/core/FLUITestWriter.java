@@ -13,12 +13,18 @@ import java.nio.charset.Charset;
 import java.io.OutputStream;
 
 import generated.fliesenui.dto.DetailsParameterDTO;
+import generated.fliesenui.dto.DetailsParameterListDTO;
 import generated.fliesenui.dto.EditStateDTO;
+import generated.fliesenui.dto.EditStateListDTO;
 import generated.fliesenui.dto.IdAndLabelDTO;
 import generated.fliesenui.dto.IdAndLabelListDTO;
+import generated.fliesenui.dto.IdAndLabelListListDTO;
 import generated.fliesenui.dto.OverviewItemDTO;
+import generated.fliesenui.dto.OverviewItemListDTO;
 import generated.fliesenui.dto.OverviewListDTO;
+import generated.fliesenui.dto.OverviewListListDTO;
 import generated.fliesenui.dto.OverviewParameterDTO;
+import generated.fliesenui.dto.OverviewParameterListDTO;
 
 public class FLUITestWriter{
     private int dtoIndex = 0;
@@ -36,6 +42,8 @@ public class FLUITestWriter{
             result.append(requestClassName + "." + createScreenDetailsFactoryMethod(step, requestData) + ";");
         } else if (requestData.getScreenID().equals("login")){
             result.append(requestClassName + "." + createScreenLoginFactoryMethod(step, requestData) + ";");
+        } else if (requestData.getScreenID().equals("markdownHelp")){
+            result.append(requestClassName + "." + createScreenMarkdownHelpFactoryMethod(step, requestData) + ";");
         } else if (requestData.getScreenID().equals("overview")){
             result.append(requestClassName + "." + createScreenOverviewFactoryMethod(step, requestData) + ";");
         } else {
@@ -52,6 +60,8 @@ public class FLUITestWriter{
             result.append(createScreenDetailsDTOMethods(step, requestData));
         } else if (requestData.getScreenID().equals("login")){
             result.append(createScreenLoginDTOMethods(step, requestData));
+        } else if (requestData.getScreenID().equals("markdownHelp")){
+            result.append(createScreenMarkdownHelpDTOMethods(step, requestData));
         } else if (requestData.getScreenID().equals("overview")){
             result.append(createScreenOverviewDTOMethods(step, requestData));
         } else {
@@ -68,12 +78,54 @@ public class FLUITestWriter{
          return result;
     }
 
+    public StringBuilder createSetDTODetailsParameterListDTO(String indent, String prefix, int loopDepth, String currentDTOName, DetailsParameterListDTO dto){
+         StringBuilder result = new StringBuilder();
+         String dtoName;
+         String listName;
+         listName = "list" + getNextListIndex();
+         result.append("\n");
+         if (dto.getItems() != null){
+             result.append(indent + "List<DetailsParameterDTO> " + listName + " = new ArrayList<DetailsParameterDTO>();\n");
+             result.append(indent + prefix + ".setItems(" + listName + ");\n");
+             for (DetailsParameterDTO i : dto.getItems()){
+                 dtoName = "dto" + getNextDTOIndex();
+                 result.append("\n");                 result.append(indent + "DetailsParameterDTO " + dtoName + " = new DetailsParameterDTO();\n");
+                 result.append(indent + listName + ".add(" + dtoName + ");\n");
+                 result.append(createSetDTODetailsParameterDTO(indent, dtoName, loopDepth + 1, dtoName, i));
+                 result.append("\n");             }
+         } else {
+             result.append(indent + prefix + ".setItems(null);\n");
+         }
+         return result;
+    }
+
     public StringBuilder createSetDTOEditStateDTO(String indent, String prefix, int loopDepth, String currentDTOName, EditStateDTO dto){
          StringBuilder result = new StringBuilder();
          String dtoName;
          String listName;
          result.append(indent + prefix + ".setText(" + quoteIfNotNull((String)dto.getText()) + ");\n");
          result.append(indent + prefix + ".setInEditMode(" + dto.getInEditMode() + ");\n");
+         return result;
+    }
+
+    public StringBuilder createSetDTOEditStateListDTO(String indent, String prefix, int loopDepth, String currentDTOName, EditStateListDTO dto){
+         StringBuilder result = new StringBuilder();
+         String dtoName;
+         String listName;
+         listName = "list" + getNextListIndex();
+         result.append("\n");
+         if (dto.getItems() != null){
+             result.append(indent + "List<EditStateDTO> " + listName + " = new ArrayList<EditStateDTO>();\n");
+             result.append(indent + prefix + ".setItems(" + listName + ");\n");
+             for (EditStateDTO i : dto.getItems()){
+                 dtoName = "dto" + getNextDTOIndex();
+                 result.append("\n");                 result.append(indent + "EditStateDTO " + dtoName + " = new EditStateDTO();\n");
+                 result.append(indent + listName + ".add(" + dtoName + ");\n");
+                 result.append(createSetDTOEditStateDTO(indent, dtoName, loopDepth + 1, dtoName, i));
+                 result.append("\n");             }
+         } else {
+             result.append(indent + prefix + ".setItems(null);\n");
+         }
          return result;
     }
 
@@ -107,6 +159,27 @@ public class FLUITestWriter{
          return result;
     }
 
+    public StringBuilder createSetDTOIdAndLabelListListDTO(String indent, String prefix, int loopDepth, String currentDTOName, IdAndLabelListListDTO dto){
+         StringBuilder result = new StringBuilder();
+         String dtoName;
+         String listName;
+         listName = "list" + getNextListIndex();
+         result.append("\n");
+         if (dto.getItems() != null){
+             result.append(indent + "List<IdAndLabelListDTO> " + listName + " = new ArrayList<IdAndLabelListDTO>();\n");
+             result.append(indent + prefix + ".setItems(" + listName + ");\n");
+             for (IdAndLabelListDTO i : dto.getItems()){
+                 dtoName = "dto" + getNextDTOIndex();
+                 result.append("\n");                 result.append(indent + "IdAndLabelListDTO " + dtoName + " = new IdAndLabelListDTO();\n");
+                 result.append(indent + listName + ".add(" + dtoName + ");\n");
+                 result.append(createSetDTOIdAndLabelListDTO(indent, dtoName, loopDepth + 1, dtoName, i));
+                 result.append("\n");             }
+         } else {
+             result.append(indent + prefix + ".setItems(null);\n");
+         }
+         return result;
+    }
+
     public StringBuilder createSetDTOOverviewItemDTO(String indent, String prefix, int loopDepth, String currentDTOName, OverviewItemDTO dto){
          StringBuilder result = new StringBuilder();
          String dtoName;
@@ -114,6 +187,27 @@ public class FLUITestWriter{
          result.append(indent + prefix + ".setId(" + quoteIfNotNull((String)dto.getId()) + ");\n");
          result.append(indent + prefix + ".setLabel(" + quoteIfNotNull((String)dto.getLabel()) + ");\n");
          result.append(indent + prefix + ".setColor(" + quoteIfNotNull((String)dto.getColor()) + ");\n");
+         return result;
+    }
+
+    public StringBuilder createSetDTOOverviewItemListDTO(String indent, String prefix, int loopDepth, String currentDTOName, OverviewItemListDTO dto){
+         StringBuilder result = new StringBuilder();
+         String dtoName;
+         String listName;
+         listName = "list" + getNextListIndex();
+         result.append("\n");
+         if (dto.getItems() != null){
+             result.append(indent + "List<OverviewItemDTO> " + listName + " = new ArrayList<OverviewItemDTO>();\n");
+             result.append(indent + prefix + ".setItems(" + listName + ");\n");
+             for (OverviewItemDTO i : dto.getItems()){
+                 dtoName = "dto" + getNextDTOIndex();
+                 result.append("\n");                 result.append(indent + "OverviewItemDTO " + dtoName + " = new OverviewItemDTO();\n");
+                 result.append(indent + listName + ".add(" + dtoName + ");\n");
+                 result.append(createSetDTOOverviewItemDTO(indent, dtoName, loopDepth + 1, dtoName, i));
+                 result.append("\n");             }
+         } else {
+             result.append(indent + prefix + ".setItems(null);\n");
+         }
          return result;
     }
 
@@ -138,6 +232,27 @@ public class FLUITestWriter{
          return result;
     }
 
+    public StringBuilder createSetDTOOverviewListListDTO(String indent, String prefix, int loopDepth, String currentDTOName, OverviewListListDTO dto){
+         StringBuilder result = new StringBuilder();
+         String dtoName;
+         String listName;
+         listName = "list" + getNextListIndex();
+         result.append("\n");
+         if (dto.getItems() != null){
+             result.append(indent + "List<OverviewListDTO> " + listName + " = new ArrayList<OverviewListDTO>();\n");
+             result.append(indent + prefix + ".setItems(" + listName + ");\n");
+             for (OverviewListDTO i : dto.getItems()){
+                 dtoName = "dto" + getNextDTOIndex();
+                 result.append("\n");                 result.append(indent + "OverviewListDTO " + dtoName + " = new OverviewListDTO();\n");
+                 result.append(indent + listName + ".add(" + dtoName + ");\n");
+                 result.append(createSetDTOOverviewListDTO(indent, dtoName, loopDepth + 1, dtoName, i));
+                 result.append("\n");             }
+         } else {
+             result.append(indent + prefix + ".setItems(null);\n");
+         }
+         return result;
+    }
+
     public StringBuilder createSetDTOOverviewParameterDTO(String indent, String prefix, int loopDepth, String currentDTOName, OverviewParameterDTO dto){
          StringBuilder result = new StringBuilder();
          String dtoName;
@@ -146,39 +261,84 @@ public class FLUITestWriter{
          return result;
     }
 
+    public StringBuilder createSetDTOOverviewParameterListDTO(String indent, String prefix, int loopDepth, String currentDTOName, OverviewParameterListDTO dto){
+         StringBuilder result = new StringBuilder();
+         String dtoName;
+         String listName;
+         listName = "list" + getNextListIndex();
+         result.append("\n");
+         if (dto.getItems() != null){
+             result.append(indent + "List<OverviewParameterDTO> " + listName + " = new ArrayList<OverviewParameterDTO>();\n");
+             result.append(indent + prefix + ".setItems(" + listName + ");\n");
+             for (OverviewParameterDTO i : dto.getItems()){
+                 dtoName = "dto" + getNextDTOIndex();
+                 result.append("\n");                 result.append(indent + "OverviewParameterDTO " + dtoName + " = new OverviewParameterDTO();\n");
+                 result.append(indent + listName + ".add(" + dtoName + ");\n");
+                 result.append(createSetDTOOverviewParameterDTO(indent, dtoName, loopDepth + 1, dtoName, i));
+                 result.append("\n");             }
+         } else {
+             result.append(indent + prefix + ".setItems(null);\n");
+         }
+         return result;
+    }
+
     public StringBuilder createSetDTOObjectCode(String indent, String prefix, int loopDepth, String currentDTOName, Object dto, String className){
         if (className.equals("DetailsParameterDTO")){
             return createSetDTODetailsParameterDTO(indent, prefix, loopDepth, currentDTOName, (DetailsParameterDTO) dto);
+        } else if (className.equals("DetailsParameterListDTO")){
+            return createSetDTODetailsParameterListDTO(indent, prefix, loopDepth, currentDTOName, (DetailsParameterListDTO) dto);
         } else if (className.equals("EditStateDTO")){
             return createSetDTOEditStateDTO(indent, prefix, loopDepth, currentDTOName, (EditStateDTO) dto);
+        } else if (className.equals("EditStateListDTO")){
+            return createSetDTOEditStateListDTO(indent, prefix, loopDepth, currentDTOName, (EditStateListDTO) dto);
         } else if (className.equals("IdAndLabelDTO")){
             return createSetDTOIdAndLabelDTO(indent, prefix, loopDepth, currentDTOName, (IdAndLabelDTO) dto);
         } else if (className.equals("IdAndLabelListDTO")){
             return createSetDTOIdAndLabelListDTO(indent, prefix, loopDepth, currentDTOName, (IdAndLabelListDTO) dto);
+        } else if (className.equals("IdAndLabelListListDTO")){
+            return createSetDTOIdAndLabelListListDTO(indent, prefix, loopDepth, currentDTOName, (IdAndLabelListListDTO) dto);
         } else if (className.equals("OverviewItemDTO")){
             return createSetDTOOverviewItemDTO(indent, prefix, loopDepth, currentDTOName, (OverviewItemDTO) dto);
+        } else if (className.equals("OverviewItemListDTO")){
+            return createSetDTOOverviewItemListDTO(indent, prefix, loopDepth, currentDTOName, (OverviewItemListDTO) dto);
         } else if (className.equals("OverviewListDTO")){
             return createSetDTOOverviewListDTO(indent, prefix, loopDepth, currentDTOName, (OverviewListDTO) dto);
+        } else if (className.equals("OverviewListListDTO")){
+            return createSetDTOOverviewListListDTO(indent, prefix, loopDepth, currentDTOName, (OverviewListListDTO) dto);
         } else if (className.equals("OverviewParameterDTO")){
             return createSetDTOOverviewParameterDTO(indent, prefix, loopDepth, currentDTOName, (OverviewParameterDTO) dto);
+        } else if (className.equals("OverviewParameterListDTO")){
+            return createSetDTOOverviewParameterListDTO(indent, prefix, loopDepth, currentDTOName, (OverviewParameterListDTO) dto);
         }
         return null;
     }
     public Object createDTOInstanceByClassName(String className){
         if (className.equals("DetailsParameterDTO")){
             return new DetailsParameterDTO();
+        } else if (className.equals("DetailsParameterListDTO")){
+            return new DetailsParameterListDTO();
         } else if (className.equals("EditStateDTO")){
             return new EditStateDTO();
+        } else if (className.equals("EditStateListDTO")){
+            return new EditStateListDTO();
         } else if (className.equals("IdAndLabelDTO")){
             return new IdAndLabelDTO();
         } else if (className.equals("IdAndLabelListDTO")){
             return new IdAndLabelListDTO();
+        } else if (className.equals("IdAndLabelListListDTO")){
+            return new IdAndLabelListListDTO();
         } else if (className.equals("OverviewItemDTO")){
             return new OverviewItemDTO();
+        } else if (className.equals("OverviewItemListDTO")){
+            return new OverviewItemListDTO();
         } else if (className.equals("OverviewListDTO")){
             return new OverviewListDTO();
+        } else if (className.equals("OverviewListListDTO")){
+            return new OverviewListListDTO();
         } else if (className.equals("OverviewParameterDTO")){
             return new OverviewParameterDTO();
+        } else if (className.equals("OverviewParameterListDTO")){
+            return new OverviewParameterListDTO();
         }
         return null;
     }
@@ -191,11 +351,11 @@ public class FLUITestWriter{
         } else if (requestData.getAction().equals("onBackPressed")){
             return "createOnBackPressedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("onInputDialogResult")){
-            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + quoteIfNotNull((String)p.get("result")) + ")";
+            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onConfirmDialogResult")){
-            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + p.get("result") + ")";
+            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onListChooserResult")){
-            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + toStringList((List<String>)p.get("selectedIDs")) + ")";
+            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else {
             throw new Exception("Unexpected action: '" + requestData.getAction() + "'");
         }
@@ -205,10 +365,10 @@ public class FLUITestWriter{
         Map<String, Object> p = requestData.getParameters();
         if (requestData.getAction().equals("widgetButtonBackButtonClicked")){
             return "createOnBackButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
-        } else if (requestData.getAction().equals("widgetButtonEditNameButtonClicked")){
-            return "createOnEditNameButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("widgetButtonEditTextButtonClicked")){
             return "createOnEditTextButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
+        } else if (requestData.getAction().equals("widgetButtonEditNameButtonClicked")){
+            return "createOnEditNameButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("widgetButtonDeleteButtonClicked")){
             return "createOnDeleteButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("widgetButtonSaveNoteTextButtonClicked")){
@@ -224,11 +384,11 @@ public class FLUITestWriter{
         } else if (requestData.getAction().equals("onBackPressed")){
             return "createOnBackPressedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("onInputDialogResult")){
-            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + quoteIfNotNull((String)p.get("result")) + ")";
+            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onConfirmDialogResult")){
-            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + p.get("result") + ")";
+            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onListChooserResult")){
-            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + toStringList((List<String>)p.get("selectedIDs")) + ")";
+            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else {
             throw new Exception("Unexpected action: '" + requestData.getAction() + "'");
         }
@@ -241,11 +401,30 @@ public class FLUITestWriter{
         } else if (requestData.getAction().equals("onLoaded")){
             return "createOnLoadedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1_ClientProperties())";
         } else if (requestData.getAction().equals("onInputDialogResult")){
-            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + quoteIfNotNull((String)p.get("result")) + ")";
+            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onConfirmDialogResult")){
-            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + p.get("result") + ")";
+            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onListChooserResult")){
-            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + toStringList((List<String>)p.get("selectedIDs")) + ")";
+            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
+        } else {
+            throw new Exception("Unexpected action: '" + requestData.getAction() + "'");
+        }
+    }
+
+    private String createScreenMarkdownHelpFactoryMethod(int step, FLUIRequest requestData) throws Exception{
+        Map<String, Object> p = requestData.getParameters();
+        if (requestData.getAction().equals("widgetButtonBackButtonClicked")){
+            return "createOnBackButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
+        } else if (requestData.getAction().equals("onLoaded")){
+            return "createOnLoadedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1_ClientProperties(), createStep" + step + "DTO2Parameter())";
+        } else if (requestData.getAction().equals("onBackPressed")){
+            return "createOnBackPressedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
+        } else if (requestData.getAction().equals("onInputDialogResult")){
+            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
+        } else if (requestData.getAction().equals("onConfirmDialogResult")){
+            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
+        } else if (requestData.getAction().equals("onListChooserResult")){
+            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else {
             throw new Exception("Unexpected action: '" + requestData.getAction() + "'");
         }
@@ -260,11 +439,11 @@ public class FLUITestWriter{
         } else if (requestData.getAction().equals("onLoaded")){
             return "createOnLoadedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1_ClientProperties(), createStep" + step + "DTO2Parameter())";
         } else if (requestData.getAction().equals("onInputDialogResult")){
-            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + quoteIfNotNull((String)p.get("result")) + ")";
+            return "createOnInputDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onConfirmDialogResult")){
-            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + p.get("result") + ")";
+            return "createOnConfirmDialogResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else if (requestData.getAction().equals("onListChooserResult")){
-            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", " + quoteIfNotNull((String)p.get("referenceID")) + ", " + toStringList((List<String>)p.get("selectedIDs")) + ")";
+            return "createOnListChooserResultRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ")";
         } else {
             throw new Exception("Unexpected action: '" + requestData.getAction() + "'");
         }
@@ -292,10 +471,10 @@ public class FLUITestWriter{
         StringBuilder result = new StringBuilder();
         if (requestData.getAction().equals("widgetButtonBackButtonClicked")){
             result.append(createScreenDetailsDTO1MethodForActionWidgetButtonBackButtonClicked(step, requestData));
-        } else if (requestData.getAction().equals("widgetButtonEditNameButtonClicked")){
-            result.append(createScreenDetailsDTO1MethodForActionWidgetButtonEditNameButtonClicked(step, requestData));
         } else if (requestData.getAction().equals("widgetButtonEditTextButtonClicked")){
             result.append(createScreenDetailsDTO1MethodForActionWidgetButtonEditTextButtonClicked(step, requestData));
+        } else if (requestData.getAction().equals("widgetButtonEditNameButtonClicked")){
+            result.append(createScreenDetailsDTO1MethodForActionWidgetButtonEditNameButtonClicked(step, requestData));
         } else if (requestData.getAction().equals("widgetButtonDeleteButtonClicked")){
             result.append(createScreenDetailsDTO1MethodForActionWidgetButtonDeleteButtonClicked(step, requestData));
         } else if (requestData.getAction().equals("widgetButtonSaveNoteTextButtonClicked")){
@@ -326,6 +505,24 @@ public class FLUITestWriter{
         if (requestData.getAction().equals("widgetButtonLoginButtonClicked")){
         } else if (requestData.getAction().equals("onLoaded")){
             result.append(createScreenLoginDTO1MethodForActionOnLoaded(step, requestData));
+        } else if (requestData.getAction().equals("onInputDialogResult")){
+        } else if (requestData.getAction().equals("onConfirmDialogResult")){
+        } else if (requestData.getAction().equals("onListChooserResult")){
+        } else {
+            throw new Exception("Unexpected action: '" + requestData.getAction() + "'");
+        }
+        return result;
+    }
+
+    private StringBuilder createScreenMarkdownHelpDTOMethods(int step, FLUIRequest requestData) throws Exception{
+        StringBuilder result = new StringBuilder();
+        if (requestData.getAction().equals("widgetButtonBackButtonClicked")){
+            result.append(createScreenMarkdownHelpDTO1MethodForActionWidgetButtonBackButtonClicked(step, requestData));
+        } else if (requestData.getAction().equals("onLoaded")){
+            result.append(createScreenMarkdownHelpDTO1MethodForActionOnLoaded(step, requestData));
+            result.append(createScreenMarkdownHelpDTO2MethodForActionOnLoaded(step, requestData));
+        } else if (requestData.getAction().equals("onBackPressed")){
+            result.append(createScreenMarkdownHelpDTO1MethodForActionOnBackPressed(step, requestData));
         } else if (requestData.getAction().equals("onInputDialogResult")){
         } else if (requestData.getAction().equals("onConfirmDialogResult")){
         } else if (requestData.getAction().equals("onListChooserResult")){
@@ -438,7 +635,7 @@ public class FLUITestWriter{
         return result;
     }
 
-    private StringBuilder createScreenDetailsDTO1MethodForActionWidgetButtonEditNameButtonClicked(int step, FLUIRequest requestData){
+    private StringBuilder createScreenDetailsDTO1MethodForActionWidgetButtonEditTextButtonClicked(int step, FLUIRequest requestData){
         StringBuilder result = new StringBuilder();
         DetailsParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), DetailsParameterDTO.class);
         String declaration = "private DetailsParameterDTO createStep" + step + "DTO1Parameter()";
@@ -455,7 +652,7 @@ public class FLUITestWriter{
         return result;
     }
 
-    private StringBuilder createScreenDetailsDTO1MethodForActionWidgetButtonEditTextButtonClicked(int step, FLUIRequest requestData){
+    private StringBuilder createScreenDetailsDTO1MethodForActionWidgetButtonEditNameButtonClicked(int step, FLUIRequest requestData){
         StringBuilder result = new StringBuilder();
         DetailsParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), DetailsParameterDTO.class);
         String declaration = "private DetailsParameterDTO createStep" + step + "DTO1Parameter()";
@@ -642,6 +839,74 @@ public class FLUITestWriter{
         return result;
     }
 
+    private StringBuilder createScreenMarkdownHelpDTO1MethodForActionWidgetButtonBackButtonClicked(int step, FLUIRequest requestData){
+        StringBuilder result = new StringBuilder();
+        OverviewParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), OverviewParameterDTO.class);
+        String declaration = "private OverviewParameterDTO createStep" + step + "DTO1Parameter()";
+        if (declaredCreateStepDTOMethods.contains(declaration)){
+            return result;
+        }
+        declaredCreateStepDTOMethods.add(declaration);
+        result.append("    " + declaration + "{\n");
+        result.append("        OverviewParameterDTO result = new OverviewParameterDTO();\n");
+        result.append(createSetDTOOverviewParameterDTO("        ", "result", 0, "result", dto));
+        result.append("        return result;\n");
+        result.append("    }\n");
+        result.append("\n");
+        return result;
+    }
+
+    private StringBuilder createScreenMarkdownHelpDTO1MethodForActionOnLoaded(int step, FLUIRequest requestData){
+        StringBuilder result = new StringBuilder();
+        FLUIClientPropertiesDTO dto = gson.fromJson((String)requestData.getParameters().get("_ClientProperties"), FLUIClientPropertiesDTO.class);
+        String declaration = "private FLUIClientPropertiesDTO createStep" + step + "DTO1_ClientProperties()";
+        if (declaredCreateStepDTOMethods.contains(declaration)){
+            return result;
+        }
+        declaredCreateStepDTOMethods.add(declaration);
+        result.append("    " + declaration + "{\n");
+        result.append("        FLUIClientPropertiesDTO result = new FLUIClientPropertiesDTO();\n");
+        result.append(createSetDTOFLUIClientPropertiesDTO("        ", "result", 0, "result", dto));
+        result.append("        return result;\n");
+        result.append("    }\n");
+        result.append("\n");
+        return result;
+    }
+
+    private StringBuilder createScreenMarkdownHelpDTO2MethodForActionOnLoaded(int step, FLUIRequest requestData){
+        StringBuilder result = new StringBuilder();
+        OverviewParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), OverviewParameterDTO.class);
+        String declaration = "private OverviewParameterDTO createStep" + step + "DTO2Parameter()";
+        if (declaredCreateStepDTOMethods.contains(declaration)){
+            return result;
+        }
+        declaredCreateStepDTOMethods.add(declaration);
+        result.append("    " + declaration + "{\n");
+        result.append("        OverviewParameterDTO result = new OverviewParameterDTO();\n");
+        result.append(createSetDTOOverviewParameterDTO("        ", "result", 0, "result", dto));
+        result.append("        return result;\n");
+        result.append("    }\n");
+        result.append("\n");
+        return result;
+    }
+
+    private StringBuilder createScreenMarkdownHelpDTO1MethodForActionOnBackPressed(int step, FLUIRequest requestData){
+        StringBuilder result = new StringBuilder();
+        OverviewParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), OverviewParameterDTO.class);
+        String declaration = "private OverviewParameterDTO createStep" + step + "DTO1Parameter()";
+        if (declaredCreateStepDTOMethods.contains(declaration)){
+            return result;
+        }
+        declaredCreateStepDTOMethods.add(declaration);
+        result.append("    " + declaration + "{\n");
+        result.append("        OverviewParameterDTO result = new OverviewParameterDTO();\n");
+        result.append(createSetDTOOverviewParameterDTO("        ", "result", 0, "result", dto));
+        result.append("        return result;\n");
+        result.append("    }\n");
+        result.append("\n");
+        return result;
+    }
+
     private StringBuilder createScreenOverviewDTO1MethodForActionWidgetButtonMenuButtonClicked(int step, FLUIRequest requestData){
         StringBuilder result = new StringBuilder();
         OverviewParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), OverviewParameterDTO.class);
@@ -736,18 +1001,26 @@ public class FLUITestWriter{
     public StringBuilder generateImports(){
         StringBuilder result = new StringBuilder();
         result.append("import generated.fliesenui.dto.DetailsParameterDTO;\n");
+        result.append("import generated.fliesenui.dto.DetailsParameterListDTO;\n");
         result.append("import generated.fliesenui.dto.EditStateDTO;\n");
+        result.append("import generated.fliesenui.dto.EditStateListDTO;\n");
         result.append("import generated.fliesenui.dto.IdAndLabelDTO;\n");
         result.append("import generated.fliesenui.dto.IdAndLabelListDTO;\n");
+        result.append("import generated.fliesenui.dto.IdAndLabelListListDTO;\n");
         result.append("import generated.fliesenui.dto.OverviewItemDTO;\n");
+        result.append("import generated.fliesenui.dto.OverviewItemListDTO;\n");
         result.append("import generated.fliesenui.dto.OverviewListDTO;\n");
+        result.append("import generated.fliesenui.dto.OverviewListListDTO;\n");
         result.append("import generated.fliesenui.dto.OverviewParameterDTO;\n");
+        result.append("import generated.fliesenui.dto.OverviewParameterListDTO;\n");
         result.append("import generated.fliesenui.screen.AboutRequest;\n");
         result.append("import generated.fliesenui.screen.AboutReply;\n");
         result.append("import generated.fliesenui.screen.DetailsRequest;\n");
         result.append("import generated.fliesenui.screen.DetailsReply;\n");
         result.append("import generated.fliesenui.screen.LoginRequest;\n");
         result.append("import generated.fliesenui.screen.LoginReply;\n");
+        result.append("import generated.fliesenui.screen.MarkdownHelpRequest;\n");
+        result.append("import generated.fliesenui.screen.MarkdownHelpReply;\n");
         result.append("import generated.fliesenui.screen.OverviewRequest;\n");
         result.append("import generated.fliesenui.screen.OverviewReply;\n");
          return result;
@@ -758,6 +1031,7 @@ public class FLUITestWriter{
         result.append("        screenManager.setAboutPresenter(/* TODO: Add presenter About*/);\n");
         result.append("        screenManager.setDetailsPresenter(/* TODO: Add presenter Details*/);\n");
         result.append("        screenManager.setLoginPresenter(/* TODO: Add presenter Login*/);\n");
+        result.append("        screenManager.setMarkdownHelpPresenter(/* TODO: Add presenter MarkdownHelp*/);\n");
         result.append("        screenManager.setOverviewPresenter(/* TODO: Add presenter Overview*/);\n");
          return result;
     }

@@ -10,58 +10,41 @@ import com.bright_side_it.fonotes.android.base.AndroidPlatform;
 import com.bright_side_it.fonotes.android.base.FonotesAndroidBase;
 import com.bright_side_it.fonotes.android.service.WebServerService;
 
-import generated.fliesenui.core.FLUIAndroidWebView;
+import generated.fliesenui.core.FLUIAndroidDisplayActivity;
+import generated.fliesenui.core.FLUIScreenManagerAndroid;
 
-public class MainActivity extends AppCompatActivity {
-
-	private AndroidPlatform platform = null;
-	private FLUIAndroidWebView webView;
+public class MainActivity extends FLUIAndroidDisplayActivity {
+	private AndroidPlatform platform = new AndroidPlatform(this);
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		platform = new AndroidPlatform(this);
-		try{
-			super.onCreate(savedInstanceState);
-			getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-			getSupportActionBar().hide();
-			webView = new FLUIAndroidWebView(this);
-			webView.onCreate(this, FonotesAndroidBase.createScreenManager(this, platform, null, true));
-			setContentView(webView);
-		} catch (Throwable t){
-			handleError(t);
+	protected void fluiOnCreate(Bundle savedInstanceState) {
+	}
+
+	@Override
+	protected FLUIScreenManagerAndroid fluiCreateScreenManager() {
+		return FonotesAndroidBase.createScreenManager(this, platform, null, true);
+	}
+
+	@Override
+	protected void fluiOnResume() throws Throwable{
+		if (WebServerService.isWebServerRunning()) {
+			startActivity(new Intent(this, WebServerActivity.class));
+			finish();
+			return;
+		}
+		if (!PermissionsActivity.arePermissionsGranted(this)) {
+			startActivity(new Intent(this, PermissionsActivity.class));
+			finish();
+			return;
 		}
 	}
 
 	@Override
-	protected void onResume() {
-		try {
-			super.onResume();
-			if (WebServerService.isWebServerRunning()) {
-				startActivity(new Intent(this, WebServerActivity.class));
-				finish();
-				return;
-			}
-			if (!PermissionsActivity.arePermissionsGranted(this)) {
-				startActivity(new Intent(this, PermissionsActivity.class));
-				finish();
-				return;
-			}
-		} catch (Throwable t){
-			handleError(t);
-		}
-	}
-
-	private void handleError(Throwable t) {
-		Log.e("Fonotes", "Error: " + t, t);
+	protected void fluiOnError(Throwable throwable) {
+		Log.e("Fonotes", "Error: " + throwable, throwable);
 		if (platform != null){
-			platform.handleError(new Exception("General error occured in main activity", t));
+			platform.handleError(new Exception("General error occured in main activity", throwable));
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		if (webView != null){
-			webView.fireEventOnBackPressed();
-		}
-	}
 }

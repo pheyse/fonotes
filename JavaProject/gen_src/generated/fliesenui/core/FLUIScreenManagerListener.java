@@ -18,4 +18,9 @@ public interface FLUIScreenManagerListener {
 	FLUIImageStream getCustomImageStream(String imageStreamID);
 
 	FLUIFileStream getFileStream(String fileStreamID);
+	
+	/**
+	 * if the screenErrorHandler in the project definition is set to 'screenManager' this method is called when errors occur
+	 */
+	void onScreenError(FLUIAbstractReply reply, Throwable error, FLUIRequest request);
 }

@@ -3,7 +3,8 @@ package generated.fliesenui.core;
 public class FLUIImageAssets {
 
 public enum ImageAsset {
-;
+        BACK("back", "back.png")
+      , DELETE("delete", "delete.png");
 
         private String id;
         private String filename;

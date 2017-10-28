@@ -3,7 +3,7 @@ package generated.fliesenui.core;
 import java.util.List;
 
 public class FLUIReplyAction {
-	public enum ReplyActionType{DEFAULT, SHOW_LIST_CHOOSER_IMGS, SHOW_LIST_CHOOSER_TEXTS, OPEN_SCREEN, SET_DTO, SET_IMAGE_ASSET, SET_HIGHLIGHTINGS, SET_CONTEXT_ASSIST}
+	public enum ReplyActionType{DEFAULT, SHOW_LIST_CHOOSER_IMGS, SHOW_LIST_CHOOSER_TEXTS, OPEN_SCREEN, SET_DTO, SET_IMAGE_ASSET, SET_HIGHLIGHTINGS, SET_CONTEXT_ASSIST, SET_TABLE_CHECKED_ROW_IDS}
 	
 	private ReplyActionType actionType;
 	private String code;

@@ -45,7 +45,7 @@ public class DirNamesLogicTest {
 		String encodedName = logic.toFilename(originalName);
 		verifyAllowedChars(encodedName);
 		System.out.println("test_simple: encodedName = '" + encodedName + "'");
-		String decodedName = logic.toText(encodedName);
+		String decodedName = logic.filenameToText(encodedName);
 		assertEquals(originalName, decodedName);
 	}
 
@@ -57,7 +57,7 @@ public class DirNamesLogicTest {
 		String encodedName = logic.toFilename(originalName);
 		verifyAllowedChars(encodedName);
 		System.out.println("test_plus: encodedName = '" + encodedName + "'");
-		String decodedName = logic.toText(encodedName);
+		String decodedName = logic.filenameToText(encodedName);
 		assertEquals(originalName, decodedName);
 	}
 
@@ -68,7 +68,7 @@ public class DirNamesLogicTest {
 		String encodedName = logic.toFilename(originalName);
 		verifyAllowedChars(encodedName);
 		System.out.println("test_plus: encodedName = '" + encodedName + "'");
-		String decodedName = logic.toText(encodedName);
+		String decodedName = logic.filenameToText(encodedName);
 		assertEquals(originalName, decodedName);
 	}
 	
@@ -79,7 +79,7 @@ public class DirNamesLogicTest {
 		String encodedName = logic.toFilename(originalName);
 		verifyAllowedChars(encodedName);
 		System.out.println("test_complex: encodedName = '" + encodedName + "'");
-		String decodedName = logic.toText(encodedName);
+		String decodedName = logic.filenameToText(encodedName);
 		assertEquals(originalName, decodedName);
 	}
 	

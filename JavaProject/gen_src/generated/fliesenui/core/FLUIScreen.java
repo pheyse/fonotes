@@ -6,5 +6,5 @@ public interface FLUIScreen {
 
 	String getID();
 	
-	FLUIAbstractReply onFLUIRequest(boolean recordMode, FLUIRequest request, String uploadedFileName, InputStream uploadedFileInputStream) throws Exception;
+	FLUIAbstractReply onFLUIRequest(FLUIScreenManagerInterface manager, boolean recordMode, FLUIRequest request, String uploadedFileName, InputStream uploadedFileInputStream) throws Exception;
 }

@@ -12,12 +12,29 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.AboutView;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.AboutListener;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.AboutDisplay;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.AboutDisplayController;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.AboutDisplayEventHandler;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.DetailsView;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.DetailsListener;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.DetailsDisplay;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.DetailsDisplayController;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.DetailsDisplayEventHandler;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.LoginView;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.LoginListener;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.LoginDisplay;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.LoginDisplayController;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.LoginDisplayEventHandler;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpView;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpListener;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpDisplay;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpDisplayController;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpDisplayEventHandler;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewView;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewListener;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewDisplay;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewDisplayController;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewDisplayEventHandler;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ public class FLUIScreenManager implements FLUIScreenManagerInterface{
 /*Generated! Do not modify!*/ 
@@ -32,6 +49,7 @@
 /*Generated! Do not modify!*/     private FLUIActionRecording actionRecording;
 /*Generated! Do not modify!*/     private FLUIWebCallHandler fluiWebCallHandler = new FLUIWebCallHandler(this);
 /*Generated! Do not modify!*/     private Map<String, FLUIScreen> screenIDToViewMap = new TreeMap<String, FLUIScreen>();
+/*Generated! Do not modify!*/     private Map<String, FLUIDisplayController> screenIDToDisplayControllerMap = new TreeMap<String, FLUIDisplayController>();
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private FLUIScreenManager() {
 /*Generated! Do not modify!*/     }
@@ -77,6 +95,31 @@
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/     public boolean isSinglePageApp() {
 /*Generated! Do not modify!*/         return singlePageApp;
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setAboutDisplay(AboutDisplay display) {
+/*Generated! Do not modify!*/         screenIDToDisplayControllerMap.put("about", new AboutDisplayController(display));
+/*Generated! Do not modify!*/         display.setEventHandler(new AboutDisplayEventHandler(this));
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setDetailsDisplay(DetailsDisplay display) {
+/*Generated! Do not modify!*/         screenIDToDisplayControllerMap.put("details", new DetailsDisplayController(display));
+/*Generated! Do not modify!*/         display.setEventHandler(new DetailsDisplayEventHandler(this));
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setLoginDisplay(LoginDisplay display) {
+/*Generated! Do not modify!*/         screenIDToDisplayControllerMap.put("login", new LoginDisplayController(display));
+/*Generated! Do not modify!*/         display.setEventHandler(new LoginDisplayEventHandler(this));
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setMarkdownHelpDisplay(MarkdownHelpDisplay display) {
+/*Generated! Do not modify!*/         screenIDToDisplayControllerMap.put("markdownHelp", new MarkdownHelpDisplayController(display));
+/*Generated! Do not modify!*/         display.setEventHandler(new MarkdownHelpDisplayEventHandler(this));
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setOverviewDisplay(OverviewDisplay display) {
+/*Generated! Do not modify!*/         screenIDToDisplayControllerMap.put("overview", new OverviewDisplayController(display));
+/*Generated! Do not modify!*/         display.setEventHandler(new OverviewDisplayEventHandler(this));
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public FLUIImageStream getCustomImageStream(String imageStreamID) {
@@ -223,13 +266,22 @@
 /*Generated! Do not modify!*/         screenIDToViewMap.put("login", new LoginView(presenter));
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setMarkdownHelpPresenter(MarkdownHelpListener presenter) {
+/*Generated! Do not modify!*/         screenIDToViewMap.put("markdownHelp", new MarkdownHelpView(presenter));
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void setOverviewPresenter(OverviewListener presenter) {
 /*Generated! Do not modify!*/         screenIDToViewMap.put("overview", new OverviewView(presenter));
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     private void reply(String screenID, String json) {
+/*Generated! Do not modify!*/     private void reply(String screenID, String replyDTOJSON, FLUIAbstractReply reply) {
+/*Generated! Do not modify!*/         FLUIDisplayController displayController = screenIDToDisplayControllerMap.get(screenID);
+/*Generated! Do not modify!*/         if (displayController != null){
+/*Generated! Do not modify!*/             displayController.processReply(reply.getReplyDTO());
+/*Generated! Do not modify!*/             return;
+/*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/         if (webView != null){
-/*Generated! Do not modify!*/             webView.executeWithResultString(screenID + "$processReply(\"" + FLUIUtil.reescapeEscapeCharacters(json) + "\");");
+/*Generated! Do not modify!*/             webView.executeWithResultString(screenID + "$processReply(\"" + FLUIUtil.reescapeEscapeCharacters(replyDTOJSON) + "\");");
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
@@ -242,9 +294,9 @@
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             listener.onRequest(request);
 /*Generated! Do not modify!*/             FLUIScreen view = screenIDToViewMap.get(request.getScreenID());
-/*Generated! Do not modify!*/             FLUIAbstractReply reply;
+/*Generated! Do not modify!*/             FLUIAbstractReply reply = null;
 /*Generated! Do not modify!*/             if (view != null){
-/*Generated! Do not modify!*/                 reply = view.onFLUIRequest(recording, request, uploadFileName, uploadFileInputStream);
+/*Generated! Do not modify!*/                 reply = view.onFLUIRequest(this, recording, request, uploadFileName, uploadFileInputStream);
 /*Generated! Do not modify!*/                 if (reply != null){
 /*Generated! Do not modify!*/                     replyJSON = new Gson().toJson(reply.getReplyDTO());
 /*Generated! Do not modify!*/                     if (recording){;
@@ -254,7 +306,7 @@
 /*Generated! Do not modify!*/                 }
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             if (replyJSON != null){
-/*Generated! Do not modify!*/                 reply(request.getScreenID(), replyJSON);
+/*Generated! Do not modify!*/                 reply(request.getScreenID(), replyJSON, reply);
 /*Generated! Do not modify!*/             } else {
 /*Generated! Do not modify!*/                 listener.onWarning(new Exception("No presenter defined for screen '" + request.getScreenID() + "'"));
 /*Generated! Do not modify!*/             }

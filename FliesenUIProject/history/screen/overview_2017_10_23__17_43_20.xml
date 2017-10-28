@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="Overview" parameterDTO="parameter">
+    <dto id="parameter" type="overviewParameter" />
+    <dto id="items" type="overviewList" /> 
+	<container orientation="border">
+		<bar position="top">
+            <cell size="5" />
+			<cell size="75">
+				<label id="info" text="Fonotes - Phone Notes" style="medium"/>
+			</cell>
+            <cell size="20">
+                <button id="menuButton" text="Menu">
+                    <eventParameter value="parameter" />
+                </button>
+			</cell>
+		</bar>
+        <bar id="sortInfoBar" >
+            <cell size="5" />
+            <cell size="95">
+                <label id="sortInfoText" text=""/>
+			</cell>
+		</bar>
+        <bar id="colorFilterInfoBar" visible="false">
+            <cell size="5" />
+            <cell size="95">
+                <label id="colorFilterInfoText" text=""/>
+			</cell>
+		</bar>
+        <bar position="center">
+            <cell size="5" />
+            <cell size="95">
+                <table id="notesTable" dto="items.items" idDTOField="id" style="normal" backgroundColorDTOField="color" showColumnHeaders="false">
+                    <column size="100" text="Note">
+                        <tableLabel textDTOField="label" />
+                    </column>
+                    <eventParameter value="parameter" />
+                </table>
+            </cell>
+        </bar>
+    </container>
+</screen>

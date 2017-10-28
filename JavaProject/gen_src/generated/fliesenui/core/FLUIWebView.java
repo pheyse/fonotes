@@ -42,6 +42,8 @@ public class FLUIWebView extends Region {
 	private FLUIScreenManager screenManager;
 	private boolean singlePageApp = false;
 	private boolean externalURL = false;
+	private WebViewCommandHandler webViewCommandHandler = null;
+	private Console console;
 
     protected FLUIWebView(Window stage, int width, int height, FLUIScreenManager screenManager) {
         this.width = width;
@@ -82,9 +84,11 @@ public class FLUIWebView extends Region {
                 		}
                 	}
                 	                	
+                 	webViewCommandHandler = new WebViewCommandHandler(stage);
+					console = new Console();
                     JSObject win = (JSObject) webEngine.executeScript("window");
-                    win.setMember("console", new Console());
-                    win.setMember("webView", new WebViewCommandHandler(stage));
+                    win.setMember("console", console);
+					win.setMember("webView", webViewCommandHandler);
                     win.setMember("screenManager", screenManager);
                     if (currentScreenID != null) {
                     	log("calling executeOnLoadWhenControllerIsReady");
@@ -152,6 +156,17 @@ public class FLUIWebView extends Region {
     public String executeWithResultString(String command) throws FLUIScriptException {
         log("Executing command >>" + command + "<<");
         try {
+        	
+
+        	try{
+            	//: if console and webView are not set again, the methods are recognized (no error thrown) in JavaScript, but not called!
+                JSObject win = (JSObject) webEngine.executeScript("window");
+                win.setMember("console", console); 
+    			win.setMember("webView", webViewCommandHandler);
+        	} catch (Exception warning){
+        		log("Warning: " + new Exception("Warning: error while setting console and webView (again): " + warning));
+        	}
+        	
             Object result = webEngine.executeScript(command);
             return (String) result;
         } catch (netscape.javascript.JSException e) {
@@ -190,6 +205,7 @@ public class FLUIWebView extends Region {
 		}
 		
 		public double getAvailWidth(){
+			logDebug("Hello??? getAvailWidth");
 			 return java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
 		}
 
@@ -238,6 +254,10 @@ public class FLUIWebView extends Region {
     	    	}
     	    	screenManager.onRequest(uploadFinishedRequestJSON, null, null);
     		}
+    	}
+    	
+    	public void logDebug(String message){
+    		System.out.println("FLUIWebView-LogDebug> " + message);
     	}
     	
     	public void downloadFile(String fileStreamID){

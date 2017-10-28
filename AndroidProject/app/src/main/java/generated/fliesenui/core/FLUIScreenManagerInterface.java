@@ -5,6 +5,7 @@
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.AboutListener;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.DetailsListener;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.LoginListener;
+/*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpListener;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewListener;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ public interface FLUIScreenManagerInterface {
@@ -18,6 +19,7 @@
 /*Generated! Do not modify!*/     void setAboutPresenter(AboutListener presenter);
 /*Generated! Do not modify!*/     void setDetailsPresenter(DetailsListener presenter);
 /*Generated! Do not modify!*/     void setLoginPresenter(LoginListener presenter);
+/*Generated! Do not modify!*/     void setMarkdownHelpPresenter(MarkdownHelpListener presenter);
 /*Generated! Do not modify!*/     void setOverviewPresenter(OverviewListener presenter);
 /*Generated! Do not modify!*/ }
 /*Generated! Do not modify!*/ 

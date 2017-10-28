@@ -42,7 +42,7 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
          );
      }
     }
-    $scope.showInputDialog = function(referenceID, title, textContent, label, initialValueText, okText, cancelText) {
+    $scope.showInputDialog = function(referenceID, callbackData, title, textContent, label, initialValueText, okText, cancelText) {
         var confirm = $mdDialog.prompt()
           .title(title)
           .textContent(textContent)
@@ -55,6 +55,7 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         $mdDialog.show(confirm).then(function(result) {
             var request = login$createRequest("onInputDialogResult");
             request.parameters["referenceID"] = referenceID;
+            request.parameters["callbackData"] = callbackData;
             if (typeof result != "undefined"){
                 request.parameters["result"] = result;
                 login$executeRequest(request);
@@ -65,11 +66,12 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         }, function() {
             var request = login$createRequest("onInputDialogResult");
             request.parameters["referenceID"] = referenceID;
+            request.parameters["callbackData"] = callbackData;
             login$executeRequest(request);
         });
     };
 
-    $scope.showConfirm = function(referenceID, title, textContent, okText, cancelText) {
+    $scope.showConfirm = function(referenceID, callbackData, title, textContent, okText, cancelText) {
         var confirm = $mdDialog.confirm()
               .title(title)
               .textContent(textContent)
@@ -81,17 +83,20 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
             var request = login$createRequest("onConfirmDialogResult");
             request.parameters["referenceID"] = referenceID;
             request.parameters["result"] = true;
+            request.parameters["callbackData"] = callbackData;
             login$executeRequest(request);
         }, function() {
             var request = login$createRequest("onConfirmDialogResult");
             request.parameters["referenceID"] = referenceID;
             request.parameters["result"] = false;
+            request.parameters["callbackData"] = callbackData;
             login$executeRequest(request);
         });
     };
 
     $scope.showListChooser = function(parameter){
     	$scope.listChooserReferenceID = parameter.referenceID;
+    	$scope.listChooserCallbackData = parameter.callbackData;
     	$scope.listChooserTitle = parameter.title;
     	$scope.listChooserMultiselect = parameter.multiSelect;
     	$scope.listChooserShowIcons = parameter.showIcons;
@@ -109,7 +114,7 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
             clickOutsideToClose:true,
             template:
 			     '<md-dialog aria-label="{{listChooserTitle}}" style="width: 80%;height: 80%;">'
-               + '  <form ng-cloak>'
+               + '  <form ng-cloak style="background-color: grey;">'
                + '    <md-toolbar>'
                + '      <div class="md-toolbar-tools">'
                + '        <h2>{{listChooserTitle}}</h2>'
@@ -146,7 +151,7 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
                + '      <md-button ng-click="cancel();">'
                + '       {{listChooserCancelText}}'
                + '      </md-button>'
-               + '      <md-button ng-click="listChooser_okClicked();hide();" ng-visible="listChooserMultiselect">'
+               + '      <md-button ng-click="hide();listChooser_okClicked();" ng-visible="listChooserMultiselect">'
                + '        {{listChooserOKText}}'
                + '      </md-button>'
                + '    </md-dialog-actions>'
@@ -184,8 +189,8 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
     	            //: select item
         	        item.selected = !item.selected;
         	        	  
-        	        $scope.listChooser_okClicked();        		  
     	        	$mdDialog.hide("");
+        	        $scope.listChooser_okClicked();        		  
     	        }
     	    }
         };
@@ -204,6 +209,7 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         console.log("selected ids: " + selectedIDs);
         var request = login$createRequest("onListChooserResult");
         request.parameters["referenceID"] = $scope.listChooserReferenceID;
+        request.parameters["callbackData"] = $scope.listChooserCallbackData;
         request.parameters["selectedIDs"] = selectedIDs;
         login$executeRequest(request);
     }
@@ -212,6 +218,7 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
 	    console.log("list chooser: cancelled");
         var request = login$createRequest("onListChooserResult");
         request.parameters["referenceID"] = $scope.listChooserReferenceID;
+        request.parameters["callbackData"] = $scope.listChooserCallbackData;
         request.parameters["selectedIDs"] = null;
         login$executeRequest(request);
     }
@@ -251,6 +258,8 @@ var login$setInitialValues = function(){
 
 var login$createImageAssetIDToNameMap = function(){
     result = new Object();
+    result["back"] = "back.png";
+    result["delete"] = "delete.png";
     return result;
 }
 
@@ -348,10 +357,40 @@ login$initDTOTypeDetailsParameterForPreview = function(index){
     result.password = "5678" + "(" + index + ")";
     return result;
 };
+login$initDTOTypeDetailsParameterListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = login$initDTOTypeDetailsParameterForPreview(0);
+    result.items[1] = login$initDTOTypeDetailsParameterForPreview(1);
+    result.items[2] = login$initDTOTypeDetailsParameterForPreview(2);
+    result.items[3] = login$initDTOTypeDetailsParameterForPreview(3);
+    result.items[4] = login$initDTOTypeDetailsParameterForPreview(4);
+    result.items[5] = login$initDTOTypeDetailsParameterForPreview(5);
+    result.items[6] = login$initDTOTypeDetailsParameterForPreview(6);
+    result.items[7] = login$initDTOTypeDetailsParameterForPreview(7);
+    result.items[8] = login$initDTOTypeDetailsParameterForPreview(8);
+    result.items[9] = login$initDTOTypeDetailsParameterForPreview(9);
+    return result;
+};
 login$initDTOTypeEditStateForPreview = function(index){
     var result = new Object();
     result.text = "hello" + "(" + index + ")";
     result.inEditMode = true;
+    return result;
+};
+login$initDTOTypeEditStateListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = login$initDTOTypeEditStateForPreview(0);
+    result.items[1] = login$initDTOTypeEditStateForPreview(1);
+    result.items[2] = login$initDTOTypeEditStateForPreview(2);
+    result.items[3] = login$initDTOTypeEditStateForPreview(3);
+    result.items[4] = login$initDTOTypeEditStateForPreview(4);
+    result.items[5] = login$initDTOTypeEditStateForPreview(5);
+    result.items[6] = login$initDTOTypeEditStateForPreview(6);
+    result.items[7] = login$initDTOTypeEditStateForPreview(7);
+    result.items[8] = login$initDTOTypeEditStateForPreview(8);
+    result.items[9] = login$initDTOTypeEditStateForPreview(9);
     return result;
 };
 login$initDTOTypeIdAndLabelForPreview = function(index){
@@ -375,11 +414,41 @@ login$initDTOTypeIdAndLabelListForPreview = function(index){
     result.items[9] = login$initDTOTypeIdAndLabelForPreview(9);
     return result;
 };
+login$initDTOTypeIdAndLabelListListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = login$initDTOTypeIdAndLabelListForPreview(0);
+    result.items[1] = login$initDTOTypeIdAndLabelListForPreview(1);
+    result.items[2] = login$initDTOTypeIdAndLabelListForPreview(2);
+    result.items[3] = login$initDTOTypeIdAndLabelListForPreview(3);
+    result.items[4] = login$initDTOTypeIdAndLabelListForPreview(4);
+    result.items[5] = login$initDTOTypeIdAndLabelListForPreview(5);
+    result.items[6] = login$initDTOTypeIdAndLabelListForPreview(6);
+    result.items[7] = login$initDTOTypeIdAndLabelListForPreview(7);
+    result.items[8] = login$initDTOTypeIdAndLabelListForPreview(8);
+    result.items[9] = login$initDTOTypeIdAndLabelListForPreview(9);
+    return result;
+};
 login$initDTOTypeOverviewItemForPreview = function(index){
     var result = new Object();
     result.id = "ID" + "(" + index + ")";
     result.label = "My Notes" + "(" + index + ")";
     result.color = "#ff0000" + "(" + index + ")";
+    return result;
+};
+login$initDTOTypeOverviewItemListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = login$initDTOTypeOverviewItemForPreview(0);
+    result.items[1] = login$initDTOTypeOverviewItemForPreview(1);
+    result.items[2] = login$initDTOTypeOverviewItemForPreview(2);
+    result.items[3] = login$initDTOTypeOverviewItemForPreview(3);
+    result.items[4] = login$initDTOTypeOverviewItemForPreview(4);
+    result.items[5] = login$initDTOTypeOverviewItemForPreview(5);
+    result.items[6] = login$initDTOTypeOverviewItemForPreview(6);
+    result.items[7] = login$initDTOTypeOverviewItemForPreview(7);
+    result.items[8] = login$initDTOTypeOverviewItemForPreview(8);
+    result.items[9] = login$initDTOTypeOverviewItemForPreview(9);
     return result;
 };
 login$initDTOTypeOverviewListForPreview = function(index){
@@ -397,9 +466,39 @@ login$initDTOTypeOverviewListForPreview = function(index){
     result.items[9] = login$initDTOTypeOverviewItemForPreview(9);
     return result;
 };
+login$initDTOTypeOverviewListListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = login$initDTOTypeOverviewListForPreview(0);
+    result.items[1] = login$initDTOTypeOverviewListForPreview(1);
+    result.items[2] = login$initDTOTypeOverviewListForPreview(2);
+    result.items[3] = login$initDTOTypeOverviewListForPreview(3);
+    result.items[4] = login$initDTOTypeOverviewListForPreview(4);
+    result.items[5] = login$initDTOTypeOverviewListForPreview(5);
+    result.items[6] = login$initDTOTypeOverviewListForPreview(6);
+    result.items[7] = login$initDTOTypeOverviewListForPreview(7);
+    result.items[8] = login$initDTOTypeOverviewListForPreview(8);
+    result.items[9] = login$initDTOTypeOverviewListForPreview(9);
+    return result;
+};
 login$initDTOTypeOverviewParameterForPreview = function(index){
     var result = new Object();
     result.password = "1234" + "(" + index + ")";
+    return result;
+};
+login$initDTOTypeOverviewParameterListForPreview = function(index){
+    var result = new Object();
+    result.items = [];
+    result.items[0] = login$initDTOTypeOverviewParameterForPreview(0);
+    result.items[1] = login$initDTOTypeOverviewParameterForPreview(1);
+    result.items[2] = login$initDTOTypeOverviewParameterForPreview(2);
+    result.items[3] = login$initDTOTypeOverviewParameterForPreview(3);
+    result.items[4] = login$initDTOTypeOverviewParameterForPreview(4);
+    result.items[5] = login$initDTOTypeOverviewParameterForPreview(5);
+    result.items[6] = login$initDTOTypeOverviewParameterForPreview(6);
+    result.items[7] = login$initDTOTypeOverviewParameterForPreview(7);
+    result.items[8] = login$initDTOTypeOverviewParameterForPreview(8);
+    result.items[9] = login$initDTOTypeOverviewParameterForPreview(9);
     return result;
 };
 
@@ -512,6 +611,13 @@ login$processReply = function(jsonString){
         this[textEditorName].showHint({hint:function(){return hintValue;}});
     }
 
+    for (key in reply.tableCheckedRowIDs){
+        scope[key] = new Object();
+        for (i in reply.tableCheckedRowIDs[key]){
+            scope[key][reply.tableCheckedRowIDs[key][i]] = true;
+        }
+    }
+
     var screenToOpen = reply.screenToOpen;
     if (typeof screenToOpen != "undefined") {
         login$openScreen(screenToOpen, reply.openParameter);
@@ -540,12 +646,12 @@ login$processReply = function(jsonString){
 
     var inputDialogParameters = reply.inputDialogParameters;
     if (typeof inputDialogParameters != "undefined") {
-        scope.showInputDialog(inputDialogParameters.referenceID, inputDialogParameters.title, inputDialogParameters.textContent, inputDialogParameters.label, inputDialogParameters.initialValueText, inputDialogParameters.okText, inputDialogParameters.cancelText);
+        scope.showInputDialog(inputDialogParameters.referenceID, inputDialogParameters.callbackData, inputDialogParameters.title, inputDialogParameters.textContent, inputDialogParameters.label, inputDialogParameters.initialValueText, inputDialogParameters.okText, inputDialogParameters.cancelText);
     }
 
     var confirmDialogParameters = reply.confirmDialogParameters;
     if (typeof confirmDialogParameters != "undefined") {
-        scope.showConfirm(confirmDialogParameters.referenceID, confirmDialogParameters.title, confirmDialogParameters.textContent, confirmDialogParameters.okText, confirmDialogParameters.cancelText);
+        scope.showConfirm(confirmDialogParameters.referenceID, confirmDialogParameters.callbackData, confirmDialogParameters.title, confirmDialogParameters.textContent, confirmDialogParameters.okText, confirmDialogParameters.cancelText);
     }
     if (typeof reply.listChooserParameters != "undefined") {
         scope.showListChooser(reply.listChooserParameters);

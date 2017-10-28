@@ -297,7 +297,7 @@ public class DetailsPresenter implements DetailsListener{
 
 	@Override
 	public void onAutosaveTimer(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText, EditStateDTO editState) {
-//		log("onAutosaveTimer");
+		log("onAutosaveTimer");
 		if (!verifyParameterPassword(reply, parameter)){
 			return;
 		}

@@ -43,4 +43,20 @@ public class SimpleManagerListener implements FLUIScreenManagerListener{
 	public void onWebViewConsoleLog(String message) {
 		System.out.println("FLUIManager WebView JS Console>" + message);		
 	}
+
+	@Override
+	public void onScreenError(FLUIAbstractReply reply, Throwable error, FLUIRequest request) {
+		System.err.println("Screen error occurred");
+		if (request != null){
+			System.err.println(" screen = '" + request.getScreenID() + "', action = '" + request.getAction() + "', language = '" + request.getCurrentLanguage() + "'");
+		}
+		if (error != null){
+			error.printStackTrace();
+		} else {
+			System.err.println("error was null");
+		}
+		if (reply != null){
+		    reply.setErrorDialog("Error in screen", "Error: " + error);
+		}
+	}
 }

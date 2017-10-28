@@ -14,6 +14,7 @@ public class FLUIReplyDTO {
     private Map<String, Object> dtoValues;
     private Map<String, Object> objectSetValueValues;
     private Map<String, String> selectBoxSelectedIDs;
+    private Map<String, Set<String>> tableCheckedRowIDs;
     private Map<String, String> markdownViewTexts;
     private Map<String, List<TextHighlighting>> textHighlighting;
     private Map<String, CursorPos> cursorPosValues;
@@ -225,5 +226,13 @@ public class FLUIReplyDTO {
 	public void setRecordedActions(List<FLUIReplyAction> recordedActions) {
 		this.recordedActions = recordedActions;
 	}
-	
+
+	public Map<String, Set<String>> getTableCheckedRowIDs() {
+		return tableCheckedRowIDs;
+	}
+
+	public void setTableCheckedRowIDs(Map<String, Set<String>> tableCheckedRowIDs) {
+		this.tableCheckedRowIDs = tableCheckedRowIDs;
+	}
+
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="My Screen" parameterDTO="parameter">
+    <listenToBackAction>
+        <eventParameter value="parameter"/>
+    </listenToBackAction>
+    <dto id="parameter" type="overviewParameter" />
+	<container orientation="row">
+        		<bar>
+			<cell size="15">
+				<button id="backButton" text="" imageAssetID="back">
+                    <eventParameter value="parameter" />
+                </button>
+			</cell>
+			<cell size="85">
+				<label id="info" text="About Fonotes" style="large"/>
+			</cell>
+		</bar>
+		<bar>
+            <cell size="5" />
+			<cell size="95">
+				<markdownView id="aboutText" text="..."/>
+			</cell>
+		</bar>
+    </container>
+</screen>

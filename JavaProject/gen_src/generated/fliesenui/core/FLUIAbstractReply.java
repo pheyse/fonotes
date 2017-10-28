@@ -15,7 +15,7 @@ import java.util.TreeSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public abstract class FLUIAbstractReply {
+public abstract class FLUIAbstractReply implements FLUIAbstractReplyContainer{
     protected FLUIReplyDTO replyDTO = createInitialReplyDTO();
     protected Gson gson = new GsonBuilder().create();
     public static final String DEFAULT_OK_TEXT = "OK";
@@ -36,6 +36,7 @@ public abstract class FLUIAbstractReply {
         result.setObjectsToSetValue(new TreeSet<String>());
         result.setObjectSetValueValues(new TreeMap<String, Object>());
         result.setSelectBoxSelectedIDs(new TreeMap<String, String>());
+        result.setTableCheckedRowIDs(new TreeMap<String, Set<String>>());
         result.setMarkdownViewTexts(new TreeMap<String, String>());
         result.setCursorPosValues(new TreeMap<String, CursorPos>());
         result.setTextHighlighting(new TreeMap<String, List<TextHighlighting>>());
@@ -118,7 +119,8 @@ public abstract class FLUIAbstractReply {
         	addRecordedAction("downloadFile(" + escapeString(fileStreamID) + ");");
         }
     }
-    
+
+/*    
     public void showInputDialog(String referenceID, String title, String textContent, String label, String initialValueText, String okText, String cancelText) {
         InputDialogParameters inputDialogParameters = new InputDialogParameters();
         inputDialogParameters.setReferenceID(referenceID);
@@ -234,7 +236,7 @@ public abstract class FLUIAbstractReply {
 		result.setSelected(selected);
 		return result;
 	}
-	
+*/	
 	public void setLanguage(StringLanguage language){
 		replyDTO.setLanguageToSet("" + language);
         if (recordMode){
@@ -258,4 +260,7 @@ public abstract class FLUIAbstractReply {
 		return replyDTO;
 	}
 	
+	public FLUIAbstractReply getAbstractReply(){
+	    return this;
+	}	
 }

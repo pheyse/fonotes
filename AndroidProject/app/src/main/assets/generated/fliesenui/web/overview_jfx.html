@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿#<!DOCTYPE html>
 <html lang="en"  >
 	<head>
 		<title>Overview</title>
@@ -29,6 +29,7 @@
 		<script src="lib/angular-aria.min.js"></script>
 		<script src="lib/angular-messages.min.js"></script>
 		<script src="lib/angular-material.min.js"></script>
+        <script src="lib/angular-sanitize.min.js"></script>
 		<script src="lib/showdown.min.js"></script>
 		<script src="lib/strings.js"></script>
 		<script src="cmlib/codemirror.js"></script>
@@ -39,11 +40,12 @@
 		<script src="cmlib/matchtags.js"></script>
 		<script src="cmlib/xml-fold.js"></script>
 		<script src="cmlib/show-hint.js"></script>
+	    <script src="lib/flui-util.js"></script>
 		<script type="text/javascript">
             browserMode = "JavaFX";
             htmlFileSuffix = "jfx";
             singlePageApp = false;
-            var app = angular.module('app', ['ngMaterial']).config(function($mdThemingProvider) {
+            var app = angular.module('app', ['ngMaterial', 'ngSanitize']).config(function($mdThemingProvider) {
                 $mdThemingProvider.theme('default')
                     .primaryPalette('blue')
                     .accentPalette('blue')
@@ -111,52 +113,75 @@ getText = function(stringID){
 
 
 		        <div id="box1cm" style="width: 1cm; height: 1cm; position: absolute; left: -100%; top: -100%;"></div>
-<div layout="row" layout-wrap="" layout-align="space-between center">
-			<div flex="5">
-				<span/>
-			</div>
-			<div flex="75">
-				<span>
-					<h1 ng-show="overview_info_propertyVisible" style="white-space: pre-wrap;">{{overview_info_propertyText}}</h1>
-				</span>
-			</div>
-			<div flex="20">
-				<span>
-					<button class="fliesenUIButton" ng-click="overview_widgetButtonMenuButtonClicked();" ng-show="overview_menuButton_propertyVisible">{{overview_menuButton_propertyText}}</button>
-				</span>
-			</div>
-			<div flex="5" ng-show="overview_sortInfoBar_propertyVisible">
-				<span/>
-			</div>
-			<div flex="95" ng-show="overview_sortInfoBar_propertyVisible">
-				<span>
-					<span ng-show="overview_sortInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_sortInfoText_propertyText}}</span>
-				</span>
-			</div>
-			<div flex="5" ng-show="overview_colorFilterInfoBar_propertyVisible">
-				<span/>
-			</div>
-			<div flex="95" ng-show="overview_colorFilterInfoBar_propertyVisible">
-				<span>
-					<span ng-show="overview_colorFilterInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_colorFilterInfoText_propertyText}}</span>
-				</span>
-			</div>
-			<div flex="5">
-				<span/>
-			</div>
-			<div flex="95">
-				<span>
-					<div style="width:100%; ">
-						<table style="width:100%">
-							<tr ng-repeat="i in items.items" ng-mouseleave="rowHover=false;rowBackgroundColor=i.color;" ng-mouseover="rowHover=true;rowBackgroundColor='#f3f3f3';" ng-click="overview_tableNotesTableRowClicked($index, $event)" style="border-color:#999999;border-bottom-style: solid;border-width: 1px; background-color:{{rowBackgroundColor}}" layout="row" layout-wrap="" ng-init="rowBackgroundColor=i.color;">
-								<td style="width:90%;word-wrap: break-word;min-height:60px; padding-left:15px; padding-top:15px;">
-									<span style="white-space: pre-wrap;">{{ i.label }}</span>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</span>
-			</div>
+<div layout-wrap="" layout-align="space-between center" ng-show="overview_topContainer_propertyVisible">
+			<span style="position:fixed; top:0; left:0; height:3.0cm; width: 100%;">
+				<div flex="100">
+					<span>
+						<div layout-wrap="" layout-align="space-between center" layout="row">
+							<div flex="5">
+								<span/>
+							</div>
+							<div flex="75">
+								<span>
+									<h2 ng-show="overview_info_propertyVisible" style="white-space: pre-wrap;">{{overview_info_propertyText}}</h2>
+								</span>
+							</div>
+							<div flex="20">
+								<span>
+									<button class="fliesenUIButton" ng-click="overview_widgetButtonMenuButtonClicked();" ng-show="overview_menuButton_propertyVisible">{{overview_menuButton_propertyText}}</button>
+								</span>
+							</div>
+							<div flex="5" ng-show="overview_sortInfoBar_propertyVisible">
+								<span/>
+							</div>
+							<div flex="95" ng-show="overview_sortInfoBar_propertyVisible">
+								<span>
+									<span ng-show="overview_sortInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_sortInfoText_propertyText}}</span>
+								</span>
+							</div>
+							<div flex="5" ng-show="overview_colorFilterInfoBar_propertyVisible">
+								<span/>
+							</div>
+							<div flex="95" ng-show="overview_colorFilterInfoBar_propertyVisible">
+								<span>
+									<span ng-show="overview_colorFilterInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_colorFilterInfoText_propertyText}}</span>
+								</span>
+							</div>
+						</div>
+					</span>
+				</div>
+			</span>
+			<span style="position:fixed; overflow: auto;top: 3.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
+				<div flex="5">
+					<span/>
+				</div>
+				<div flex="95">
+					<span>
+						<div flex="100">
+							<table style="width:100%">
+								<tr>
+									<td style="width:10%">Filter:</td>
+									<td style="width:83%">
+										<input id="overview_tableNotesTableFilterTextInputField" style="width:90%" ng-model="overview_notesTableFilterText" onkeydown="overview_tableNotesTableFilterTextOnKeyDown(event)"/>
+									</td>
+									<td style="width:7%">
+										<md-button class="fliesenUIButton fliesenUIButtonExtendSmall" ng-click="overview_tableNotesTableOnInfoButtonClicked();">?</md-button>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="width:100%; ">
+							<table style="width:100%">
+								<tr ng-repeat="i in items.items | overview_tableNotesTableFilter:overview_notesTableFilterText" ng-mouseleave="rowHover=false;rowBackgroundColor=i.color;" ng-mouseover="rowHover=true;rowBackgroundColor='#f3f3f3';" ng-click="overview_tableNotesTableRowClicked($index, $event)" style="border-color:#999999;border-bottom-style: solid;border-width: 1px; background-color:{{rowBackgroundColor}}" layout="row" ng-init="rowBackgroundColor=i.color;">
+									<td style="width:90.0%;word-wrap: break-word;min-height:0.8cm; padding-left:0.38cm; padding-top:0.38cm;">
+										<span style="white-space: pre-wrap;">{{ i.label }}</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</span>
+				</div>
+			</span>
 		</div>
 
 		

@@ -37,14 +37,14 @@
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public static DetailsRequest createOnEditNameButtonClickedRequest(String language, generated.fliesenui.dto.DetailsParameterDTO parameter){
-/*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("widgetButtonEditNameButtonClicked", language);
+/*Generated! Do not modify!*/     public static DetailsRequest createOnEditTextButtonClickedRequest(String language, generated.fliesenui.dto.DetailsParameterDTO parameter){
+/*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("widgetButtonEditTextButtonClicked", language);
 /*Generated! Do not modify!*/         resultInstance.request.getParameters().put("parameter", new Gson().toJson(parameter));
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public static DetailsRequest createOnEditTextButtonClickedRequest(String language, generated.fliesenui.dto.DetailsParameterDTO parameter){
-/*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("widgetButtonEditTextButtonClicked", language);
+/*Generated! Do not modify!*/     public static DetailsRequest createOnEditNameButtonClickedRequest(String language, generated.fliesenui.dto.DetailsParameterDTO parameter){
+/*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("widgetButtonEditNameButtonClicked", language);
 /*Generated! Do not modify!*/         resultInstance.request.getParameters().put("parameter", new Gson().toJson(parameter));
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
@@ -96,24 +96,18 @@
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public static DetailsRequest createOnInputDialogResultRequest(String language, String referenceID, String result){
+/*Generated! Do not modify!*/     public static DetailsRequest createOnInputDialogResultRequest(String language){
 /*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("onInputDialogResult", language);
-/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("referenceID", referenceID);
-/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("result", result);
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public static DetailsRequest createOnConfirmDialogResultRequest(String language, String referenceID, boolean result){
+/*Generated! Do not modify!*/     public static DetailsRequest createOnConfirmDialogResultRequest(String language){
 /*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("onConfirmDialogResult", language);
-/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("referenceID", referenceID);
-/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("result", result);
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public static DetailsRequest createOnListChooserResultRequest(String language, String referenceID, java.util.List<String> selectedIDs){
+/*Generated! Do not modify!*/     public static DetailsRequest createOnListChooserResultRequest(String language){
 /*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("onListChooserResult", language);
-/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("referenceID", referenceID);
-/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("selectedIDs", selectedIDs);
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 

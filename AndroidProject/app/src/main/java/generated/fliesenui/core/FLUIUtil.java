@@ -20,15 +20,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class FLUIUtil {
-    private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss");
+	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss");
 
 	private static final String ENCODING = "UTF-8";
 	private static final Map<Integer, KeyType> KEY_CODE_TO_KEY_TYPE_MAP = createKeyCodeToKeyTypeMap();
-	
+
 	public static void writeFile(File file, String text) throws Exception{
 		writeFile(file, text, false);
 	}
-	
+
 	public static void writeFile(File file, String text, boolean append) throws Exception{
 		Writer out = null;
 		try{
@@ -43,68 +43,68 @@ public class FLUIUtil {
 			}
 		}
 	}
-	
+
 	public static String readFile(File file) throws Exception{
-	    StringBuilder result = new StringBuilder();
-	    BufferedReader in = null;
-	    try {
-	    	in = new BufferedReader(new InputStreamReader(new FileInputStream(file), ENCODING));
-	    	String line;
-	    	while ((line = in.readLine()) != null) {
-	    		result.append(line);
-	    		result.append("\n");
+		StringBuilder result = new StringBuilder();
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(file), ENCODING));
+			String line;
+			while ((line = in.readLine()) != null) {
+				result.append(line);
+				result.append("\n");
 			}
-	    } catch (Exception e){
-	    	throw e;
-	    } finally {
-	    	in.close();
-	    }
-	    return result.toString();
+		} catch (Exception e){
+			throw e;
+		} finally {
+			in.close();
+		}
+		return result.toString();
 	}
-    
-    public static TextHighlighting createErrorTextHighlighting(int startLine, int startPosInLine, int endLine, int endPosInLine) {
-        TextHighlighting result = new TextHighlighting();
-        result.setStartLine(startLine);
-        result.setStartPosInLine(startPosInLine);
-        result.setEndLine(endLine);
-        result.setEndPosInLine(endPosInLine);
-        result.setStyle("textHighlightError");
-        return result;
-    }
 
-    public static TextHighlighting createWarningTextHighlighting(int startLine, int startPosInLine, int endLine, int endPosInLine) {
-        TextHighlighting result = new TextHighlighting();
-        result.setStartLine(startLine);
-        result.setStartPosInLine(startPosInLine);
-        result.setEndLine(endLine);
-        result.setEndPosInLine(endPosInLine);
-        result.setStyle("textHighlightWarning");
-        return result;
-    }
+	public static TextHighlighting createErrorTextHighlighting(int startLine, int startPosInLine, int endLine, int endPosInLine) {
+		TextHighlighting result = new TextHighlighting();
+		result.setStartLine(startLine);
+		result.setStartPosInLine(startPosInLine);
+		result.setEndLine(endLine);
+		result.setEndPosInLine(endPosInLine);
+		result.setStyle("textHighlightError");
+		return result;
+	}
 
-    public static CursorPos createCursorPos(int line, int posInLine) {
-        CursorPos result = new CursorPos();
-        result.setLine(line);
-        result.setPosInLine(posInLine);
-        return result;
-    }
+	public static TextHighlighting createWarningTextHighlighting(int startLine, int startPosInLine, int endLine, int endPosInLine) {
+		TextHighlighting result = new TextHighlighting();
+		result.setStartLine(startLine);
+		result.setStartPosInLine(startPosInLine);
+		result.setEndLine(endLine);
+		result.setEndPosInLine(endPosInLine);
+		result.setStyle("textHighlightWarning");
+		return result;
+	}
 
-    public static ContextAssistChoice createContextAssistChoice(String label, String text) {
-        ContextAssistChoice result = new ContextAssistChoice();
-        result.setLabel(label);
-        result.setText(text);
-        return result;
-    }
+	public static CursorPos createCursorPos(int line, int posInLine) {
+		CursorPos result = new CursorPos();
+		result.setLine(line);
+		result.setPosInLine(posInLine);
+		return result;
+	}
 
-    public static String toActionLogString(FLUIRequest request) {
-    	if (request == null){
-    		return null;
-    	}
-        String json = new Gson().toJson(request);
-        json = json.replace("\\", "\\\\").replace("\n", "\\n");
-        return TIMESTAMP_FORMAT.format(new Date()) + ";" + request.getScreenID() + ";" + request.getAction() + ";" + json;
-    }
-    
+	public static ContextAssistChoice createContextAssistChoice(String label, String text) {
+		ContextAssistChoice result = new ContextAssistChoice();
+		result.setLabel(label);
+		result.setText(text);
+		return result;
+	}
+
+	public static String toActionLogString(FLUIRequest request) {
+		if (request == null){
+			return null;
+		}
+		String json = new Gson().toJson(request);
+		json = json.replace("\\", "\\\\").replace("\n", "\\n");
+		return TIMESTAMP_FORMAT.format(new Date()) + ";" + request.getScreenID() + ";" + request.getAction() + ";" + json;
+	}
+
 //    public static String toURLParameter(Object object){
 //    	String json = new Gson().toJson(object);
 //    	byte[] bytes = null;
@@ -116,21 +116,21 @@ public class FLUIUtil {
 //    	String base64 = Base64.getEncoder().encodeToString(bytes);
 //    	return base64.replace("+", "-").replace("/", "_").replace("=", "~");
 //    }
-    
-    public static String reescapeEscapeCharacters(String string) {
-        return string.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "\\'").replace("\n", "\\n").replace("\r", "\\r");
-    }
 
-    public static void saveActionRecording(FLUIActionRecording recording, File file) throws Exception{
-        writeFile(file, new GsonBuilder().setPrettyPrinting().create().toJson(recording));
-    }
+	public static String reescapeEscapeCharacters(String string) {
+		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace("'", "\\'").replace("\n", "\\n").replace("\r", "\\r");
+	}
 
-    public static FLUIActionRecording loadActionRecording(File file) throws Exception{
-    	String json = readFile(file);
-    	return new Gson().fromJson(json, FLUIActionRecording.class);
-    }
-    
-    public static FLUIKeyEvent createFLUIKeyEvent(KeyModifier keyModifier, String keyCharString, Double keyCode, String editorText, int line, int posInLine, String info) throws Exception{
+	public static void saveActionRecording(FLUIActionRecording recording, File file) throws Exception{
+		writeFile(file, new GsonBuilder().setPrettyPrinting().create().toJson(recording));
+	}
+
+	public static FLUIActionRecording loadActionRecording(File file) throws Exception{
+		String json = readFile(file);
+		return new Gson().fromJson(json, FLUIActionRecording.class);
+	}
+
+	public static FLUIKeyEvent createFLUIKeyEvent(KeyModifier keyModifier, String keyCharString, Double keyCode, String editorText, int line, int posInLine, String info) throws Exception{
 		FLUIKeyEvent result = new FLUIKeyEvent();
 		result.setControl(keyModifier.isControl());
 		result.setShift(keyModifier.isShift());
@@ -139,7 +139,7 @@ public class FLUIUtil {
 		result.setEditorText(editorText);
 		result.setEventType(parseEventType(keyModifier.getEventType()));
 		if ((keyCharString != null) && (!keyCharString.isEmpty())){
-			result.setKeyChar(keyCharString.charAt(0));	
+			result.setKeyChar(keyCharString.charAt(0));
 		}
 		if (keyCode != null){
 			result.setKeyCode(keyCode.intValue());
@@ -148,7 +148,7 @@ public class FLUIUtil {
 		result.setLine(line);
 		result.setPosInLine(posInLine);
 		result.setInfo(info);
-		
+
 		return result;
 	}
 
@@ -203,5 +203,124 @@ public class FLUIUtil {
 		return (event.getKeyType() == keyType);
 	}
 
+	public static int toLine(String text, int posInText) {
+		int line = 0;
+		int currentPos = 0;
+		for (char i : text.toCharArray()) {
+			currentPos++;
+			if (currentPos > posInText) {
+				return line;
+			}
+			if (i == '\n') {
+				line++;
+			}
+		}
+		return line;
+	}
+
+	public static int toPosInLine(String text, int posInText) {
+		int pos = text.lastIndexOf("\n", posInText);
+		if (pos < 0) {
+			return posInText;
+		}
+		if (pos == posInText) {
+			//: special case: at the pos in text there is a \n. This means the cursor is at the end of the previous line
+			if (pos == 0) {
+				return 0;
+			}
+			int previousLineStart = text.lastIndexOf("\n", pos - 1);
+			if (previousLineStart < 0) {
+				return pos;
+			}
+			return posInText - previousLineStart - 1;
+		}
+
+		return posInText - pos - 1;
+	}
+
+	public static int toPosInText(String text, int line, int posInLine) {
+		int lineBreakPos = 0;
+		for (int i = 0; i < line; i++) {
+			lineBreakPos = text.indexOf("\n", lineBreakPos);
+			lineBreakPos++;
+			if (lineBreakPos < 0) {
+				return -1;
+			}
+			if (lineBreakPos > 0) {
+				if (text.charAt(lineBreakPos - 1) == '\r') {
+					lineBreakPos++;
+				}
+			}
+		}
+		return lineBreakPos + posInLine;
+	}
+
+
+	public static long nullValue(Long value, long valueIfNull){
+		if (value == null) return valueIfNull;
+		return value.longValue();
+	}
+
+	public static double nullValue(Double value, double valueIfNull){
+		if (value == null) return valueIfNull;
+		return value.doubleValue();
+	}
+
+	public static String nullValue(String value, String valueIfNull){
+		if (value == null) return valueIfNull;
+		return value;
+	}
+
+	public static String nullValue(Boolean value, String valueIfNull){
+		if (value == null) return valueIfNull;
+		return value.toString();
+	}
+
+	public static String nullValue(Object value, String valueIfNotNull, String valueIfNull){
+		if (value == null) return valueIfNull;
+		return valueIfNotNull;
+	}
+
+	public static <K> K nullValue(K value, K valueIfNull) {
+		if (value != null) return value;
+		return valueIfNull;
+	}
+
+	public static boolean equalsWithAsterisk(String string, String stringToFind, boolean ignoreCase){
+		if (ignoreCase) return equalsWithAsterisk(string.toUpperCase(), stringToFind.toUpperCase());
+		else return equalsWithAsterisk(string, stringToFind);
+	}
+
+	public static boolean equalsWithAsterisk(String string, String stringToFind){
+		if (stringToFind.replace("*", "").length() == 0) return true;
+
+		int firstAsteriskOccurence = stringToFind.indexOf("*");
+		if (firstAsteriskOccurence < 0) return string.equals(stringToFind);
+
+		String firstTokenToSearch = stringToFind.substring(0, firstAsteriskOccurence).replace("*", "");
+		String lastTokenToSearch = stringToFind.substring(stringToFind.lastIndexOf("*")).replace("*", "");
+		if ((!stringToFind.startsWith("*")) && (!string.startsWith(firstTokenToSearch))) return false;
+		if ((!stringToFind.endsWith("*")) && (!string.endsWith(lastTokenToSearch))) return false;
+
+
+		while(firstTokenToSearch.length() == 0){
+			firstAsteriskOccurence = stringToFind.indexOf("*", firstAsteriskOccurence + 1);
+			if (firstAsteriskOccurence >= 0) firstTokenToSearch = stringToFind.substring(0, firstAsteriskOccurence).replace("*", "");
+			else {
+				firstTokenToSearch = stringToFind.replace("*", "");
+				return string.endsWith(firstTokenToSearch);
+			}
+		}
+
+		int occurenceIndex = string.indexOf(firstTokenToSearch);
+		while(occurenceIndex >= 0){
+			String restOString = string.substring(occurenceIndex + 1);
+			String restOfSearchString;
+			restOfSearchString = stringToFind.substring(firstAsteriskOccurence); // not +1 to keep leading "*"
+			if (equalsWithAsterisk(restOString, restOfSearchString)) return true;
+			occurenceIndex = string.indexOf(occurenceIndex + 1);
+		}
+		return false;
+	}
 
 }

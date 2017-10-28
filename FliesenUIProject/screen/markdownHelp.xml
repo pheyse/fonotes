@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screen title="My Screen" parameterDTO="parameter">
+    <listenToBackAction>
+        <eventParameter value="parameter"/>
+    </listenToBackAction>
+    <dto id="parameter" type="overviewParameter" />
+	<container orientation="row">
+		<bar>
+			<cell size="15">
+				<button id="backButton" text="" imageAssetID="back">
+                    <eventParameter value="parameter" />
+                </button>
+			</cell>
+			<cell size="85">
+				<label id="info" text="Markdown Help" style="large"/>
+			</cell>
+		</bar>
+		<bar>
+			<cell size="100">
+				<markdownView id="markdownHelpText" text="..."/>
+			</cell>
+		</bar>
+    </container>
+</screen>

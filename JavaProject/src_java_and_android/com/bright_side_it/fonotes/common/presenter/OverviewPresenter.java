@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 
 public class OverviewPresenter implements OverviewListener{
 	private static final String ID_ABOUT = "about";
+	private static final String ID_MARKDOWN_HELP = "markdownHelp";
 	private static final String ID_FILTER_COLOR = "fiterColor";
 	private static final String ID_SORT = "sort";
 	private static final String ID_START_WEB_SERVER = "startWebServer";
@@ -138,8 +139,10 @@ public class OverviewPresenter implements OverviewListener{
 			return prefix + "creation time";
 		} else if (sortType == SortType.CREATION_TIME_DESC){
 			return prefix + "creation time (descending)";
-		} else if (sortType == SortType.LAST_EDIT_TIME_ASC){
+		} else if (sortType == SortType.LAST_EDIT_TIME_DESC){
 			return prefix + "last edit time";
+		} else if (sortType == SortType.LAST_EDIT_TIME_ASC){
+			return prefix + "last edit time (ascending)";
 		} else if (sortType == SortType.CREATION_TIME_DESC){
 			return prefix + "last edit time (descending)";
 		}
@@ -247,6 +250,8 @@ public class OverviewPresenter implements OverviewListener{
 				platform.startWebServer();
 			} else if (ID_ABOUT.equals(selection)){
 				reply.openScreenAbout(reference.getParameter());
+			} else if (ID_MARKDOWN_HELP.equals(selection)){
+				reply.openScreenMarkdownHelp(reference.getParameter());
 			} else if (ID_FILTER_COLOR.equals(selection)){
 				showChooseColorFilter(reply, reference.getParameter());
 			} else if (ID_SEARCH_TITLE.equals(selection)){
@@ -378,8 +383,9 @@ public class OverviewPresenter implements OverviewListener{
 			items.addItem(ID_START_WEB_SERVER, "Start Web Server");
 		}
 		items.addItem(ID_CONVERT_OLD_COLORS, "Special: Convert old colors to new");
+		items.addItem(ID_MARKDOWN_HELP, "Markdown help");
 		items.addItem(ID_ABOUT, "About");
-		
+
 		ListChooserReference reference = new ListChooserReference();
 		reference.setAction(ActionType.MENU.toString());
 		reference.setParameter(parameter);

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿#<!DOCTYPE html>
 <html lang="en"  >
 	<head>
 		<title>My Screen</title>
@@ -29,6 +29,7 @@
 		<script src="lib/angular-aria.min.js"></script>
 		<script src="lib/angular-messages.min.js"></script>
 		<script src="lib/angular-material.min.js"></script>
+        <script src="lib/angular-sanitize.min.js"></script>
 		<script src="lib/showdown.min.js"></script>
 		<script src="lib/strings.js"></script>
 		<script src="cmlib/codemirror.js"></script>
@@ -39,11 +40,12 @@
 		<script src="cmlib/matchtags.js"></script>
 		<script src="cmlib/xml-fold.js"></script>
 		<script src="cmlib/show-hint.js"></script>
+	    <script src="lib/flui-util.js"></script>
 		<script type="text/javascript">
             browserMode = "WebBrowser";
             htmlFileSuffix = "web";
             singlePageApp = false;
-            var app = angular.module('app', ['ngMaterial']).config(function($mdThemingProvider) {
+            var app = angular.module('app', ['ngMaterial', 'ngSanitize']).config(function($mdThemingProvider) {
                 $mdThemingProvider.theme('default')
                     .primaryPalette('blue')
                     .accentPalette('blue')
@@ -111,27 +113,21 @@ getText = function(stringID){
 
 
 		        <div id="box1cm" style="width: 1cm; height: 1cm; position: absolute; left: -100%; top: -100%;"></div>
-<div layout="row" layout-wrap="" layout-align="space-between center">
-			<div flex="5">
-				<span/>
+<div layout-wrap="" layout-align="space-between center" layout="row">
+			<div flex="15">
+				<span>
+					<md-button class="md-raised" ng-click="about_widgetButtonBackButtonClicked();" ng-show="about_backButton_propertyVisible">
+						<img ng-src="img/{{about_backButton_propertyImageSource}}"/>
+						<span>{{about_backButton_propertyText}}</span>
+					</md-button>
+				</span>
 			</div>
-			<div flex="95">
+			<div flex="85">
 				<span>
 					<h1 ng-show="about_info_propertyVisible" style="white-space: pre-wrap;">{{about_info_propertyText}}</h1>
 				</span>
 			</div>
-			<div flex="5">
-				<span/>
-			</div>
-			<div flex="95">
-				<span>
-					<md-button class="md-raised" ng-click="about_widgetButtonBackButtonClicked();" ng-show="about_backButton_propertyVisible">{{about_backButton_propertyText}}</md-button>
-				</span>
-			</div>
-			<div flex="5">
-				<span/>
-			</div>
-			<div flex="95">
+			<div flex="100">
 				<span>
 					<md-card ng-show="about_aboutText_propertyVisible">
 						<span style="{{about_aboutText_propertyBackgroundColor}}">

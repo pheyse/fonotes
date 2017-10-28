@@ -1,10 +1,10 @@
 package generated.fliesenui.core;
 
 public class FLUIMessage {
-    public static int TYPE_ID_INFO_DIALOG = 101;
-    public static int TYPE_ID_WARNING_DIALOG = 102;
-    public static int TYPE_ID_ERROR_DIALOG = 103;
-    public static int TYPE_ID_INFO_TOAST = 201;
+    public static final int TYPE_ID_INFO_DIALOG = 101;
+    public static final int TYPE_ID_WARNING_DIALOG = 102;
+    public static final int TYPE_ID_ERROR_DIALOG = 103;
+    public static final int TYPE_ID_INFO_TOAST = 201;
 
     private String title;
     private String text;
