@@ -3,6 +3,8 @@ package com.bright_side_it.fonotes.common.presenter;
 import java.sql.Savepoint;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 import com.bright_side_it.fonotes.common.base.Platform;
@@ -12,9 +14,11 @@ import com.bright_side_it.fonotes.common.dao.FonotesDAO;
 import com.bright_side_it.fonotes.common.logic.ColorLogic;
 import com.bright_side_it.fonotes.common.model.NoteInfo;
 
+import generated.fliesenui.core.BrightMarkdown;
 import generated.fliesenui.core.FLUIClientPropertiesDTO;
 import generated.fliesenui.core.FLUIKeyEvent;
 import generated.fliesenui.core.FLUIKeyEvent.KeyType;
+import generated.fliesenui.core.FLUIMarkdownFormatting;
 import generated.fliesenui.core.FLUIUtil;
 import generated.fliesenui.core.KeyModifier;
 import generated.fliesenui.core.TextHighlighting;
@@ -73,7 +77,7 @@ public class DetailsPresenter implements DetailsListener{
 		reply.setColorsDTO(IdAndLabelListDTOBuilder.construct(colorLogic.getColorIDsAndLabels()));
 		reply.setNoteNameLabelText(noteInfo.getName());
 		reply.setColorSelectBoxSelectedID(noteInfo.getColorID());
-		reply.setNoteViewText(content);
+		setNoteViewText(reply, content);
 		reply.setEditStateDTO(EditStateDTOBuilder.construct(content, false));
 		reply.setNoteViewBackgroundColor("#" + colorLogic.getColorHexSoftFromColorID(noteInfo.getColorID()));
 //		reply.setEditNoteTextAreaBackgroundColor("#" + colorLogic.getColorHexSoftFromColorID(noteInfo.getColorID()));
@@ -86,7 +90,31 @@ public class DetailsPresenter implements DetailsListener{
 		}
 	}
 
-	@Override
+    private void setNoteViewText(DetailsReply reply, String text){
+	    if (text == null){
+            reply.setNoteViewText("");
+	        return;
+        }
+        try{
+            int deepestHeading = new BrightMarkdown().getDeepestHeading(text);
+            FLUIMarkdownFormatting formatting = new FLUIMarkdownFormatting();
+            Map<Integer, Integer> fontSizesMap = new TreeMap<>();
+            formatting.setHeadingLevelToFontSizeInMM(fontSizesMap);
+            int fontSize = 4;
+            for (int i = deepestHeading; i >= 0; i --){
+                fontSizesMap.put(i, fontSize);
+                fontSize = (int)Math.max(fontSize * 1.2, fontSize + 2);
+            }
+            reply.setNoteViewText(text, formatting);
+        } catch (Exception e){
+            commonPresenter.handleError(reply, "Could not read markdown text", e);
+            return;
+        }
+
+
+    }
+
+    @Override
 	public void onInputDialogResult(DetailsReply reply, String referenceID, String dialogResult) {
 		if ((dialogResult == null) || (dialogResult.isEmpty())){
 			return;
@@ -265,7 +293,7 @@ public class DetailsPresenter implements DetailsListener{
 	}
 
 	@Override
-	public void onSaveNoteTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText) {
+	public void onSaveNoteTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText){
 		if (!verifyParameterPassword(reply, parameter)){
 			return;
 		}
@@ -279,7 +307,7 @@ public class DetailsPresenter implements DetailsListener{
 		}
 		reply.setEditStateDTO(EditStateDTOBuilder.construct(content, false));
 		reply.setAutosaveTimerActive(false);
-		reply.setNoteViewText(editNoteTextAreaText);
+		setNoteViewText(reply, editNoteTextAreaText);
 		reply.setEditNotePanelVisible(false);
 		reply.setViewNotePanelVisible(true);
 		reply.setButtonBarVisible(true);

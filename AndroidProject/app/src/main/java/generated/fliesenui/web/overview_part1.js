@@ -297,9 +297,13 @@ app.controller("overview_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
       
 
     $scope.overview_widgetButtonMenuButtonClicked = function () {
-        var request = overview$createRequest("widgetButtonMenuButtonClicked");
-        request.parameters["parameter"] = overview$getParameter_dto();
-        overview$executeRequest(request);
+        try{
+            var request = overview$createRequest("widgetButtonMenuButtonClicked");
+            request.parameters["parameter"] = overview$getParameter_dto();
+            overview$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'overview_widgetButtonMenuButtonClicked': " + errorToString(err));
+        }
     }
 
     $scope.overview_tableNotesTableOnInfoButtonClicked = function () {

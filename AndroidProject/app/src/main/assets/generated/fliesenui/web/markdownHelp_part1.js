@@ -225,9 +225,13 @@ app.controller("markdownHelp_Ctrl", function($scope, $mdToast, $mdDialog, $http)
       
 
     $scope.markdownHelp_widgetButtonBackButtonClicked = function () {
-        var request = markdownHelp$createRequest("widgetButtonBackButtonClicked");
-        request.parameters["parameter"] = markdownHelp$getParameter_dto();
-        markdownHelp$executeRequest(request);
+        try{
+            var request = markdownHelp$createRequest("widgetButtonBackButtonClicked");
+            request.parameters["parameter"] = markdownHelp$getParameter_dto();
+            markdownHelp$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'markdownHelp_widgetButtonBackButtonClicked': " + errorToString(err));
+        }
     }
 
     if (!singlePageApp){

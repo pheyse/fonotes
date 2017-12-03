@@ -2,8 +2,10 @@ package generated.fliesenui.core;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,13 +40,26 @@ public class BrightMarkdown {
 	private static final String ESCAPE_MARK = "%%";
 	private static final String CODE_BLOCK_MARK = "```";
 	private static final String ESCAPE_NEW_LINE_IN_CODE_BLOCK = "%%N%%";
-
+	
+	public static enum FormattingItem {H1, H2, H3, H4, H5, H6}
+	private Map<FormattingItem, Integer> fontSizesInMM = new EnumMap<>(FormattingItem.class);
 
 	public String createHTML(String markdownText) throws Exception{
 		BrightMarkdownSection section = parseAll(markdownText);
 		return toHTML(section);
 	}
 
+	/**
+	 * 
+	 * @param markdownText
+	 * @return the deepest heading which is 0 if there are no headings, and e.g. 3 if there is h1, h2 and h3
+	 * @throws Exception
+	 */
+	public int getDeepestHeading(String markdownText) throws Exception{
+		BrightMarkdownSection section = parseAll(markdownText);
+		return getDeepestHeading(section);
+	}
+	
 	public String getDocumentationAsHTML() throws Exception{
 		return new BrightMarkdown().createHTML(getDocumentationAsMarkdown()).replace("\r", "").replace("\n", "");
 	}
@@ -356,9 +371,6 @@ public class BrightMarkdown {
 				throw new RuntimeException("Did not expect raw text and children in one section item! (Raw text = >>" + section.getRawText() + "<<");
 			}
 			rest = section.getRawText();
-			if (indicator.equals("_")){
-				log("x");
-			}
 			start = rest.indexOf(indicator);
 			if (start < 0){
 				return;
@@ -366,23 +378,39 @@ public class BrightMarkdown {
 			
 			List<BrightMarkdownSection> children = new ArrayList<>();
 			end = 0;
+			int skippedAtBeginning = 0;
 			while (start >= 0){
-				end = rest.indexOf(indicator, start + indicator.length());
-				if (end >= 0){
-					if (start > 0){
-						children.add(createSection(section, MDType.PLAIN_TEXT, rest.substring(0, start)));
-					}
-					String text = rest.substring(start + indicator.length(), end);
-					if (!text.isEmpty()){
-						children.add(createSection(section, type, text));
+				if (hasWhitespaceBefore(rest, start)){ //: if there is non whitespace before the indicator, it is within a word, so don't treat it as an indicator
+					end = rest.indexOf(indicator, start + indicator.length());
+					if (end >= 0){
+						skippedAtBeginning = start + indicator.length();
+						while (hasWhitespaceAfter(rest, end + indicator.length() - 1)){ //: if the end indicator before more text it is within a word and should be ignored
+							skippedAtBeginning += indicator.length();
+							end = rest.indexOf(indicator, skippedAtBeginning);
+							if (end < 0){
+								start = -1; //: end loop
+							}
+						}
+						if (end >= 0){
+							if (start > 0){
+								children.add(createSection(section, MDType.PLAIN_TEXT, rest.substring(0, start)));
+							}
+							String text = rest.substring(start + indicator.length(), end);
+							if (!text.isEmpty()){
+								children.add(createSection(section, type, text));
+							} else { //: special case there is an indicator start and an indicator end, but no text in between -> keep expression as plain text
+								children.add(createSection(section, MDType.PLAIN_TEXT, indicator + indicator));
+							}
+							rest = rest.substring(end + indicator.length());
+							skippedAtBeginning = 0;
+							start = rest.indexOf(indicator);
+						}
 					} else {
-						//: special case there is an indicator start and an indicator end, but no text in between -> keep expression as plain text
-						children.add(createSection(section, MDType.PLAIN_TEXT, indicator + indicator));
+						start = -1; //: end loop
 					}
-					rest = rest.substring(end + indicator.length());
-					start = rest.indexOf(indicator);
 				} else {
-					start = -1; //: end loop
+					skippedAtBeginning += indicator.length();
+					start = rest.indexOf(indicator, skippedAtBeginning);
 				}
 			}
 			if (rest.length() > 0){
@@ -398,6 +426,26 @@ public class BrightMarkdown {
 			exception.printStackTrace();
 			throw exception;
 		}
+	}
+	
+	private boolean hasWhitespaceBefore(String text, int index) {
+		if (index <= 0){
+			return true; //: treat beginning of line or text as "white space"
+		}
+		if (index - 1 > text.length()){
+			return false; //: treat pos outside of text as "non white space"
+		}
+		return Character.isWhitespace(text.charAt(index - 1));
+	}
+
+	private boolean hasWhitespaceAfter(String text, int index) {
+		if (index + 1 > text.length()){
+			return true; //: treat end of line or text as "white space"
+		}
+		if (index < 0){
+			return false; //: treat pos outside of text as "non white space"
+		}
+		return Character.isWhitespace(text.charAt(index - 1));
 	}
 	
 	private BrightMarkdownSection createSection(BrightMarkdownSection parent, MDType type, String rawText){
@@ -455,6 +503,11 @@ public class BrightMarkdown {
 		Document document = docBuilder.newDocument();
 		Element rootElement = document.createElement("html");
 		document.appendChild(rootElement);
+		if (isCSSStyleSet()){
+			Element headElement = appendNode(rootElement, "head", null);
+			createCSSStyleNode(headElement);
+		}
+		
 		Element bodyElement = appendNode(rootElement, "body", null);
 		createHTMLNodes(bodyElement, section.getChildren());
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -467,6 +520,21 @@ public class BrightMarkdown {
 		result = unescape(result);
         result = result.replace(ESCAPE_NEW_LINE_IN_CODE_BLOCK, "<br/>");
 		return result;
+	}
+
+	private void createCSSStyleNode(Element parentElement) {
+		StringBuilder cssText = new StringBuilder();
+		for (Entry<FormattingItem, Integer> i: fontSizesInMM.entrySet()){
+			if (cssText.length() > 0){
+				cssText.append("\n");
+			}
+			cssText.append(i.getKey() + "{font-size:" + i.getValue() + "mm;}");
+		}
+		appendNode(parentElement, "style", cssText.toString());
+	}
+
+	private boolean isCSSStyleSet() {
+		return !fontSizesInMM.isEmpty();
 	}
 
 	private void createHTMLNodes(Element rootElement, List<BrightMarkdownSection> items) throws Exception {
@@ -634,4 +702,23 @@ public class BrightMarkdown {
 		element.setAttribute(attributeName, attributeValue);
 		return element;
 	}
+	
+	public void setFontSizeInMM(FormattingItem formattingItem, int sizeInMM){
+		fontSizesInMM.put(formattingItem, sizeInMM);		
+	}
+	
+	private int getDeepestHeading(BrightMarkdownSection section) {
+		int max = 0;
+		if (section.getType() == MDType.HEADING){
+			max = Math.max(section.getLevel(), max);
+		}
+		if (section.getChildren() != null){
+			for (BrightMarkdownSection i: section.getChildren()){
+				max = Math.max(getDeepestHeading(i), max);
+			}
+		}
+		return max;
+	}
+
+
 }

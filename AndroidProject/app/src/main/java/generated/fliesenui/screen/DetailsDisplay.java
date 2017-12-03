@@ -1,5 +1,6 @@
 /*Generated! Do not modify!*/ package generated.fliesenui.screen;
 /*Generated! Do not modify!*/ import java.util.Collection;
+/*Generated! Do not modify!*/ import java.util.List;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.CallbackMethodCall;

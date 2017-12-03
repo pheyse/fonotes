@@ -275,13 +275,17 @@
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private void reply(String screenID, String replyDTOJSON, FLUIAbstractReply reply) {
-/*Generated! Do not modify!*/         FLUIDisplayController displayController = screenIDToDisplayControllerMap.get(screenID);
-/*Generated! Do not modify!*/         if (displayController != null){
-/*Generated! Do not modify!*/             displayController.processReply(reply.getReplyDTO());
-/*Generated! Do not modify!*/             return;
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/         if (webView != null){
-/*Generated! Do not modify!*/             webView.executeWithResultString(screenID + "$processReply(\"" + FLUIUtil.reescapeEscapeCharacters(replyDTOJSON) + "\");");
+/*Generated! Do not modify!*/         try{
+/*Generated! Do not modify!*/             FLUIDisplayController displayController = screenIDToDisplayControllerMap.get(screenID);
+/*Generated! Do not modify!*/             if (displayController != null){
+/*Generated! Do not modify!*/                 displayController.processReply(reply.getReplyDTO());
+/*Generated! Do not modify!*/                 return;
+/*Generated! Do not modify!*/             }
+/*Generated! Do not modify!*/             if (webView != null){
+/*Generated! Do not modify!*/                 webView.executeWithResultString(screenID + "$processReply(\"" + FLUIUtil.reescapeEscapeCharacters(replyDTOJSON) + "\");");
+/*Generated! Do not modify!*/             }
+/*Generated! Do not modify!*/         } catch (Throwable t){
+/*Generated! Do not modify!*/             listener.onError(t);
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 

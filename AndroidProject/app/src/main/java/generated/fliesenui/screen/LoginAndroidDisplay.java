@@ -33,6 +33,8 @@
 /*Generated! Do not modify!*/ import android.widget.ImageView;
 /*Generated! Do not modify!*/ import android.widget.ArrayAdapter;
 /*Generated! Do not modify!*/ import android.widget.RelativeLayout;
+/*Generated! Do not modify!*/ import android.widget.Toast;
+/*Generated! Do not modify!*/ import android.widget.ScrollView;
 /*Generated! Do not modify!*/ import android.webkit.WebView;
 /*Generated! Do not modify!*/ import android.text.TextWatcher;
 /*Generated! Do not modify!*/ import android.util.TypedValue;
@@ -46,6 +48,9 @@
 /*Generated! Do not modify!*/ import com.bright_side_it.fonotes.R; //read from Manifest file in Android project
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import com.google.gson.Gson;
+/*Generated! Do not modify!*/ import java.io.File;
+/*Generated! Do not modify!*/ import java.io.FileInputStream;
+/*Generated! Do not modify!*/ import java.io.IOException;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.TextHighlighting;
@@ -193,7 +198,11 @@
 /*Generated! Do not modify!*/         bar4.addView(cell7, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.2f));
 /*Generated! Do not modify!*/         container0.addView(bar4, paramsMatchWrap);
 /*Generated! Do not modify!*/         topView.addView(container0, paramsMatchWrap);
-/*Generated! Do not modify!*/         return topView;
+/*Generated! Do not modify!*/         ScrollView topScrollView = new ScrollView(context);
+/*Generated! Do not modify!*/         topScrollView.setBackgroundColor(Color.TRANSPARENT);
+/*Generated! Do not modify!*/         topScrollView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+/*Generated! Do not modify!*/         topScrollView.addView(topView);
+/*Generated! Do not modify!*/         return topScrollView;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private String toStringOrNull(CharSequence charSequence){
@@ -375,7 +384,7 @@
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/         if (parameters.isMultiSelect()){
 /*Generated! Do not modify!*/             Collection<String> selection = readSelectedItems(parameters.getItems());
-/*Generated! Do not modify!*/             FLUIAndroidUtil.showMultiSelectImageAndStringDialog(activity, parameters.getTitle(), values, selection, iconSize, iconSize, 10
+/*Generated! Do not modify!*/             FLUIAndroidUtil.showMultiSelectImageAndStringDialog(activity, parameters.getTitle(), values, selection, iconSize, iconSize, 0.3
 /*Generated! Do not modify!*/                     , FLUIAndroidUtil.SizeUnit.CM, parameters.isShowFilter(), false, true, new FLUIAndroidUtil.MultiSelectStringDialogListener() {
 /*Generated! Do not modify!*/                         @Override
 /*Generated! Do not modify!*/                         public void okActionPerformed(List<String> selection) {
@@ -387,7 +396,7 @@
 /*Generated! Do not modify!*/                         }
 /*Generated! Do not modify!*/                     });
 /*Generated! Do not modify!*/         } else {
-/*Generated! Do not modify!*/             FLUIAndroidUtil.showSelectImageAndStringDialog(activity, parameters.getTitle(), values, iconSize, iconSize, 10, FLUIAndroidUtil.SizeUnit.CM
+/*Generated! Do not modify!*/             FLUIAndroidUtil.showSelectImageAndStringDialog(activity, parameters.getTitle(), values, iconSize, iconSize, 0.3, FLUIAndroidUtil.SizeUnit.CM
 /*Generated! Do not modify!*/                     , parameters.isShowFilter(), false, true, null, new FLUIAndroidUtil.SelectStringDialogListener() {
 /*Generated! Do not modify!*/                 @Override
 /*Generated! Do not modify!*/                 public void okActionPerformed(String selection) {

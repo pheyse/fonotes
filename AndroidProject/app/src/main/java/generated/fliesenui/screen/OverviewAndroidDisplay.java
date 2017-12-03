@@ -33,6 +33,8 @@
 /*Generated! Do not modify!*/ import android.widget.ImageView;
 /*Generated! Do not modify!*/ import android.widget.ArrayAdapter;
 /*Generated! Do not modify!*/ import android.widget.RelativeLayout;
+/*Generated! Do not modify!*/ import android.widget.Toast;
+/*Generated! Do not modify!*/ import android.widget.ScrollView;
 /*Generated! Do not modify!*/ import android.webkit.WebView;
 /*Generated! Do not modify!*/ import android.text.TextWatcher;
 /*Generated! Do not modify!*/ import android.util.TypedValue;
@@ -45,6 +47,9 @@
 /*Generated! Do not modify!*/ import com.bright_side_it.fonotes.R; //read from Manifest file in Android project
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import com.google.gson.Gson;
+/*Generated! Do not modify!*/ import java.io.File;
+/*Generated! Do not modify!*/ import java.io.FileInputStream;
+/*Generated! Do not modify!*/ import java.io.IOException;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.TextHighlighting;
@@ -261,8 +266,8 @@
 /*Generated! Do not modify!*/         tableNotesTable = new ListView(context);
 /*Generated! Do not modify!*/         tableNotesTable.setAdapter(new TableNotesTableAdapter(activity));
 /*Generated! Do not modify!*/         tablePanelNotesTable.addView(tableNotesTable);
-/*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.BELOW, tableFilterNotesTableID);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+/*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.BELOW, tableFilterNotesTableID);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 /*Generated! Do not modify!*/         cell13.addView(tablePanelNotesTable, paramsMatchWrap);
@@ -484,7 +489,7 @@
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/         if (parameters.isMultiSelect()){
 /*Generated! Do not modify!*/             Collection<String> selection = readSelectedItems(parameters.getItems());
-/*Generated! Do not modify!*/             FLUIAndroidUtil.showMultiSelectImageAndStringDialog(activity, parameters.getTitle(), values, selection, iconSize, iconSize, 10
+/*Generated! Do not modify!*/             FLUIAndroidUtil.showMultiSelectImageAndStringDialog(activity, parameters.getTitle(), values, selection, iconSize, iconSize, 0.3
 /*Generated! Do not modify!*/                     , FLUIAndroidUtil.SizeUnit.CM, parameters.isShowFilter(), false, true, new FLUIAndroidUtil.MultiSelectStringDialogListener() {
 /*Generated! Do not modify!*/                         @Override
 /*Generated! Do not modify!*/                         public void okActionPerformed(List<String> selection) {
@@ -496,7 +501,7 @@
 /*Generated! Do not modify!*/                         }
 /*Generated! Do not modify!*/                     });
 /*Generated! Do not modify!*/         } else {
-/*Generated! Do not modify!*/             FLUIAndroidUtil.showSelectImageAndStringDialog(activity, parameters.getTitle(), values, iconSize, iconSize, 10, FLUIAndroidUtil.SizeUnit.CM
+/*Generated! Do not modify!*/             FLUIAndroidUtil.showSelectImageAndStringDialog(activity, parameters.getTitle(), values, iconSize, iconSize, 0.3, FLUIAndroidUtil.SizeUnit.CM
 /*Generated! Do not modify!*/                     , parameters.isShowFilter(), false, true, null, new FLUIAndroidUtil.SelectStringDialogListener() {
 /*Generated! Do not modify!*/                 @Override
 /*Generated! Do not modify!*/                 public void okActionPerformed(String selection) {
@@ -591,7 +596,7 @@
 /*Generated! Do not modify!*/                 LinearLayout cell = null;
 /*Generated! Do not modify!*/                 column1Item1 = new TextView(activity);
 /*Generated! Do not modify!*/                 column1Item1.setId(1);
-/*Generated! Do not modify!*/                 layoutParams = new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.95f);
+/*Generated! Do not modify!*/                 layoutParams = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.95f);
 /*Generated! Do not modify!*/                 layoutParams.setMargins(0, (int)(scale * 3f), 0, (int)(scale * 3f));
 /*Generated! Do not modify!*/                 panel.addView(column1Item1, layoutParams);
 /*Generated! Do not modify!*/ 
@@ -648,6 +653,7 @@
 /*Generated! Do not modify!*/             if ((currentFilter == null) || (currentFilter.isEmpty())){
 /*Generated! Do not modify!*/                 filteredItems = items;
 /*Generated! Do not modify!*/                 notifyDataSetChanged();
+/*Generated! Do not modify!*/                 FLUIAndroidUtil.setListViewHeightBasedOnChildren(tableNotesTable, this);
 /*Generated! Do not modify!*/                 return;
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             String useFilter = currentFilter.toLowerCase();
@@ -661,6 +667,7 @@
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             filteredItems = result;
 /*Generated! Do not modify!*/             notifyDataSetChanged();
+/*Generated! Do not modify!*/             FLUIAndroidUtil.setListViewHeightBasedOnChildren(tableNotesTable, this);
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     }

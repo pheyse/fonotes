@@ -225,9 +225,13 @@ app.controller("about_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
       
 
     $scope.about_widgetButtonBackButtonClicked = function () {
-        var request = about$createRequest("widgetButtonBackButtonClicked");
-        request.parameters["parameter"] = about$getParameter_dto();
-        about$executeRequest(request);
+        try{
+            var request = about$createRequest("widgetButtonBackButtonClicked");
+            request.parameters["parameter"] = about$getParameter_dto();
+            about$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'about_widgetButtonBackButtonClicked': " + errorToString(err));
+        }
     }
 
     if (!singlePageApp){

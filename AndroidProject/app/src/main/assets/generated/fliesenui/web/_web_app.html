@@ -239,7 +239,7 @@
             <!-- ######################## Beginning: HTML code of Screen 'about' ################################# -->
             <script src="about_part1.js"></script>
             <div layout-wrap="" layout-align="space-between center" layout="row">
-        			<div flex="15">
+        			<div flex="15" style="width: 15%;">
         				<span>
         					<md-button class="md-raised" ng-click="about_widgetButtonBackButtonClicked();" ng-show="about_backButton_propertyVisible">
         						<img ng-src="img/{{about_backButton_propertyImageSource}}"/>
@@ -247,12 +247,12 @@
         					</md-button>
         				</span>
         			</div>
-        			<div flex="85">
+        			<div flex="85" style="width: 85%;">
         				<span>
         					<h1 ng-show="about_info_propertyVisible" style="white-space: pre-wrap;">{{about_info_propertyText}}</h1>
         				</span>
         			</div>
-        			<div flex="100">
+        			<div flex="100" style="width: 100%;">
         				<span>
         					<md-card ng-show="about_aboutText_propertyVisible">
         						<span style="{{about_aboutText_propertyBackgroundColor}}">
@@ -271,10 +271,10 @@
             <script src="details_part1.js"></script>
             <div layout-wrap="" layout-align="space-between center">
         			<span style="position:fixed; top:0; left:0; height:3.0cm; width: 100%;">
-        				<div flex="100">
+        				<div flex="100" style="width: 100%;">
         					<span>
         						<div layout-wrap="" layout-align="space-between center" layout="row">
-        							<div flex="100" ng-show="details_buttonBar_propertyVisible">
+        							<div flex="100" ng-show="details_buttonBar_propertyVisible" style="width: 100%;">
         								<span>
         									<md-button class="md-raised" ng-click="details_widgetButtonBackButtonClicked();" ng-show="details_backButton_propertyVisible">
         										<img ng-src="img/{{details_backButton_propertyImageSource}}" height="20px"/>
@@ -288,21 +288,21 @@
         									</md-button>
         								</span>
         							</div>
-        							<div flex="5">
+        							<div flex="5" style="width: 5%;">
         								<span/>
         							</div>
-        							<div flex="95">
+        							<div flex="95" style="width: 95%;">
         								<span ng-show="details_colorBar_propertyVisible">
         									<span ng-show="details_colorLabel_propertyVisible" style="white-space: pre-wrap;">{{details_colorLabel_propertyText}}</span>
         									<select ng-model="details_colorSelectBox_selectedItem" ng-options="i.label for i in colors.items" ng-change="details_colorSelectBox_changed(details_colorSelectBox_selectedItem.id)"></select>
         								</span>
         							</div>
-        							<div flex="100">
+        							<div flex="100" style="width: 100%;">
         								<span ng-show="details_viewNoteName_propertyVisible">
         									<h2 ng-show="details_noteNameLabel_propertyVisible" style="white-space: pre-wrap;">{{details_noteNameLabel_propertyText}}</h2>
         								</span>
         							</div>
-        							<div flex="100">
+        							<div flex="100" style="width: 100%;">
         								<span>
         									<div style="height:30px"></div>
         								</span>
@@ -312,10 +312,10 @@
         				</div>
         			</span>
         			<span style="position:fixed; overflow: auto;top: 3.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
-        				<div flex="100">
+        				<div flex="100" style="width: 100%;">
         					<span>
         						<div layout-wrap="" layout-align="space-between center" layout="row">
-        							<div flex="100" ng-show="details_viewNotePanel_propertyVisible">
+        							<div flex="100" ng-show="details_viewNotePanel_propertyVisible" style="width: 100%;">
         								<span>
         									<md-card ng-show="details_noteView_propertyVisible">
         										<span style="{{details_noteView_propertyBackgroundColor}}">
@@ -324,21 +324,21 @@
         									</md-card>
         								</span>
         							</div>
-        							<div flex="100">
+        							<div flex="100" style="width: 100%;">
         								<span>
         									<div layout-wrap="" layout-align="space-between center" layout="row" ng-show="details_editNotePanel_propertyVisible">
-        										<div flex="100">
+        										<div flex="100" style="width: 100%;">
         											<span>
         												<md-button class="md-raised md-primary" ng-click="details_widgetButtonSaveNoteTextButtonClicked();" ng-show="details_saveNoteTextButton_propertyVisible">{{details_saveNoteTextButton_propertyText}}</md-button>
         												<md-button class="md-raised" ng-click="details_widgetButtonCancelEditNoteTextButtonClicked();" ng-show="details_cancelEditNoteTextButton_propertyVisible">{{details_cancelEditNoteTextButton_propertyText}}</md-button>
         											</span>
         										</div>
-        										<div flex="100">
+        										<div flex="100" style="width: 100%;">
         											<span>
         												<textarea ng-model="details_editNoteTextArea_propertyText" ng-show="details_editNoteTextArea_propertyVisible" style="resize:none; width:99%; height:300px;   {{details_editNoteTextArea_propertyBackgroundColor}}" id="details_editNoteTextArea"></textarea>
         											</span>
         										</div>
-        										<div flex="100">
+        										<div flex="100" style="width: 100%;">
         											<span>
         												<span ng-show="details_editNoteInfoLabel_propertyVisible" style="white-space: pre-wrap;">{{details_editNoteInfoLabel_propertyText}}</span>
         											</span>
@@ -359,12 +359,12 @@
             <!-- ######################## Beginning: HTML code of Screen 'login' ################################# -->
             <script src="login_part1.js"></script>
             <div layout-wrap="" layout-align="space-between center" layout="row">
-        			<div flex="100">
+        			<div flex="100" style="width: 100%;">
         				<span>
         					<h1 ng-show="login_info_propertyVisible" style="white-space: pre-wrap;">{{login_info_propertyText}}</h1>
         				</span>
         			</div>
-        			<div flex="60">
+        			<div flex="60" style="width: 60%;">
         				<span>
         					<md-input-container class="md-block">
         						<label>{{login_passwordTextField_propertyLabel}}</label>
@@ -372,12 +372,12 @@
         					</md-input-container>
         				</span>
         			</div>
-        			<div flex="20">
+        			<div flex="20" style="width: 20%;">
         				<span>
         					<md-button class="md-raised md-primary" ng-click="login_widgetButtonLoginButtonClicked();" ng-show="login_loginButton_propertyVisible">{{login_loginButton_propertyText}}</md-button>
         				</span>
         			</div>
-        			<div flex="20">
+        			<div flex="20" style="width: 20%;">
         				<span/>
         			</div>
         		</div>
@@ -389,7 +389,7 @@
             <!-- ######################## Beginning: HTML code of Screen 'markdownHelp' ################################# -->
             <script src="markdownHelp_part1.js"></script>
             <div layout-wrap="" layout-align="space-between center" layout="row">
-        			<div flex="15">
+        			<div flex="15" style="width: 15%;">
         				<span>
         					<md-button class="md-raised" ng-click="markdownHelp_widgetButtonBackButtonClicked();" ng-show="markdownHelp_backButton_propertyVisible">
         						<img ng-src="img/{{markdownHelp_backButton_propertyImageSource}}"/>
@@ -397,12 +397,12 @@
         					</md-button>
         				</span>
         			</div>
-        			<div flex="85">
+        			<div flex="85" style="width: 85%;">
         				<span>
         					<h1 ng-show="markdownHelp_info_propertyVisible" style="white-space: pre-wrap;">{{markdownHelp_info_propertyText}}</h1>
         				</span>
         			</div>
-        			<div flex="100">
+        			<div flex="100" style="width: 100%;">
         				<span>
         					<md-card ng-show="markdownHelp_markdownHelpText_propertyVisible">
         						<span style="{{markdownHelp_markdownHelpText_propertyBackgroundColor}}">
@@ -421,34 +421,34 @@
             <script src="overview_part1.js"></script>
             <div layout-wrap="" layout-align="space-between center" ng-show="overview_topContainer_propertyVisible">
         			<span style="position:fixed; top:0; left:0; height:3.0cm; width: 100%;">
-        				<div flex="100">
+        				<div flex="100" style="width: 100%;">
         					<span>
         						<div layout-wrap="" layout-align="space-between center" layout="row">
-        							<div flex="5">
+        							<div flex="5" style="width: 5%;">
         								<span/>
         							</div>
-        							<div flex="75">
+        							<div flex="75" style="width: 75%;">
         								<span>
         									<h2 ng-show="overview_info_propertyVisible" style="white-space: pre-wrap;">{{overview_info_propertyText}}</h2>
         								</span>
         							</div>
-        							<div flex="20">
+        							<div flex="20" style="width: 20%;">
         								<span>
         									<md-button class="md-raised" ng-click="overview_widgetButtonMenuButtonClicked();" ng-show="overview_menuButton_propertyVisible">{{overview_menuButton_propertyText}}</md-button>
         								</span>
         							</div>
-        							<div flex="5" ng-show="overview_sortInfoBar_propertyVisible">
+        							<div flex="5" ng-show="overview_sortInfoBar_propertyVisible" style="width: 5%;">
         								<span/>
         							</div>
-        							<div flex="95" ng-show="overview_sortInfoBar_propertyVisible">
+        							<div flex="95" ng-show="overview_sortInfoBar_propertyVisible" style="width: 95%;">
         								<span>
         									<span ng-show="overview_sortInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_sortInfoText_propertyText}}</span>
         								</span>
         							</div>
-        							<div flex="5" ng-show="overview_colorFilterInfoBar_propertyVisible">
+        							<div flex="5" ng-show="overview_colorFilterInfoBar_propertyVisible" style="width: 5%;">
         								<span/>
         							</div>
-        							<div flex="95" ng-show="overview_colorFilterInfoBar_propertyVisible">
+        							<div flex="95" ng-show="overview_colorFilterInfoBar_propertyVisible" style="width: 95%;">
         								<span>
         									<span ng-show="overview_colorFilterInfoText_propertyVisible" style="white-space: pre-wrap;">{{overview_colorFilterInfoText_propertyText}}</span>
         								</span>
@@ -458,10 +458,10 @@
         				</div>
         			</span>
         			<span style="position:fixed; overflow: auto;top: 3.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
-        				<div flex="5">
+        				<div flex="5" style="width: 5%;">
         					<span/>
         				</div>
-        				<div flex="95">
+        				<div flex="95" style="width: 95%;">
         					<span>
         						<div flex="100">
         							<table style="width:100%">

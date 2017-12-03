@@ -92,7 +92,12 @@
 /*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/         for (String i: reply.getDTOsToSet()){
+/*Generated! Do not modify!*/             switch(i.trim()){
+/*Generated! Do not modify!*/             case "parameter":
+/*Generated! Do not modify!*/             break;
+/*Generated! Do not modify!*/              }
+/*Generated! Do not modify!*/          }
 /*Generated! Do not modify!*/         if (reply.getMessage() != null){
 /*Generated! Do not modify!*/             display.showMessage(reply.getMessage());
 /*Generated! Do not modify!*/         }

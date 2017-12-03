@@ -2,6 +2,7 @@ package generated.fliesenui.core;
 
 import generated.fliesenui.core.FLUIKeyEvent.EventType;
 import generated.fliesenui.core.FLUIKeyEvent.KeyType;
+import generated.fliesenui.core.BrightMarkdown.FormattingItem;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,8 +13,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -323,4 +326,21 @@ public class FLUIUtil {
 		return false;
 	}
 
+	public static void applyFormatting(BrightMarkdown markdown, FLUIMarkdownFormatting formatting) {
+		if (formatting == null){
+		    return;
+        }
+
+        if (formatting.getHeadingLevelToFontSizeInMM() != null){
+            Map<Integer, Integer> map = formatting.getHeadingLevelToFontSizeInMM();
+            List<FormattingItem> formattingItems = Arrays.asList(FormattingItem.H1, FormattingItem.H2, FormattingItem.H3
+                    , FormattingItem.H4, FormattingItem.H5);
+            for (int i = 0; i < 5; i++){
+                Integer size = map.get(new Integer(i));
+                if (size != null){
+                    markdown.setFontSizeInMM(formattingItems.get(i), size);
+                }
+            }
+        }
+	}
 }

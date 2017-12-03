@@ -1,5 +1,6 @@
 /*Generated! Do not modify!*/ package generated.fliesenui.core;
 /*Generated! Do not modify!*/ import android.os.Bundle;
+/*Generated! Do not modify!*/ import android.content.Intent;
 /*Generated! Do not modify!*/ import android.support.v7.app.ActionBar;
 /*Generated! Do not modify!*/ import android.support.v7.app.AppCompatActivity;
 /*Generated! Do not modify!*/ import android.view.View;
@@ -78,10 +79,34 @@
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void onDestroy() {
+/*Generated! Do not modify!*/         try {
+/*Generated! Do not modify!*/             fluiOnDestroy();
+/*Generated! Do not modify!*/         } catch (Throwable t){
+/*Generated! Do not modify!*/             fluiOnError(t);
+/*Generated! Do not modify!*/         } 
+/*Generated! Do not modify!*/         super.onDestroy();
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+/*Generated! Do not modify!*/         try {
+/*Generated! Do not modify!*/             fluiOnActivityResult(requestCode, resultCode, data);
+/*Generated! Do not modify!*/         } catch (Throwable t){
+/*Generated! Do not modify!*/             fluiOnError(t);
+/*Generated! Do not modify!*/         } 
+/*Generated! Do not modify!*/         super.onDestroy();
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     protected abstract FLUIScreenManagerAndroid fluiCreateScreenManager();
 /*Generated! Do not modify!*/     protected abstract void fluiOnCreate(Bundle savedInstanceState);
 /*Generated! Do not modify!*/     protected abstract void fluiOnResume() throws Throwable;
 /*Generated! Do not modify!*/     protected abstract void fluiOnError(Throwable throwable);
+/*Generated! Do not modify!*/     protected void fluiOnDestroy(){}
+/*Generated! Do not modify!*/     protected void fluiOnBackPressed(){}
+/*Generated! Do not modify!*/     protected void fluiOnActivityResult(int requestCode, int resultCode, Intent data) {}
+/*Generated! Do not modify!*/     protected void fluiOnPause() {}
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private LinearLayout createMainLayout() {
 /*Generated! Do not modify!*/         LinearLayout result = new LinearLayout(this);
@@ -98,11 +123,11 @@
 /*Generated! Do not modify!*/                 clientProperties = new FLUIClientPropertiesDTO();
 /*Generated! Do not modify!*/                 loginDisplay.onLoaded(clientProperties);
 /*Generated! Do not modify!*/             }
-/*Generated! Do not modify!*/         aboutDisplay.onResume();
-/*Generated! Do not modify!*/         detailsDisplay.onResume();
-/*Generated! Do not modify!*/         loginDisplay.onResume();
-/*Generated! Do not modify!*/         markdownHelpDisplay.onResume();
-/*Generated! Do not modify!*/         overviewDisplay.onResume();
+/*Generated! Do not modify!*/             aboutDisplay.onResume();
+/*Generated! Do not modify!*/             detailsDisplay.onResume();
+/*Generated! Do not modify!*/             loginDisplay.onResume();
+/*Generated! Do not modify!*/             markdownHelpDisplay.onResume();
+/*Generated! Do not modify!*/             overviewDisplay.onResume();
 /*Generated! Do not modify!*/         } catch (Throwable t){
 /*Generated! Do not modify!*/             fluiOnError(t);
 /*Generated! Do not modify!*/         }
@@ -116,6 +141,7 @@
 /*Generated! Do not modify!*/         loginDisplay.onPause();
 /*Generated! Do not modify!*/         markdownHelpDisplay.onPause();
 /*Generated! Do not modify!*/         overviewDisplay.onPause();
+/*Generated! Do not modify!*/             fluiOnPause();
 /*Generated! Do not modify!*/             super.onPause();
 /*Generated! Do not modify!*/         } catch (Throwable t){
 /*Generated! Do not modify!*/             fluiOnError(t);
@@ -139,6 +165,11 @@
 /*Generated! Do not modify!*/         if ("overview".equals(activeScreenID)){
 /*Generated! Do not modify!*/             overviewDisplay.onBackPressed();
 /*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         try {
+/*Generated! Do not modify!*/             fluiOnBackPressed();
+/*Generated! Do not modify!*/         } catch (Throwable t){
+/*Generated! Do not modify!*/             fluiOnError(t);
+/*Generated! Do not modify!*/         } 
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private void setMainLayoutView(View view){

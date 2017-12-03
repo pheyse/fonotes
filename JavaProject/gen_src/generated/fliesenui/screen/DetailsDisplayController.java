@@ -171,7 +171,16 @@
 /*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/         for (String i: reply.getSelectBoxSelectedIDs().keySet()){
+/*Generated! Do not modify!*/         for (String i: reply.getDTOsToSet()){
+/*Generated! Do not modify!*/             switch(i.trim()){
+/*Generated! Do not modify!*/             case "colors":
+/*Generated! Do not modify!*/             break;
+/*Generated! Do not modify!*/             case "editState":
+/*Generated! Do not modify!*/             break;
+/*Generated! Do not modify!*/             case "parameter":
+/*Generated! Do not modify!*/             break;
+/*Generated! Do not modify!*/              }
+/*Generated! Do not modify!*/          }        for (String i: reply.getSelectBoxSelectedIDs().keySet()){
 /*Generated! Do not modify!*/             switch(i.trim()){
 /*Generated! Do not modify!*/             case "details_colorSelectBox_selectedItem":
 /*Generated! Do not modify!*/                 display.setColorSelectBoxSelectedID((String)reply.getSelectBoxSelectedIDs().get("details_colorSelectBox_selectedItem"));

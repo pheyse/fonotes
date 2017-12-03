@@ -3,6 +3,7 @@ package generated.fliesenui.core;
 public class CursorPos {
     private int line;
     private int posInLine;
+    private int pos;
 
     public int getLine() {
         return line;
@@ -20,4 +21,11 @@ public class CursorPos {
         this.posInLine = posInLine;
     }
 
+	public int getPos() {
+		return pos;
+	}
+
+	public void setPos(int pos) {
+		this.pos = pos;
+	}
 }

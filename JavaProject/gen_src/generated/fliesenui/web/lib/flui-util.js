@@ -374,6 +374,7 @@ updateTextAndCursorToNextColumn = function(currentText, cursorPos, listOfColumns
 	return result;
 }
 
+
 // MISC LOGIC
 // #########################################
 findIndex = function(dataArray, value, property){
@@ -404,4 +405,61 @@ createListFromProperty = function(dataArray, property){
 		index ++;
 	}
 	return result;
+}
+
+errorToString = function(err){
+	if (err == null){
+		return "error: null";
+	}
+	return "error properties: " + JSON.stringify(err) + ", toString(): " + err.toString();
+}
+
+//TEXT AREA LOGIC
+//#########################################
+
+function getCaretPos(textArea) {
+	if (textArea.selectionStart) {
+		return textArea.selectionStart;
+	} else if (document.selection) {
+		textArea.focus();
+
+		var r = document.selection.createRange();
+		if (r == null) {
+			return 0;
+		}
+
+		var re = textArea.createTextRange(), rc = re.duplicate();
+		re.moveToBookmark(r.getBookmark());
+		rc.setEndPoint('EndToStart', re);
+
+		return rc.text.length;
+	}
+	return 0;
+}
+
+function getCaretLine(textArea) {
+	var pos = getCaretPos(textArea),
+    before = textArea.value.substr(0, pos),
+    lines = before.split(/\r?\n/);
+	return lines.length - 1;
+}
+
+function getCaretPosInLine(textArea) {
+	var pos = getCaretPos(textArea),
+	before = textArea.value.substr(0, pos);
+	var lineStart = before.lastIndexOf("\n") + 1;
+	return pos - lineStart;
+}
+
+function setCaretPos(textArea, pos){
+	if(textArea.setSelectionRange){
+		textArea.focus();
+		textArea.setSelectionRange(pos,pos);
+	} else if (textArea.createTextRange) {
+		var range = textArea.createTextRange();
+		range.collapse(true);
+		range.moveEnd('character', pos);
+		range.moveStart('character', pos);
+		range.select();
+	}
 }

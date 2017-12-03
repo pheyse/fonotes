@@ -23,6 +23,7 @@
 /*Generated! Do not modify!*/ import generated.fliesenui.core.IDLabelImageAsset;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.ListChooserItem;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.BrightMarkdown;
+/*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIMarkdownFormatting;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIImageAssets.ImageAsset;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.dto.DetailsParameterDTO;
@@ -102,6 +103,10 @@
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void setMarkdownHelpTextText(String text){
+/*Generated! Do not modify!*/         setMarkdownHelpTextText(text, null);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setMarkdownHelpTextText(String text, FLUIMarkdownFormatting formatting){
 /*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("markdownHelp_markdownHelpText_propertyText");
 /*Generated! Do not modify!*/         if (text == null) {
 /*Generated! Do not modify!*/             replyDTO.getMarkdownViewTexts().remove("markdownHelpText");
@@ -109,7 +114,9 @@
 /*Generated! Do not modify!*/         } else {
 /*Generated! Do not modify!*/             String html = "";
 /*Generated! Do not modify!*/             try{
-/*Generated! Do not modify!*/                 html = new BrightMarkdown().createHTML(text);
+/*Generated! Do not modify!*/                 BrightMarkdown markdown = new BrightMarkdown();
+/*Generated! Do not modify!*/                 FLUIUtil.applyFormatting(markdown, formatting);
+/*Generated! Do not modify!*/                 html = markdown.createHTML(text);
 /*Generated! Do not modify!*/             } catch (Exception e){
 /*Generated! Do not modify!*/                 html = "<html><body><p>Error: " + e + "</p><p>text:</p><pre>" + text + "</pre></body></html>";
 /*Generated! Do not modify!*/             }

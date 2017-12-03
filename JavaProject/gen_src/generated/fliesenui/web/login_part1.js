@@ -225,9 +225,13 @@ app.controller("login_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
       
 
     $scope.login_widgetButtonLoginButtonClicked = function () {
-        var request = login$createRequest("widgetButtonLoginButtonClicked");
-        request.parameters["passwordTextFieldText"] = $scope.login_passwordTextField_propertyText;
-        login$executeRequest(request);
+        try{
+            var request = login$createRequest("widgetButtonLoginButtonClicked");
+            request.parameters["passwordTextFieldText"] = $scope.login_passwordTextField_propertyText;
+            login$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'login_widgetButtonLoginButtonClicked': " + errorToString(err));
+        }
     }
 
     setTimeout(function() {if (("WebBrowser" == browserMode) && (!singlePageApp)){login$executeOnLoadRequest();}}, 0);

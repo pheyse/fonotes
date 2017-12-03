@@ -23,6 +23,7 @@
 /*Generated! Do not modify!*/ import generated.fliesenui.core.IDLabelImageAsset;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.ListChooserItem;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.BrightMarkdown;
+/*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIMarkdownFormatting;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIImageAssets.ImageAsset;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.dto.DetailsParameterDTO;

@@ -225,40 +225,64 @@ app.controller("details_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
       
 
     $scope.details_widgetButtonBackButtonClicked = function () {
-        var request = details$createRequest("widgetButtonBackButtonClicked");
-        request.parameters["parameter"] = details$getParameter_dto();
-        details$executeRequest(request);
+        try{
+            var request = details$createRequest("widgetButtonBackButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonBackButtonClicked': " + errorToString(err));
+        }
     }
 
     $scope.details_widgetButtonEditTextButtonClicked = function () {
-        var request = details$createRequest("widgetButtonEditTextButtonClicked");
-        request.parameters["parameter"] = details$getParameter_dto();
-        details$executeRequest(request);
+        try{
+            var request = details$createRequest("widgetButtonEditTextButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonEditTextButtonClicked': " + errorToString(err));
+        }
     }
 
     $scope.details_widgetButtonEditNameButtonClicked = function () {
-        var request = details$createRequest("widgetButtonEditNameButtonClicked");
-        request.parameters["parameter"] = details$getParameter_dto();
-        details$executeRequest(request);
+        try{
+            var request = details$createRequest("widgetButtonEditNameButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonEditNameButtonClicked': " + errorToString(err));
+        }
     }
 
     $scope.details_widgetButtonDeleteButtonClicked = function () {
-        var request = details$createRequest("widgetButtonDeleteButtonClicked");
-        request.parameters["parameter"] = details$getParameter_dto();
-        details$executeRequest(request);
+        try{
+            var request = details$createRequest("widgetButtonDeleteButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonDeleteButtonClicked': " + errorToString(err));
+        }
     }
 
     $scope.details_widgetButtonSaveNoteTextButtonClicked = function () {
-        var request = details$createRequest("widgetButtonSaveNoteTextButtonClicked");
-        request.parameters["parameter"] = details$getParameter_dto();
-        request.parameters["editNoteTextAreaText"] = $scope.details_editNoteTextArea_propertyText;
-        details$executeRequest(request);
+        try{
+            var request = details$createRequest("widgetButtonSaveNoteTextButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            request.parameters["editNoteTextAreaText"] = $scope.details_editNoteTextArea_propertyText;
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonSaveNoteTextButtonClicked': " + errorToString(err));
+        }
     }
 
     $scope.details_widgetButtonCancelEditNoteTextButtonClicked = function () {
-        var request = details$createRequest("widgetButtonCancelEditNoteTextButtonClicked");
-        request.parameters["parameter"] = details$getParameter_dto();
-        details$executeRequest(request);
+        try{
+            var request = details$createRequest("widgetButtonCancelEditNoteTextButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonCancelEditNoteTextButtonClicked': " + errorToString(err));
+        }
     }
 
     if (!singlePageApp){
@@ -279,6 +303,9 @@ app.controller("details_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
 
     details_getColorSelectBoxSelectedID = function(){
         var scope = angular.element(document.getElementById('screenDetailsPanel')).scope();
+        if (scope.details_colorSelectBox_selectedItem == null){
+            return null;
+        }
         return (typeof scope.details_colorSelectBox_selectedItem == "undefined") ? null : scope.details_colorSelectBox_selectedItem.id;
     }
 
@@ -791,8 +818,12 @@ details$processReply = function(jsonString){
     }
     for (textEditorName in reply.cursorPosValues){
         cursorPosItem = reply.cursorPosValues[textEditorName];
-        this[textEditorName].setCursor(cursorPosItem.line, cursorPosItem.posInLine);
-        this[textEditorName].focus();
+        if ("details_editNoteTextArea" == textEditorName){
+            setCaretPos(document.getElementById('details_editNoteTextArea'), cursorPosItem.pos);
+        } else {
+            this[textEditorName].setCursor(cursorPosItem.line, cursorPosItem.posInLine);
+            this[textEditorName].focus();
+        }
     }
 
     for (textEditorName in reply.contextAssists){
