@@ -55,6 +55,8 @@
 /*Generated! Do not modify!*/     public void setEditNameButtonVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setDeleteButtonText(String text);
 /*Generated! Do not modify!*/     public void setDeleteButtonVisible(boolean visible);
+/*Generated! Do not modify!*/     public void setMenuButtonText(String text);
+/*Generated! Do not modify!*/     public void setMenuButtonVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setColorLabelText(String text);
 /*Generated! Do not modify!*/     public void setColorLabelVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setNoteNameLabelText(String text);
@@ -78,6 +80,7 @@
 /*Generated! Do not modify!*/     public void setEditNotePanelVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setBackButtonImageAsset(ImageAsset imageAsset);
 /*Generated! Do not modify!*/     public void setDeleteButtonImageAsset(ImageAsset imageAsset);
+/*Generated! Do not modify!*/     public void setMenuButtonImageAsset(ImageAsset imageAsset);
 /*Generated! Do not modify!*/     public void setAutosaveTimerActive(boolean active);
 /*Generated! Do not modify!*/     public void setColorsDTO(IdAndLabelListDTO dto);
 /*Generated! Do not modify!*/     public void setEditStateDTO(EditStateDTO dto);

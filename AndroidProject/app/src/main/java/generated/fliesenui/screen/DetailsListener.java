@@ -26,9 +26,11 @@
 /*Generated! Do not modify!*/     void onEditTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onEditNameButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onDeleteButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
+/*Generated! Do not modify!*/     void onMenuButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onSaveNoteTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText);
 /*Generated! Do not modify!*/     void onCancelEditNoteTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onAutosaveTimer(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText, EditStateDTO editState);
 /*Generated! Do not modify!*/     void onColorSelectBoxChanged(DetailsReply reply, String itemID, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/     void onBackPressed(DetailsReply reply, DetailsParameterDTO parameter);
+/*Generated! Do not modify!*/     void onListChooserMenu(DetailsReply reply, java.util.List<String> selectedIDs, DetailsParameterDTO parameter);
 /*Generated! Do not modify!*/ }

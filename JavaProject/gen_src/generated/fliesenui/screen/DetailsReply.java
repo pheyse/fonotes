@@ -142,6 +142,26 @@
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setMenuButtonText(String text){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_menuButton_propertyText");
+/*Generated! Do not modify!*/         if (text == null) {
+/*Generated! Do not modify!*/             replyDTO.getVariableValues().remove("details_menuButton_propertyText");
+/*Generated! Do not modify!*/         } else {
+/*Generated! Do not modify!*/             replyDTO.getVariableValues().put("details_menuButton_propertyText", text);
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setMenuButtonText(" + escapeString(text) + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setMenuButtonVisible(boolean visible){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_menuButton_propertyVisible");
+/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_menuButton_propertyVisible", visible);
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setMenuButtonVisible(" + visible + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void setColorLabelText(String text){
 /*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_colorLabel_propertyText");
 /*Generated! Do not modify!*/         if (text == null) {
@@ -376,6 +396,14 @@
 /*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_deleteButton_propertyImageSource", imageAsset.getFilename());
 /*Generated! Do not modify!*/         if (recordMode){
 /*Generated! Do not modify!*/             addRecordedAction(ReplyActionType.SET_IMAGE_ASSET, "setDeleteButtonImageAsset(", imageAsset);
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setMenuButtonImageAsset(ImageAsset imageAsset){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_menuButton_propertyImageSource");
+/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_menuButton_propertyImageSource", imageAsset.getFilename());
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction(ReplyActionType.SET_IMAGE_ASSET, "setMenuButtonImageAsset(", imageAsset);
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 

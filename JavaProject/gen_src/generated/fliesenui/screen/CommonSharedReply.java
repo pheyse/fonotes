@@ -3,6 +3,7 @@
 /*Generated! Do not modify!*/ import java.util.Collection;import java.util.List;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.TextHighlighting;
+/*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIMarkdownFormatting;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.CursorPos;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.ContextAssist;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.IDLabelImageAssetList;
@@ -32,4 +33,6 @@
 /*Generated! Do not modify!*/     void setInfoDialog(String title, String text);
 /*Generated! Do not modify!*/     void setInfoToast(String text);
 /*Generated! Do not modify!*/     void setLanguage(StringLanguage language);
+/*Generated! Do not modify!*/     void setMenuButtonText(String text);
+/*Generated! Do not modify!*/     void setMenuButtonVisible(boolean visible);
 /*Generated! Do not modify!*/ }

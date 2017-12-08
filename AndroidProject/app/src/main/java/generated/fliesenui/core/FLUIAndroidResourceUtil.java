@@ -9,6 +9,8 @@
 /*Generated! Do not modify!*/                 return R.drawable.flui_generated_back;
 /*Generated! Do not modify!*/             case "delete":
 /*Generated! Do not modify!*/                 return R.drawable.flui_generated_delete;
+/*Generated! Do not modify!*/             case "menu":
+/*Generated! Do not modify!*/                 return R.drawable.flui_generated_menu;
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/         throw new Exception("No image resource for image asset id '" + imageAssetID + "'");
 /*Generated! Do not modify!*/     }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 
+import com.bright_side_it.fonotes.common.base.MarkdownFormattingUtil;
 import com.bright_side_it.fonotes.common.base.Platform;
 import com.bright_side_it.fonotes.common.base.TextAndCursorPos;
 import com.bright_side_it.fonotes.common.base.TextUtil;
@@ -20,6 +21,7 @@ import generated.fliesenui.core.FLUIKeyEvent;
 import generated.fliesenui.core.FLUIKeyEvent.KeyType;
 import generated.fliesenui.core.FLUIMarkdownFormatting;
 import generated.fliesenui.core.FLUIUtil;
+import generated.fliesenui.core.IDLabelList;
 import generated.fliesenui.core.KeyModifier;
 import generated.fliesenui.core.TextHighlighting;
 import generated.fliesenui.dto.DetailsParameterDTO;
@@ -43,7 +45,8 @@ import generated.fliesenui.screen.DetailsReply;
  */
 
 public class DetailsPresenter implements DetailsListener{
-	private FonotesDAO dao;
+    private static final String MENU_ITEM_EXPORT_AS_HTML = "exportAsHTML";
+    private FonotesDAO dao;
 	private String password;
 	private ColorLogic colorLogic = new ColorLogic();
 	private CommonPresenter commonPresenter;
@@ -96,6 +99,11 @@ public class DetailsPresenter implements DetailsListener{
 	        return;
         }
         try{
+            FLUIMarkdownFormatting formatting = MarkdownFormattingUtil.createMarkdownFormatting(text);
+            reply.setNoteViewText(text, formatting);
+
+
+/*
             int deepestHeading = new BrightMarkdown().getDeepestHeading(text);
             FLUIMarkdownFormatting formatting = new FLUIMarkdownFormatting();
             Map<Integer, Integer> fontSizesMap = new TreeMap<>();
@@ -106,6 +114,7 @@ public class DetailsPresenter implements DetailsListener{
                 fontSize = (int)Math.max(fontSize * 1.2, fontSize + 2);
             }
             reply.setNoteViewText(text, formatting);
+*/
         } catch (Exception e){
             commonPresenter.handleError(reply, "Could not read markdown text", e);
             return;
@@ -268,6 +277,13 @@ public class DetailsPresenter implements DetailsListener{
 	}
 
 	@Override
+	public void onMenuButtonClicked(DetailsReply reply, DetailsParameterDTO parameter) {
+        IDLabelList items = new IDLabelList();
+        items.addItem(MENU_ITEM_EXPORT_AS_HTML, "Export as HTML");
+        reply.showListChooser("", false, false, "Menu", items, null).withCallbackMenu(parameter);
+	}
+
+	@Override
 	public void onConfirmDialogResult(DetailsReply reply, String referenceID, boolean confirmed) {
 		if (!confirmed){
 			return;
@@ -356,6 +372,35 @@ public class DetailsPresenter implements DetailsListener{
 	public void onBackPressed(DetailsReply reply, DetailsParameterDTO parameter) {
 		onBackButtonClicked(reply, parameter);
 	}
+
+    @Override
+    public void onListChooserMenu(DetailsReply reply, List<String> selectedIDs, DetailsParameterDTO parameter) {
+        if (selectedIDs == null){
+            return;
+        }
+        if (!verifyParameterPassword(reply, parameter)){
+            return;
+        }
+
+        switch (selectedIDs.get(0)){
+            case MENU_ITEM_EXPORT_AS_HTML:
+                exportAsHTML(reply, parameter.getNoteName());
+                break;
+            default:
+                String message = "Unexpected selection: " + selectedIDs.get(0);
+                commonPresenter.handleError(reply, message, new Exception(message));
+        }
+    }
+
+    private void exportAsHTML(DetailsReply reply, String noteName) {
+        try{
+            String exportPath = dao.exportNoteAsHTML(noteName);
+            reply.setInfoDialog("Text exported", "Exported as HTML file '" + exportPath + "'");
+        } catch (Exception e){
+            commonPresenter.handleError(reply, "Could not set auto save text", e);
+            return;
+        }
+    }
 
 	/*
 	@Override

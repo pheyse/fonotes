@@ -371,6 +371,8 @@ public class FLUITestWriter{
             return "createOnEditNameButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("widgetButtonDeleteButtonClicked")){
             return "createOnDeleteButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
+        } else if (requestData.getAction().equals("widgetButtonMenuButtonClicked")){
+            return "createOnMenuButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter())";
         } else if (requestData.getAction().equals("widgetButtonSaveNoteTextButtonClicked")){
             return "createOnSaveNoteTextButtonClickedRequest(" + quoteIfNotNull(requestData.getCurrentLanguage()) + ", createStep" + step + "DTO1Parameter(), " + quoteIfNotNull((String)p.get("editNoteTextAreaText")) + ")";
         } else if (requestData.getAction().equals("widgetButtonCancelEditNoteTextButtonClicked")){
@@ -477,6 +479,8 @@ public class FLUITestWriter{
             result.append(createScreenDetailsDTO1MethodForActionWidgetButtonEditNameButtonClicked(step, requestData));
         } else if (requestData.getAction().equals("widgetButtonDeleteButtonClicked")){
             result.append(createScreenDetailsDTO1MethodForActionWidgetButtonDeleteButtonClicked(step, requestData));
+        } else if (requestData.getAction().equals("widgetButtonMenuButtonClicked")){
+            result.append(createScreenDetailsDTO1MethodForActionWidgetButtonMenuButtonClicked(step, requestData));
         } else if (requestData.getAction().equals("widgetButtonSaveNoteTextButtonClicked")){
             result.append(createScreenDetailsDTO1MethodForActionWidgetButtonSaveNoteTextButtonClicked(step, requestData));
         } else if (requestData.getAction().equals("widgetButtonCancelEditNoteTextButtonClicked")){
@@ -670,6 +674,23 @@ public class FLUITestWriter{
     }
 
     private StringBuilder createScreenDetailsDTO1MethodForActionWidgetButtonDeleteButtonClicked(int step, FLUIRequest requestData){
+        StringBuilder result = new StringBuilder();
+        DetailsParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), DetailsParameterDTO.class);
+        String declaration = "private DetailsParameterDTO createStep" + step + "DTO1Parameter()";
+        if (declaredCreateStepDTOMethods.contains(declaration)){
+            return result;
+        }
+        declaredCreateStepDTOMethods.add(declaration);
+        result.append("    " + declaration + "{\n");
+        result.append("        DetailsParameterDTO result = new DetailsParameterDTO();\n");
+        result.append(createSetDTODetailsParameterDTO("        ", "result", 0, "result", dto));
+        result.append("        return result;\n");
+        result.append("    }\n");
+        result.append("\n");
+        return result;
+    }
+
+    private StringBuilder createScreenDetailsDTO1MethodForActionWidgetButtonMenuButtonClicked(int step, FLUIRequest requestData){
         StringBuilder result = new StringBuilder();
         DetailsParameterDTO dto = gson.fromJson((String)requestData.getParameters().get("parameter"), DetailsParameterDTO.class);
         String declaration = "private DetailsParameterDTO createStep" + step + "DTO1Parameter()";

@@ -55,6 +55,12 @@
 /*Generated! Do not modify!*/         return resultInstance;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public static DetailsRequest createOnMenuButtonClickedRequest(String language, generated.fliesenui.dto.DetailsParameterDTO parameter){
+/*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("widgetButtonMenuButtonClicked", language);
+/*Generated! Do not modify!*/         resultInstance.request.getParameters().put("parameter", new Gson().toJson(parameter));
+/*Generated! Do not modify!*/         return resultInstance;
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public static DetailsRequest createOnSaveNoteTextButtonClickedRequest(String language, generated.fliesenui.dto.DetailsParameterDTO parameter, String editNoteTextAreaText){
 /*Generated! Do not modify!*/         DetailsRequest resultInstance = new DetailsRequest("widgetButtonSaveNoteTextButtonClicked", language);
 /*Generated! Do not modify!*/         resultInstance.request.getParameters().put("parameter", new Gson().toJson(parameter));

@@ -53,6 +53,8 @@
 /*Generated! Do not modify!*/             listener.onEditNameButtonClicked(reply, gson.fromJson((String)parameters.get("parameter"), DetailsParameterDTO.class));
 /*Generated! Do not modify!*/         } else if ("widgetButtonDeleteButtonClicked".equals(action)) {
 /*Generated! Do not modify!*/             listener.onDeleteButtonClicked(reply, gson.fromJson((String)parameters.get("parameter"), DetailsParameterDTO.class));
+/*Generated! Do not modify!*/         } else if ("widgetButtonMenuButtonClicked".equals(action)) {
+/*Generated! Do not modify!*/             listener.onMenuButtonClicked(reply, gson.fromJson((String)parameters.get("parameter"), DetailsParameterDTO.class));
 /*Generated! Do not modify!*/         } else if ("widgetButtonSaveNoteTextButtonClicked".equals(action)) {
 /*Generated! Do not modify!*/             listener.onSaveNoteTextButtonClicked(reply, gson.fromJson((String)parameters.get("parameter"), DetailsParameterDTO.class), (String)parameters.get("editNoteTextAreaText"));
 /*Generated! Do not modify!*/         } else if ("widgetButtonCancelEditNoteTextButtonClicked".equals(action)) {
@@ -83,6 +85,11 @@
 /*Generated! Do not modify!*/             listener.onConfirmDialogResult(reply, referenceID, result);
 /*Generated! Do not modify!*/             return;
 /*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         Gson gson = new Gson();
+/*Generated! Do not modify!*/         CallbackMethodCall callback = gson.fromJson(callbackDataString, CallbackMethodCall.class);
+/*Generated! Do not modify!*/         Map<String, Object> callbackMethodParameters = callback.getParameterValues();
+/*Generated! Do not modify!*/         switch (callback.getCallbackMethodIndex()) {
+/*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/     
 /*Generated! Do not modify!*/     private void onStringInputDialogResult(DetailsReply reply, String action, Map<String, Object> parameters){
@@ -93,6 +100,11 @@
 /*Generated! Do not modify!*/             listener.onInputDialogResult(reply, referenceID, result);
 /*Generated! Do not modify!*/             return;
 /*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         Gson gson = new Gson();
+/*Generated! Do not modify!*/         CallbackMethodCall callback = gson.fromJson(callbackDataString, CallbackMethodCall.class);
+/*Generated! Do not modify!*/         Map<String, Object> callbackMethodParameters = callback.getParameterValues();
+/*Generated! Do not modify!*/         switch (callback.getCallbackMethodIndex()) {
+/*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/     
 /*Generated! Do not modify!*/     private void onListChooserDialogResult(DetailsReply reply, String action, Map<String, Object> parameters){
@@ -102,6 +114,14 @@
 /*Generated! Do not modify!*/         if (callbackDataString == null){
 /*Generated! Do not modify!*/             listener.onListChooserResult(reply, referenceID, result);
 /*Generated! Do not modify!*/             return;
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         Gson gson = new Gson();
+/*Generated! Do not modify!*/         CallbackMethodCall callback = gson.fromJson(callbackDataString, CallbackMethodCall.class);
+/*Generated! Do not modify!*/         Map<String, Object> callbackMethodParameters = callback.getParameterValues();
+/*Generated! Do not modify!*/         switch (callback.getCallbackMethodIndex()) {
+/*Generated! Do not modify!*/         case 0:
+/*Generated! Do not modify!*/             listener.onListChooserMenu(reply, result, gson.fromJson((String)callbackMethodParameters.get("parameter"), DetailsParameterDTO.class));
+/*Generated! Do not modify!*/             break;
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/     

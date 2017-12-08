@@ -264,6 +264,16 @@ app.controller("details_Ctrl", function($scope, $mdToast, $mdDialog, $http) {
         }
     }
 
+    $scope.details_widgetButtonMenuButtonClicked = function () {
+        try{
+            var request = details$createRequest("widgetButtonMenuButtonClicked");
+            request.parameters["parameter"] = details$getParameter_dto();
+            details$executeRequest(request);
+        } catch (err){
+            console.log("FLUI error in method 'details_widgetButtonMenuButtonClicked': " + errorToString(err));
+        }
+    }
+
     $scope.details_widgetButtonSaveNoteTextButtonClicked = function () {
         try{
             var request = details$createRequest("widgetButtonSaveNoteTextButtonClicked");
@@ -340,6 +350,8 @@ var details$setInitialValues = function(){
     scope.details_editNameButton_propertyVisible = true;
     scope.details_deleteButton_propertyText = "";
     scope.details_deleteButton_propertyVisible = true;
+    scope.details_menuButton_propertyText = "";
+    scope.details_menuButton_propertyVisible = true;
     scope.details_colorLabel_propertyText = "Note Color:";
     scope.details_colorLabel_propertyVisible = true;
     scope.details_noteNameLabel_propertyText = "My Note 123";
@@ -359,6 +371,7 @@ var details$setInitialValues = function(){
     scope.details_editNoteInfoLabel_propertyVisible = true;
     scope.details_backButton_propertyImageSource = "back.png";
     scope.details_deleteButton_propertyImageSource = "delete.png";
+    scope.details_menuButton_propertyImageSource = "menu.png";
     scope.details_autosaveTimer_active = false;
     scope.details_colorBar_propertyVisible = true;
     scope.details_viewNoteName_propertyVisible = true;
@@ -371,6 +384,7 @@ var details$createImageAssetIDToNameMap = function(){
     result = new Object();
     result["back"] = "back.png";
     result["delete"] = "delete.png";
+    result["menu"] = "menu.png";
     return result;
 }
 

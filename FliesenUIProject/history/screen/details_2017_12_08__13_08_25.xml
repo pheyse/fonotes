@@ -11,9 +11,6 @@
         <eventParameter value="editNoteTextArea.text" />
         <eventParameter value="editState" />
     </timer>
-    <callbackMethod name="menu" type="listChooser">
-    	<parameter name="parameter" type="detailsParameter" />
-    </callbackMethod>
     
     <container orientation="borderLayout" topSize="3">
         <bar position="top">
@@ -31,9 +28,6 @@
                                 <eventParameter value="parameter"/>
                             </button>
                             <button id="deleteButton" text="" imageAssetID="delete">
-                                <eventParameter value="parameter"/>
-                            </button>
-                            <button id="menuButton" text="" imageAssetID="menu">
                                 <eventParameter value="parameter"/>
                             </button>
                         </cell>

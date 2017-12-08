@@ -35,7 +35,16 @@
 /*Generated! Do not modify!*/          this.dialogParameters = dialogParameters;
 /*Generated! Do not modify!*/      }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void noCallbackMethodsDefinedInScreenXML(){
+/*Generated! Do not modify!*/     public void withCallbackMenu(DetailsParameterDTO parameter){
+/*Generated! Do not modify!*/         CallbackMethodCall methodCall = new CallbackMethodCall();
+/*Generated! Do not modify!*/         methodCall.setCallbackMethodIndex(0);
+/*Generated! Do not modify!*/         Map<String, Object> params = new TreeMap<String, Object>();
+/*Generated! Do not modify!*/         params.put("parameter", gson.toJson(parameter));
+/*Generated! Do not modify!*/         methodCall.setParameterValues(params);
+/*Generated! Do not modify!*/         if (dialogParameters == null){
+/*Generated! Do not modify!*/             return;
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         dialogParameters.setCallbackData(gson.toJson(methodCall));
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ }

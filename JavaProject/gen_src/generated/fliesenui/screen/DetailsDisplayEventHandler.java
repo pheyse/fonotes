@@ -77,6 +77,12 @@
 /*Generated! Do not modify!*/         screenManager.onRequest(new Gson().toJson(request), null, null);
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void onMenuButtonClicked(DetailsParameterDTO parameter){
+/*Generated! Do not modify!*/         FLUIRequest request = createRequest("widgetButtonMenuButtonClicked");
+/*Generated! Do not modify!*/         request.getParameters().put("parameter", new Gson().toJson(parameter));
+/*Generated! Do not modify!*/         screenManager.onRequest(new Gson().toJson(request), null, null);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void onSaveNoteTextButtonClicked(DetailsParameterDTO parameter, String editNoteTextAreaText){
 /*Generated! Do not modify!*/         FLUIRequest request = createRequest("widgetButtonSaveNoteTextButtonClicked");
 /*Generated! Do not modify!*/         request.getParameters().put("parameter", new Gson().toJson(parameter));

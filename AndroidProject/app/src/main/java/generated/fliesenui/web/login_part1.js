@@ -264,6 +264,7 @@ var login$createImageAssetIDToNameMap = function(){
     result = new Object();
     result["back"] = "back.png";
     result["delete"] = "delete.png";
+    result["menu"] = "menu.png";
     return result;
 }
 

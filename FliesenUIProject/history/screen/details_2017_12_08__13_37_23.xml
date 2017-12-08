@@ -11,7 +11,7 @@
         <eventParameter value="editNoteTextArea.text" />
         <eventParameter value="editState" />
     </timer>
-    <callbackMethod name="menu" type="listChooser">
+    <callbackMethod name="menu">
     	<parameter name="parameter" type="detailsParameter" />
     </callbackMethod>
     

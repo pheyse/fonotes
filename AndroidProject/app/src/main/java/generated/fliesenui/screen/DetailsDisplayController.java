@@ -82,6 +82,12 @@
 /*Generated! Do not modify!*/             case "details_deleteButton_propertyVisible":
 /*Generated! Do not modify!*/                 display.setDeleteButtonVisible((boolean)reply.getVariableValues().get("details_deleteButton_propertyVisible"));
 /*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_menuButton_propertyText":
+/*Generated! Do not modify!*/                 display.setMenuButtonText((String)reply.getVariableValues().get("details_menuButton_propertyText"));
+/*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_menuButton_propertyVisible":
+/*Generated! Do not modify!*/                 display.setMenuButtonVisible((boolean)reply.getVariableValues().get("details_menuButton_propertyVisible"));
+/*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             case "details_colorLabel_propertyText":
 /*Generated! Do not modify!*/                 display.setColorLabelText((String)reply.getVariableValues().get("details_colorLabel_propertyText"));
 /*Generated! Do not modify!*/                 break;

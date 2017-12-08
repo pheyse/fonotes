@@ -81,10 +81,6 @@ import java.util.TreeSet;
 
 import static generated.fliesenui.core.FLUIMessage.*;
 
-/**
- * Created by osboxes on 9/27/17.
- */
-
 public class FLUIAndroidUtil {
     public enum SizeUnit {DIP, CM}
     public static final float INCH_TO_CM_FACTOR = 2.54f;

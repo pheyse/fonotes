@@ -111,6 +111,8 @@
 /*Generated! Do not modify!*/     private EditText textAreaEditNoteTextArea;
 /*Generated! Do not modify!*/     private Button textButtonEditTextButton;
 /*Generated! Do not modify!*/     private ImageButton imageButtonEditTextButton;
+/*Generated! Do not modify!*/     private Button textButtonMenuButton;
+/*Generated! Do not modify!*/     private ImageButton imageButtonMenuButton;
 /*Generated! Do not modify!*/     private TextView labelNoteNameLabel;
 /*Generated! Do not modify!*/     private WebView markdownViewNoteView;
 /*Generated! Do not modify!*/     private Button textButtonSaveNoteTextButton;
@@ -295,6 +297,30 @@
 /*Generated! Do not modify!*/         });
 /*Generated! Do not modify!*/         cell4.addView(textButtonDeleteButton, paramsWrapWrap);
 /*Generated! Do not modify!*/         cell4.addView(imageButtonDeleteButton, paramsImageButton);
+/*Generated! Do not modify!*/         textButtonMenuButton = new Button(context);
+/*Generated! Do not modify!*/         imageButtonMenuButton = new ImageButton(context);
+/*Generated! Do not modify!*/         textButtonMenuButton.setText("");
+/*Generated! Do not modify!*/         drawable = getResources().getDrawable(R.drawable.flui_generated_menu);
+/*Generated! Do not modify!*/         drawable.setBounds(0, 0, 72, 72);
+/*Generated! Do not modify!*/         imageButtonMenuButton.setImageResource(R.drawable.flui_generated_menu);
+/*Generated! Do not modify!*/         textButtonMenuButton.setCompoundDrawables(drawable, null, null, null);
+/*Generated! Do not modify!*/         imageButtonMenuButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+/*Generated! Do not modify!*/         imageButtonMenuButton.setAdjustViewBounds(true);
+/*Generated! Do not modify!*/         textButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/         textButtonMenuButton.setOnClickListener(new View.OnClickListener() {
+/*Generated! Do not modify!*/             @Override
+/*Generated! Do not modify!*/             public void onClick(View view) {
+/*Generated! Do not modify!*/                 eventHandler.onMenuButtonClicked(getParameterDTO());
+/*Generated! Do not modify!*/             };
+/*Generated! Do not modify!*/         });
+/*Generated! Do not modify!*/         imageButtonMenuButton.setOnClickListener(new View.OnClickListener() {
+/*Generated! Do not modify!*/             @Override
+/*Generated! Do not modify!*/             public void onClick(View view) {
+/*Generated! Do not modify!*/                 eventHandler.onMenuButtonClicked(getParameterDTO());
+/*Generated! Do not modify!*/             };
+/*Generated! Do not modify!*/         });
+/*Generated! Do not modify!*/         cell4.addView(textButtonMenuButton, paramsWrapWrap);
+/*Generated! Do not modify!*/         cell4.addView(imageButtonMenuButton, paramsImageButton);
 /*Generated! Do not modify!*/         layoutBarButtonBar.addView(cell4, paramsMatchMatch);
 /*Generated! Do not modify!*/         container5.addView(layoutBarButtonBar, paramsMatchWrap);
 /*Generated! Do not modify!*/         LinearLayout bar5 = new LinearLayout(context);
@@ -597,6 +623,37 @@
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setMenuButtonText(String text){
+/*Generated! Do not modify!*/         textButtonMenuButton.setText(text);
+/*Generated! Do not modify!*/         if ((textButtonMenuButton.getVisibility() == View.GONE) && (imageButtonMenuButton.getVisibility() == View.GONE)){
+/*Generated! Do not modify!*/             return; //: both buttons are invisible, nothing to do
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         if ((text == null) || (text.isEmpty())){
+/*Generated! Do not modify!*/             textButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/             imageButtonMenuButton.setVisibility(View.VISIBLE);
+/*Generated! Do not modify!*/         } else {
+/*Generated! Do not modify!*/             textButtonMenuButton.setVisibility(View.VISIBLE);
+/*Generated! Do not modify!*/             imageButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setMenuButtonVisible(boolean visible){
+/*Generated! Do not modify!*/         if (!visible){
+/*Generated! Do not modify!*/             textButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/             imageButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/             return;
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         if ((textButtonMenuButton.getText() == null) || (textButtonMenuButton.getText().toString().isEmpty())){
+/*Generated! Do not modify!*/             textButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/             imageButtonMenuButton.setVisibility(View.VISIBLE);
+/*Generated! Do not modify!*/         } else {
+/*Generated! Do not modify!*/             textButtonMenuButton.setVisibility(View.VISIBLE);
+/*Generated! Do not modify!*/             imageButtonMenuButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setColorLabelText(String text){
 /*Generated! Do not modify!*/         labelColorLabel.setText(text);
 /*Generated! Do not modify!*/     }
@@ -765,6 +822,10 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setDeleteButtonImageAsset(ImageAsset imageAsset){
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setMenuButtonImageAsset(ImageAsset imageAsset){
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override

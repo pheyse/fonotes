@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 import com.bright_side_it.filesystemfacade.facade.FSFFile;
 import com.bright_side_it.fonotes.common.base.FileUtil;
+import com.bright_side_it.fonotes.common.base.MarkdownFormattingUtil;
 import com.bright_side_it.fonotes.common.base.Platform;
 import com.bright_side_it.fonotes.common.logic.ColorLogic;
 import com.bright_side_it.fonotes.common.logic.DirNamesLogic;
@@ -20,6 +21,9 @@ import com.bright_side_it.fonotes.common.model.NoteInfoRepository;
 import com.bright_side_it.fonotes.common.model.Settings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import generated.fliesenui.core.BrightMarkdown;
+import generated.fliesenui.core.FLUIMarkdownFormatting;
 
 public class FonotesDAO {
 	private static final SimpleDateFormat HISTORY_TIME_FORMAT = new SimpleDateFormat("yyyy_MM_dd__HH_mm_ss");
@@ -41,6 +45,10 @@ public class FonotesDAO {
 
 	private FSFFile getNotesDir() throws Exception{
 		return makeSureItExists(platform.getApplicationDataFSFDir().getChild("notes"));
+	}
+
+	private FSFFile getExportDir() throws Exception{
+		return makeSureItExists(platform.getApplicationDataFSFDir().getChild("export"));
 	}
 
 	private FSFFile getSettigsFile() throws Exception{
@@ -352,5 +360,23 @@ public class FonotesDAO {
 		}
 	}
 
-	
+
+    /**
+     *
+     * @param noteName
+     * @return path to which the note as been exported to
+     */
+    public String exportNoteAsHTML(String noteName) throws Exception{
+        String text = readNoteContent(noteName);
+
+        FLUIMarkdownFormatting formatting = MarkdownFormattingUtil.createMarkdownFormatting(text);
+        BrightMarkdown brightMarkdown = new BrightMarkdown();
+        MarkdownFormattingUtil.apply(brightMarkdown, formatting);
+        String html = brightMarkdown.createHTML(text);
+
+        FSFFile file = getExportDir().getChild("note.html");
+        FileUtil.writeFile(file, html);
+
+        return file.getAbsolutePath();
+    }
 }

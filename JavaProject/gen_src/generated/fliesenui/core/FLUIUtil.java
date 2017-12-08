@@ -336,7 +336,7 @@ public class FLUIUtil {
             List<FormattingItem> formattingItems = Arrays.asList(FormattingItem.H1, FormattingItem.H2, FormattingItem.H3
                     , FormattingItem.H4, FormattingItem.H5);
             for (int i = 0; i < 5; i++){
-                Integer size = map.get(1);
+                Integer size = map.get(new Integer(i));
                 if (size != null){
                     markdown.setFontSizeInMM(formattingItems.get(i), size);
                 }
