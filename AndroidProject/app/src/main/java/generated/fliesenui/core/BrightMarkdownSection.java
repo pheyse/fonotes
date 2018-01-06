@@ -3,7 +3,7 @@ package generated.fliesenui.core;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Philip Heyse
  *
  */

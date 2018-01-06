@@ -1,7 +1,10 @@
 package com.bright_side_it.fonotes.android.service;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -31,6 +34,7 @@ public class WebServerService extends Service {
 	private static FonotesAndroidJettyServer jettyServer;
 	private static String infoString;
 	private int ONGOING_NOTIFICATION_ID = 1;
+	private static final String NOTIFICATION_CHANNEL_ID = "1";
 	private static final int PORT = 53001;
 	private static final String LOG_TAG = "Fonotes Web Server";
 	private static final int PASSWORD_LENGTH = 5;
@@ -40,6 +44,26 @@ public class WebServerService extends Service {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
+
+
+	/**
+	 * see also: https://developer.android.com/guide/topics/ui/notifiers/notifications.html
+	 * quote: "Attempting to create an existing notification channel with its original values performs no operation,
+	 * so it's safe to perform the preceding sequence of steps when starting an app"
+	 */
+	private void createOrRecreateNotificationChannel(){
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+			return; //: this is only possible and only required for version Oreo and higher
+		}
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		CharSequence name = "Fonotes Web Server"; //: The user-visible name of the channel.
+		int importance = NotificationManager.IMPORTANCE_HIGH;
+		NotificationChannel mChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+		mChannel.setDescription("Notifications from the Fonotes Web Server");
+		mChannel.enableLights(false);
+		mNotificationManager.createNotificationChannel(mChannel);
+	}
+
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -51,7 +75,7 @@ public class WebServerService extends Service {
 		} else if (ACTION_STOP.equals(action)){
 			stopWebServer();
 		} else {
-			Log.w("FLUI Webserver", "Unknown action: " + action);
+			Log.w("Fonotes Webserver", "Unknown action: " + action);
 		}
 		return START_NOT_STICKY;
 	}
@@ -66,9 +90,11 @@ public class WebServerService extends Service {
 
 		infoString = "Password = " + password + "\n" + jettyServer.getIPAddressInfoString(PORT);
 
+		createOrRecreateNotificationChannel();
 		NotificationCompat.Builder notification = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_tray)
 				.setContentTitle("Fonotes Server")
+				.setChannelId(NOTIFICATION_CHANNEL_ID)
 				.setContentText(infoString);
 
 		Intent notificationIntent = new Intent(this, MainActivity.class);
