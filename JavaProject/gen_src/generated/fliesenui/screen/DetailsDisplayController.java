@@ -88,6 +88,18 @@
 /*Generated! Do not modify!*/             case "details_menuButton_propertyVisible":
 /*Generated! Do not modify!*/                 display.setMenuButtonVisible((boolean)reply.getVariableValues().get("details_menuButton_propertyVisible"));
 /*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_saveNoteTextButton_propertyText":
+/*Generated! Do not modify!*/                 display.setSaveNoteTextButtonText((String)reply.getVariableValues().get("details_saveNoteTextButton_propertyText"));
+/*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_saveNoteTextButton_propertyVisible":
+/*Generated! Do not modify!*/                 display.setSaveNoteTextButtonVisible((boolean)reply.getVariableValues().get("details_saveNoteTextButton_propertyVisible"));
+/*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_cancelEditNoteTextButton_propertyText":
+/*Generated! Do not modify!*/                 display.setCancelEditNoteTextButtonText((String)reply.getVariableValues().get("details_cancelEditNoteTextButton_propertyText"));
+/*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_cancelEditNoteTextButton_propertyVisible":
+/*Generated! Do not modify!*/                 display.setCancelEditNoteTextButtonVisible((boolean)reply.getVariableValues().get("details_cancelEditNoteTextButton_propertyVisible"));
+/*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             case "details_colorLabel_propertyText":
 /*Generated! Do not modify!*/                 display.setColorLabelText((String)reply.getVariableValues().get("details_colorLabel_propertyText"));
 /*Generated! Do not modify!*/                 break;
@@ -105,18 +117,6 @@
 /*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             case "details_noteView_propertyVisible":
 /*Generated! Do not modify!*/                 display.setNoteViewVisible((boolean)reply.getVariableValues().get("details_noteView_propertyVisible"));
-/*Generated! Do not modify!*/                 break;
-/*Generated! Do not modify!*/             case "details_saveNoteTextButton_propertyText":
-/*Generated! Do not modify!*/                 display.setSaveNoteTextButtonText((String)reply.getVariableValues().get("details_saveNoteTextButton_propertyText"));
-/*Generated! Do not modify!*/                 break;
-/*Generated! Do not modify!*/             case "details_saveNoteTextButton_propertyVisible":
-/*Generated! Do not modify!*/                 display.setSaveNoteTextButtonVisible((boolean)reply.getVariableValues().get("details_saveNoteTextButton_propertyVisible"));
-/*Generated! Do not modify!*/                 break;
-/*Generated! Do not modify!*/             case "details_cancelEditNoteTextButton_propertyText":
-/*Generated! Do not modify!*/                 display.setCancelEditNoteTextButtonText((String)reply.getVariableValues().get("details_cancelEditNoteTextButton_propertyText"));
-/*Generated! Do not modify!*/                 break;
-/*Generated! Do not modify!*/             case "details_cancelEditNoteTextButton_propertyVisible":
-/*Generated! Do not modify!*/                 display.setCancelEditNoteTextButtonVisible((boolean)reply.getVariableValues().get("details_cancelEditNoteTextButton_propertyVisible"));
 /*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             case "details_editNoteTextArea_propertyText":
 /*Generated! Do not modify!*/                 display.setEditNoteTextAreaText((String)reply.getVariableValues().get("details_editNoteTextArea_propertyText"));
@@ -138,6 +138,9 @@
 /*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             case "details_buttonBar_propertyVisible":
 /*Generated! Do not modify!*/                 display.setButtonBarVisible((boolean)reply.getVariableValues().get("details_buttonBar_propertyVisible"));
+/*Generated! Do not modify!*/                 break;
+/*Generated! Do not modify!*/             case "details_editNoteButtonBar_propertyVisible":
+/*Generated! Do not modify!*/                 display.setEditNoteButtonBarVisible((boolean)reply.getVariableValues().get("details_editNoteButtonBar_propertyVisible"));
 /*Generated! Do not modify!*/                 break;
 /*Generated! Do not modify!*/             case "details_viewNotePanel_propertyVisible":
 /*Generated! Do not modify!*/                 display.setViewNotePanelVisible((boolean)reply.getVariableValues().get("details_viewNotePanel_propertyVisible"));
@@ -210,6 +213,10 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/         if (reply.getScreenToOpen() != null){
 /*Generated! Do not modify!*/             openScreen(reply.getScreenToOpen(), reply.getOpenParameter());
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/         if (reply.getDownloadFileStreamID() != null){
+/*Generated! Do not modify!*/             display.downloadFile(reply.getDownloadFileStreamID());
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 

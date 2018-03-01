@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class FLUIUtil {
+	public static final String USER_AGENT_FLUI_ANDROID_NATIVE = "FLUIAndroidNative";
+
 	private static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd;HH:mm:ss");
 
 	private static final String ENCODING = "UTF-8";

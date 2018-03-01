@@ -114,7 +114,7 @@ getText = function(stringID){
 
 		        <div id="box1cm" style="width: 1cm; height: 1cm; position: absolute; left: -100%; top: -100%;"></div>
 <div layout-wrap="" layout-align="space-between center">
-			<span style="position:fixed; top:0; left:0; height:3.0cm; width: 100%;">
+			<span style="position:fixed; top:0; left:0; height:2.0cm; width: 100%;">
 				<div flex="100" style="width: 100%;">
 					<span>
 						<div layout-wrap="" layout-align="space-between center" layout="row">
@@ -134,6 +134,12 @@ getText = function(stringID){
 										<img ng-src="img/{{details_menuButton_propertyImageSource}}"/>
 										<span>{{details_menuButton_propertyText}}</span>
 									</button>
+								</span>
+							</div>
+							<div flex="100" ng-show="details_editNoteButtonBar_propertyVisible" style="width: 100%;">
+								<span>
+									<button class="fliesenUIButton fliesenUIPrimary" ng-click="details_widgetButtonSaveNoteTextButtonClicked();" ng-show="details_saveNoteTextButton_propertyVisible">{{details_saveNoteTextButton_propertyText}}</button>
+									<button class="fliesenUIButton" ng-click="details_widgetButtonCancelEditNoteTextButtonClicked();" ng-show="details_cancelEditNoteTextButton_propertyVisible">{{details_cancelEditNoteTextButton_propertyText}}</button>
 								</span>
 							</div>
 							<div flex="5" style="width: 5%;">
@@ -159,7 +165,7 @@ getText = function(stringID){
 					</span>
 				</div>
 			</span>
-			<span style="position:fixed; overflow: auto;top: 3.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
+			<span style="position:fixed; overflow: auto;top: 2.0cm;bottom: 0cm;left: 0cm;right: 0cm;">
 				<div flex="100" style="width: 100%;">
 					<span>
 						<div layout-wrap="" layout-align="space-between center" layout="row">
@@ -175,12 +181,6 @@ getText = function(stringID){
 							<div flex="100" style="width: 100%;">
 								<span>
 									<div layout-wrap="" layout-align="space-between center" layout="row" ng-show="details_editNotePanel_propertyVisible">
-										<div flex="100" style="width: 100%;">
-											<span>
-												<button class="fliesenUIButton fliesenUIPrimary" ng-click="details_widgetButtonSaveNoteTextButtonClicked();" ng-show="details_saveNoteTextButton_propertyVisible">{{details_saveNoteTextButton_propertyText}}</button>
-												<button class="fliesenUIButton" ng-click="details_widgetButtonCancelEditNoteTextButtonClicked();" ng-show="details_cancelEditNoteTextButton_propertyVisible">{{details_cancelEditNoteTextButton_propertyText}}</button>
-											</span>
-										</div>
 										<div flex="100" style="width: 100%;">
 											<span>
 												<textarea ng-model="details_editNoteTextArea_propertyText" ng-show="details_editNoteTextArea_propertyVisible" style="resize:none; width:99%; height:300px;   {{details_editNoteTextArea_propertyBackgroundColor}}" id="details_editNoteTextArea"></textarea>

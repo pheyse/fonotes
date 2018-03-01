@@ -38,7 +38,7 @@
                             </button>
                         </cell>
                     </bar>
-                    <bar id="editNoteButtonBar" visible="false">
+                    <bar id="editNoteButtonBar">
                         <cell size="100">
                             <button id="saveNoteTextButton" text="Save" primary="true">
                                 <eventParameter value="parameter" />

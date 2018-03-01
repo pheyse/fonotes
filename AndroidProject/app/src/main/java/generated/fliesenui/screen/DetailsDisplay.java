@@ -57,6 +57,10 @@
 /*Generated! Do not modify!*/     public void setDeleteButtonVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setMenuButtonText(String text);
 /*Generated! Do not modify!*/     public void setMenuButtonVisible(boolean visible);
+/*Generated! Do not modify!*/     public void setSaveNoteTextButtonText(String text);
+/*Generated! Do not modify!*/     public void setSaveNoteTextButtonVisible(boolean visible);
+/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonText(String text);
+/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setColorLabelText(String text);
 /*Generated! Do not modify!*/     public void setColorLabelVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setNoteNameLabelText(String text);
@@ -64,10 +68,6 @@
 /*Generated! Do not modify!*/     public void setNoteViewText(String text);
 /*Generated! Do not modify!*/     public void setNoteViewVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setNoteViewBackgroundColor(String color);
-/*Generated! Do not modify!*/     public void setSaveNoteTextButtonText(String text);
-/*Generated! Do not modify!*/     public void setSaveNoteTextButtonVisible(boolean visible);
-/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonText(String text);
-/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setEditNoteTextAreaText(String text);
 /*Generated! Do not modify!*/     public void setEditNoteTextAreaVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setEditNoteTextAreaBackgroundColor(String color);
@@ -76,6 +76,7 @@
 /*Generated! Do not modify!*/     public void setColorBarVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setViewNoteNameVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setButtonBarVisible(boolean visible);
+/*Generated! Do not modify!*/     public void setEditNoteButtonBarVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setViewNotePanelVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setEditNotePanelVisible(boolean visible);
 /*Generated! Do not modify!*/     public void setBackButtonImageAsset(ImageAsset imageAsset);
@@ -95,4 +96,5 @@
 /*Generated! Do not modify!*/     public void showConfirmDialog(ConfirmDialogParameters parameters);
 /*Generated! Do not modify!*/     public void showListChooser(ListChooserParameters parameters);
 /*Generated! Do not modify!*/     public void showMessage(FLUIMessage message);
+/*Generated! Do not modify!*/     public void downloadFile(String downloadFileStreamID);
 /*Generated! Do not modify!*/ }

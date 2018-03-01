@@ -80,6 +80,7 @@ public class DetailsPresenter implements DetailsListener{
 		reply.setColorsDTO(IdAndLabelListDTOBuilder.construct(colorLogic.getColorIDsAndLabels()));
 		reply.setNoteNameLabelText(noteInfo.getName());
 		reply.setColorSelectBoxSelectedID(noteInfo.getColorID());
+//		setNoteViewText(reply, "onLoad. " + new Date() + "\n" + content);
 		setNoteViewText(reply, content);
 		reply.setEditStateDTO(EditStateDTOBuilder.construct(content, false));
 		reply.setNoteViewBackgroundColor("#" + colorLogic.getColorHexSoftFromColorID(noteInfo.getColorID()));
@@ -101,7 +102,7 @@ public class DetailsPresenter implements DetailsListener{
         try{
             FLUIMarkdownFormatting formatting = MarkdownFormattingUtil.createMarkdownFormatting(text);
             reply.setNoteViewText(text, formatting);
-
+			log("setNoteViewText: text has been set");
 
 /*
             int deepestHeading = new BrightMarkdown().getDeepestHeading(text);
@@ -207,6 +208,7 @@ public class DetailsPresenter implements DetailsListener{
 		reply.setEditNotePanelVisible(true);
 		reply.setViewNotePanelVisible(false);
 		reply.setButtonBarVisible(false);
+		reply.setEditNoteButtonBarVisible(true);
 		reply.setColorBarVisible(false);
 		reply.setBackButtonVisible(false);
 		reply.setEditNoteTextAreaText(initialText);
@@ -238,6 +240,7 @@ public class DetailsPresenter implements DetailsListener{
 		reply.setAutosaveTimerActive(false);
 		reply.setViewNotePanelVisible(true);
 		reply.setButtonBarVisible(true);
+		reply.setEditNoteButtonBarVisible(false);
 		reply.setColorBarVisible(true);
 		reply.setBackButtonVisible(true);
 
@@ -310,10 +313,12 @@ public class DetailsPresenter implements DetailsListener{
 
 	@Override
 	public void onSaveNoteTextButtonClicked(DetailsReply reply, DetailsParameterDTO parameter, String editNoteTextAreaText){
+		log("onSaveNoteTextButtonClicked: 1");
 		if (!verifyParameterPassword(reply, parameter)){
 			return;
 		}
 		String content = editNoteTextAreaText;
+		log("onSaveNoteTextButtonClicked: 2");
 		try{
 			dao.setNoteContent(parameter.getNoteName(), content);
 			dao.removeAutoSaveText(parameter.getNoteName());
@@ -321,14 +326,20 @@ public class DetailsPresenter implements DetailsListener{
 			commonPresenter.handleError(reply, "Could not update note text", e);
 			return;
 		}
+		log("onSaveNoteTextButtonClicked: 3");
 		reply.setEditStateDTO(EditStateDTOBuilder.construct(content, false));
 		reply.setAutosaveTimerActive(false);
+		log("onSaveNoteTextButtonClicked: 4");
+//		setNoteViewText(reply, "saved. " + new Date() + "\n" + editNoteTextAreaText);
 		setNoteViewText(reply, editNoteTextAreaText);
+		log("onSaveNoteTextButtonClicked: 5");
 		reply.setEditNotePanelVisible(false);
 		reply.setViewNotePanelVisible(true);
 		reply.setButtonBarVisible(true);
+		reply.setEditNoteButtonBarVisible(false);
 		reply.setColorBarVisible(true);
 		reply.setBackButtonVisible(true);
+		log("onSaveNoteTextButtonClicked: 6");
 	}
 
 	@Override

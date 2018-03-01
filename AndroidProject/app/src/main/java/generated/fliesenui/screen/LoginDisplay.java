@@ -63,4 +63,5 @@
 /*Generated! Do not modify!*/     public void showConfirmDialog(ConfirmDialogParameters parameters);
 /*Generated! Do not modify!*/     public void showListChooser(ListChooserParameters parameters);
 /*Generated! Do not modify!*/     public void showMessage(FLUIMessage message);
+/*Generated! Do not modify!*/     public void downloadFile(String downloadFileStreamID);
 /*Generated! Do not modify!*/ }

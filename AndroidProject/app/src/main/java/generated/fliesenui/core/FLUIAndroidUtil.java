@@ -63,7 +63,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -957,6 +961,11 @@ public class FLUIAndroidUtil {
     }
 
     public static void setListViewHeightBasedOnChildren(ListView listView, ArrayAdapter listAdapter) {
+        setListViewHeightBasedOnChildren(listView, listAdapter, 0);
+    }
+
+
+    public static void setListViewHeightBasedOnChildren(ListView listView, ArrayAdapter listAdapter, float additionalMarginPerListItem) {
         if (listAdapter == null) {
             return;
         }
@@ -965,11 +974,95 @@ public class FLUIAndroidUtil {
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
+            totalHeight += listItem.getMeasuredHeight() + additionalMarginPerListItem;
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
+    public static FLUIClientPropertiesDTO createClientPropertiesDTO(Activity activity) {
+        FLUIClientPropertiesDTO result = new FLUIClientPropertiesDTO();
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        result.setUserAgent(FLUIUtil.USER_AGENT_FLUI_ANDROID_NATIVE);
+        result.setPixelWidthPerInch(metrics.xdpi );
+        result.setPixelHeightPerInch(metrics.ydpi);
+        result.setPixelWidthPerCM(1d / INCH_TO_CM_FACTOR * metrics.xdpi );
+        result.setPixelHeightPerCM(1d / INCH_TO_CM_FACTOR * metrics.ydpi);
+        result.setScreenWidthInPixels(metrics.widthPixels);
+        result.setScreenHeightInPixels(metrics.heightPixels);
+
+        result.setScreenWidthInCM(result.getScreenWidthInPixels() / result.getPixelWidthPerCM());
+        result.setScreenHeightInCM(result.getScreenHeightInPixels() / result.getPixelHeightPerCM());
+        result.setScreenWidthInInch(result.getScreenWidthInCM() / INCH_TO_CM_FACTOR);
+        result.setScreenHeightInInch(result.getScreenHeightInCM() / INCH_TO_CM_FACTOR);
+
+        double a = result.getScreenWidthInInch();
+        double b = result.getScreenHeightInInch();
+        result.setScreenDiagonalInInch(Math.sqrt((a * a) + (b * b)));
+
+        result.setScreenAvailableWidthInPixels(result.getScreenWidthInPixels());
+        result.setScreenAvailableHeightInPixels(result.getScreenHeightInPixels());
+
+        result.setWindowInnerWidthInPixels(result.getScreenWidthInPixels());
+        result.setWindowInnerHeightInPixels(result.getScreenHeightInPixels());
+
+        return result;
+    }
+
+    public static void downloadFile(Activity activity, FLUIScreenManagerAndroid screenManager, String downloadFileStreamID) {
+        FLUIFileStream fileStream = screenManager.getFileStream(downloadFileStreamID);
+
+        if (fileStream == null){
+            return;
+        }
+
+        if (fileStream.getErrorMessage() != null){
+            Toast.makeText(activity, "Download failed: " + fileStream.getErrorMessage(), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        InputStream dataStream = fileStream.getInputStream();
+        if (dataStream == null){
+            Toast.makeText(activity, "Download failed: No data stream provided", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        OutputStream output = null;
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(downloadDir, fileStream.getFilename());
+        try {
+            output = new FileOutputStream(file);
+            byte[] buffer = new byte[4 * 1024]; // or other buffer size
+            int read;
+
+            while ((read = dataStream.read(buffer)) != -1) {
+                output.write(buffer, 0, read);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(activity, "Download failed: " + e, Toast.LENGTH_LONG).show();
+            return;
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException ignored) {
+                }
+            }
+            try {
+                dataStream.close();
+            } catch (IOException ignored) {
+            }
+        }
+
+        Toast.makeText(activity, "Saved file to " + file.getAbsolutePath() + "'", Toast.LENGTH_LONG).show();
+
+    }
+
+
 }

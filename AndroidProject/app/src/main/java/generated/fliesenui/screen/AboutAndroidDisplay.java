@@ -52,6 +52,7 @@
 /*Generated! Do not modify!*/ import java.io.IOException;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
+/*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIScreenManagerAndroid;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.TextHighlighting;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIMessage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.CursorPos;
@@ -89,9 +90,13 @@
 /*Generated! Do not modify!*/     private Activity activity;
 /*Generated! Do not modify!*/     private Context context;
 /*Generated! Do not modify!*/     private FLUIDisplayManager displayManager;
+/*Generated! Do not modify!*/     private FLUIScreenManagerAndroid screenManager;
 /*Generated! Do not modify!*/     private AboutDisplayEventHandler eventHandler;
 /*Generated! Do not modify!*/     private boolean screenActive = false;
 /*Generated! Do not modify!*/     private float density = 1f;
+/*Generated! Do not modify!*/     private float xdpi = 1f;
+/*Generated! Do not modify!*/     private float ydpi = 1f;
+/*Generated! Do not modify!*/     private static final double CM_TO_INCH_FACTOR = 0.393701;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private WebView markdownViewAboutText;
@@ -105,12 +110,15 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private OverviewParameterDTO dtoParameter = null;
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public AboutAndroidDisplay(final Activity activity, FLUIDisplayManager displayManager){
+/*Generated! Do not modify!*/     public AboutAndroidDisplay(final Activity activity, FLUIDisplayManager displayManager, FLUIScreenManagerAndroid screenManager){
 /*Generated! Do not modify!*/         super(activity);
 /*Generated! Do not modify!*/         this.context = activity;
 /*Generated! Do not modify!*/         this.activity = activity;
 /*Generated! Do not modify!*/         this.displayManager = displayManager;
+/*Generated! Do not modify!*/         this.screenManager = screenManager;
 /*Generated! Do not modify!*/         this.density = activity.getResources().getDisplayMetrics().density;
+/*Generated! Do not modify!*/         this.xdpi = activity.getResources().getDisplayMetrics().xdpi;
+/*Generated! Do not modify!*/         this.ydpi = activity.getResources().getDisplayMetrics().ydpi;
 /*Generated! Do not modify!*/         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 /*Generated! Do not modify!*/         setOrientation(LinearLayout.VERTICAL);
 /*Generated! Do not modify!*/         addView(createView(), params);
@@ -263,7 +271,7 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setAboutTextText(String text){
-/*Generated! Do not modify!*/         markdownViewAboutText.loadData(text, "text/html; charset=utf-8", "UTF-8");
+/*Generated! Do not modify!*/         markdownViewAboutText.loadDataWithBaseURL("same://ur/l/tat/does/not/work", text, "text/html; charset=utf-8", "UTF-8", null);
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
@@ -481,4 +489,8 @@
 /*Generated! Do not modify!*/         FLUIAndroidUtil.showMessage(activity, message);
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void downloadFile(String downloadFileStreamID) {
+/*Generated! Do not modify!*/         FLUIAndroidUtil.downloadFile(activity, screenManager, downloadFileStreamID);
+/*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ }

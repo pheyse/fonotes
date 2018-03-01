@@ -38,17 +38,6 @@
                             </button>
                         </cell>
                     </bar>
-                    <bar id="editNoteButtonBar" visible="false">
-                        <cell size="100">
-                            <button id="saveNoteTextButton" text="Save" primary="true">
-                                <eventParameter value="parameter" />
-                                <eventParameter value="editNoteTextArea.text"/>
-                            </button>
-                            <button id="cancelEditNoteTextButton" text="Cancel">
-                                <eventParameter value="parameter" />
-                            </button>
-                        </cell>
-                    </bar>
                     <bar>
                         <cell size="5" />
                         <cell size="95" id="colorBar">
@@ -82,6 +71,17 @@
                         <bar>
                             <cell size="100">
                                 <container id="editNotePanel" orientation="row" visible="false">
+                                    <bar>
+                                        <cell size="100">
+                                            <button id="saveNoteTextButton" text="Save" primary="true">
+                                                <eventParameter value="parameter" />
+                                                <eventParameter value="editNoteTextArea.text"/>
+                                            </button>
+                                            <button id="cancelEditNoteTextButton" text="Cancel">
+                                                <eventParameter value="parameter" />
+                                            </button>
+                                        </cell>
+                                    </bar>
                                     <bar>
                                         <cell size="100">
                                             <textArea id="editNoteTextArea" text="my note text" height="300">

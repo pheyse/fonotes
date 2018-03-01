@@ -52,6 +52,7 @@
 /*Generated! Do not modify!*/ import java.io.IOException;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
+/*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIScreenManagerAndroid;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.TextHighlighting;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIMessage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.CursorPos;
@@ -89,18 +90,23 @@
 /*Generated! Do not modify!*/     private Activity activity;
 /*Generated! Do not modify!*/     private Context context;
 /*Generated! Do not modify!*/     private FLUIDisplayManager displayManager;
+/*Generated! Do not modify!*/     private FLUIScreenManagerAndroid screenManager;
 /*Generated! Do not modify!*/     private OverviewDisplayEventHandler eventHandler;
 /*Generated! Do not modify!*/     private boolean screenActive = false;
 /*Generated! Do not modify!*/     private float density = 1f;
+/*Generated! Do not modify!*/     private float xdpi = 1f;
+/*Generated! Do not modify!*/     private float ydpi = 1f;
+/*Generated! Do not modify!*/     private static final double CM_TO_INCH_FACTOR = 0.393701;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private TextView labelColorFilterInfoText;
 /*Generated! Do not modify!*/     private TextView labelInfo;
 /*Generated! Do not modify!*/     private Button textButtonMenuButton;
 /*Generated! Do not modify!*/     private ImageButton imageButtonMenuButton;
-/*Generated! Do not modify!*/     private ListView tableNotesTable;
+/*Generated! Do not modify!*/     private LinearLayout tableNotesTable;
 /*Generated! Do not modify!*/     private TextView labelSortInfoText;
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     private TableNotesTableAdapter tableNotesTableAdapter;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private RelativeLayout layoutContainerTopContainer;
 /*Generated! Do not modify!*/ 
@@ -111,12 +117,15 @@
 /*Generated! Do not modify!*/     private OverviewListDTO dtoItems = null;
 /*Generated! Do not modify!*/     private OverviewParameterDTO dtoParameter = null;
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public OverviewAndroidDisplay(final Activity activity, FLUIDisplayManager displayManager){
+/*Generated! Do not modify!*/     public OverviewAndroidDisplay(final Activity activity, FLUIDisplayManager displayManager, FLUIScreenManagerAndroid screenManager){
 /*Generated! Do not modify!*/         super(activity);
 /*Generated! Do not modify!*/         this.context = activity;
 /*Generated! Do not modify!*/         this.activity = activity;
 /*Generated! Do not modify!*/         this.displayManager = displayManager;
+/*Generated! Do not modify!*/         this.screenManager = screenManager;
 /*Generated! Do not modify!*/         this.density = activity.getResources().getDisplayMetrics().density;
+/*Generated! Do not modify!*/         this.xdpi = activity.getResources().getDisplayMetrics().xdpi;
+/*Generated! Do not modify!*/         this.ydpi = activity.getResources().getDisplayMetrics().ydpi;
 /*Generated! Do not modify!*/         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 /*Generated! Do not modify!*/         setOrientation(LinearLayout.VERTICAL);
 /*Generated! Do not modify!*/         addView(createView(), params);
@@ -227,16 +236,24 @@
 /*Generated! Do not modify!*/         container4.addView(layoutBarColorFilterInfoBar, paramsMatchWrap);
 /*Generated! Do not modify!*/         cell2.addView(container4, paramsMatchWrap);
 /*Generated! Do not modify!*/         bar1.addView(cell2, paramsMatchWrap);
-/*Generated! Do not modify!*/         layoutContainerTopContainer.addView(bar1, paramsWrapWrap);
 /*Generated! Do not modify!*/         bar1.setId(layoutContainerTopContainerPositionTop);
+/*Generated! Do not modify!*/         layoutContainerTopContainer.addView(bar1, new LayoutParams(LayoutParams.MATCH_PARENT, (int)(CM_TO_INCH_FACTOR * 1.1 * ydpi)));
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)bar1.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
 /*Generated! Do not modify!*/         LinearLayout bar11 = new LinearLayout(context);
 /*Generated! Do not modify!*/         bar11.setOrientation(LinearLayout.VERTICAL);
+/*Generated! Do not modify!*/         ScrollView bar11ScrollView = new ScrollView(context);
+/*Generated! Do not modify!*/         bar11.addView(bar11ScrollView, paramsMatchMatch);
 /*Generated! Do not modify!*/         LinearLayout cell12 = new LinearLayout(context);
 /*Generated! Do not modify!*/         cell12.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         bar11.addView(cell12, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout cell13 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell13.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout container14 = new LinearLayout(context);
+/*Generated! Do not modify!*/         container14.setOrientation(LinearLayout.VERTICAL);
+/*Generated! Do not modify!*/         LinearLayout bar13 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar13.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell14 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell14.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         bar13.addView(cell14, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.05f));
+/*Generated! Do not modify!*/         LinearLayout cell15 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell15.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         RelativeLayout tablePanelNotesTable = new RelativeLayout(context);
 /*Generated! Do not modify!*/         EditText tableFilterNotesTable = new EditText(context);
 /*Generated! Do not modify!*/         int tableFilterNotesTableID = View.generateViewId();
@@ -252,7 +269,7 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/             @Override
 /*Generated! Do not modify!*/             public void onTextChanged(CharSequence text, int start, int before, int count) {
-/*Generated! Do not modify!*/                 ((TableNotesTableAdapter) tableNotesTable.getAdapter()).onFilterTextChanged("" + text);
+/*Generated! Do not modify!*/                 tableNotesTableAdapter.onFilterTextChanged("" + text);
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/         };
@@ -263,17 +280,24 @@
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableFilterNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableFilterNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableFilterNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-/*Generated! Do not modify!*/         tableNotesTable = new ListView(context);
-/*Generated! Do not modify!*/         tableNotesTable.setAdapter(new TableNotesTableAdapter(activity));
+/*Generated! Do not modify!*/         tableNotesTableAdapter = new TableNotesTableAdapter(activity);
+/*Generated! Do not modify!*/         tableNotesTable = new LinearLayout(context);
+/*Generated! Do not modify!*/         tableNotesTable.setOrientation(VERTICAL);
 /*Generated! Do not modify!*/         tablePanelNotesTable.addView(tableNotesTable);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.BELOW, tableFilterNotesTableID);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)tableNotesTable.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-/*Generated! Do not modify!*/         cell13.addView(tablePanelNotesTable, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar11.addView(cell13, paramsMatchWrap);
-/*Generated! Do not modify!*/         layoutContainerTopContainer.addView(bar11, paramsWrapWrap);
+/*Generated! Do not modify!*/         cell15.addView(tablePanelNotesTable, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar13.addView(cell15, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.9f));
+/*Generated! Do not modify!*/         LinearLayout cell16 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell16.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         bar13.addView(cell16, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.05f));
+/*Generated! Do not modify!*/         container14.addView(bar13, paramsMatchWrap);
+/*Generated! Do not modify!*/         cell12.addView(container14, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar11ScrollView.addView(cell12, paramsMatchWrap);
 /*Generated! Do not modify!*/         bar11.setId(layoutContainerTopContainerPositionCenter);
+/*Generated! Do not modify!*/         layoutContainerTopContainer.addView(bar11, paramsWrapWrap);
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)bar11.getLayoutParams()).addRule(RelativeLayout.BELOW, layoutContainerTopContainerPositionTop);
 /*Generated! Do not modify!*/         topView.addView(layoutContainerTopContainer, paramsMatchWrap);
 /*Generated! Do not modify!*/         return topView;
@@ -373,7 +397,7 @@
 /*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setItemsDTO(OverviewListDTO dto){
 /*Generated! Do not modify!*/         dtoItems = dto;
-/*Generated! Do not modify!*/         ((TableNotesTableAdapter) tableNotesTable.getAdapter()).setItems(dto.getItems());
+/*Generated! Do not modify!*/         tableNotesTableAdapter.setItems(dto.getItems());
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
@@ -580,6 +604,17 @@
 /*Generated! Do not modify!*/             scale = activity.getResources().getDisplayMetrics().density;
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/         private void updateLinearLayout(){
+/*Generated! Do not modify!*/             tableNotesTable.removeAllViews();
+/*Generated! Do not modify!*/             if (filteredItems == null){
+/*Generated! Do not modify!*/                 return;
+/*Generated! Do not modify!*/             }
+/*Generated! Do not modify!*/             for (int i = 0; i < filteredItems.size(); i++){
+/*Generated! Do not modify!*/                 View view = getView(i, null, null);
+/*Generated! Do not modify!*/                 tableNotesTable.addView(view, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+/*Generated! Do not modify!*/             }
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/         @SuppressWarnings("ResourceType")
 /*Generated! Do not modify!*/         public View getView(int position, View convertView, ViewGroup parent) {
 /*Generated! Do not modify!*/             View row = convertView;
@@ -595,9 +630,10 @@
 /*Generated! Do not modify!*/                 panel.addView(rowHeightTextView, new LayoutParams(0, (int)(scale * 40), 0f));
 /*Generated! Do not modify!*/                 LinearLayout cell = null;
 /*Generated! Do not modify!*/                 column1Item1 = new TextView(activity);
+/*Generated! Do not modify!*/                 column1Item1.setTextColor(Color.BLACK);
 /*Generated! Do not modify!*/                 column1Item1.setId(1);
 /*Generated! Do not modify!*/                 layoutParams = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.95f);
-/*Generated! Do not modify!*/                 layoutParams.setMargins(0, (int)(scale * 3f), 0, (int)(scale * 3f));
+/*Generated! Do not modify!*/                 layoutParams.setMargins(0, (int)(scale * 3f), 0, (int)(scale * 8f));
 /*Generated! Do not modify!*/                 panel.addView(column1Item1, layoutParams);
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/                 row = panel;
@@ -652,8 +688,7 @@
 /*Generated! Do not modify!*/             filteredItems = items;
 /*Generated! Do not modify!*/             if ((currentFilter == null) || (currentFilter.isEmpty())){
 /*Generated! Do not modify!*/                 filteredItems = items;
-/*Generated! Do not modify!*/                 notifyDataSetChanged();
-/*Generated! Do not modify!*/                 FLUIAndroidUtil.setListViewHeightBasedOnChildren(tableNotesTable, this);
+/*Generated! Do not modify!*/                 updateLinearLayout();
 /*Generated! Do not modify!*/                 return;
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             String useFilter = currentFilter.toLowerCase();
@@ -666,10 +701,13 @@
 /*Generated! Do not modify!*/                 }
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             filteredItems = result;
-/*Generated! Do not modify!*/             notifyDataSetChanged();
-/*Generated! Do not modify!*/             FLUIAndroidUtil.setListViewHeightBasedOnChildren(tableNotesTable, this);
+/*Generated! Do not modify!*/             updateLinearLayout();
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void downloadFile(String downloadFileStreamID) {
+/*Generated! Do not modify!*/         FLUIAndroidUtil.downloadFile(activity, screenManager, downloadFileStreamID);
+/*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ }

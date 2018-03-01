@@ -1,8 +1,8 @@
 /*Generated! Do not modify!*/ package generated.fliesenui.core;
 /*Generated! Do not modify!*/ import android.os.Bundle;
 /*Generated! Do not modify!*/ import android.content.Intent;
-/*Generated! Do not modify!*/ import android.support.v7.app.ActionBar;
-/*Generated! Do not modify!*/ import android.support.v7.app.AppCompatActivity;
+/*Generated! Do not modify!*/ import android.app.Activity;
+/*Generated! Do not modify!*/ import android.app.ActionBar;
 /*Generated! Do not modify!*/ import android.view.View;
 /*Generated! Do not modify!*/ import android.view.ViewGroup;
 /*Generated! Do not modify!*/ import android.view.Window;
@@ -39,7 +39,7 @@
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.MarkdownHelpAndroidDisplay;
 /*Generated! Do not modify!*/ import generated.fliesenui.screen.OverviewAndroidDisplay;
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/ public abstract class FLUIAndroidDisplayActivity extends AppCompatActivity implements FLUIDisplayManager {
+/*Generated! Do not modify!*/ public abstract class FLUIAndroidDisplayActivity extends Activity implements FLUIDisplayManager {
 /*Generated! Do not modify!*/     private LinearLayout mainLayout;
 /*Generated! Do not modify!*/     private ViewGroup.LayoutParams screenParams;
 /*Generated! Do not modify!*/     private FLUIClientPropertiesDTO clientProperties;
@@ -56,21 +56,21 @@
 /*Generated! Do not modify!*/             super.onCreate(savedInstanceState);
 /*Generated! Do not modify!*/             fluiOnCreate(savedInstanceState);
 /*Generated! Do not modify!*/             getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-/*Generated! Do not modify!*/             ActionBar actionBar = getSupportActionBar();
+/*Generated! Do not modify!*/             ActionBar actionBar = getActionBar();
 /*Generated! Do not modify!*/             if (actionBar != null){
-/*Generated! Do not modify!*/                 getSupportActionBar().hide();
+/*Generated! Do not modify!*/                 actionBar.hide();
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             FLUIScreenManagerAndroid screenManager = fluiCreateScreenManager();
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/             aboutDisplay = new AboutAndroidDisplay(this, this);
+/*Generated! Do not modify!*/             aboutDisplay = new AboutAndroidDisplay(this, this, screenManager);
 /*Generated! Do not modify!*/             screenManager.setAboutDisplay(aboutDisplay);
-/*Generated! Do not modify!*/             detailsDisplay = new DetailsAndroidDisplay(this, this);
+/*Generated! Do not modify!*/             detailsDisplay = new DetailsAndroidDisplay(this, this, screenManager);
 /*Generated! Do not modify!*/             screenManager.setDetailsDisplay(detailsDisplay);
-/*Generated! Do not modify!*/             loginDisplay = new LoginAndroidDisplay(this, this);
+/*Generated! Do not modify!*/             loginDisplay = new LoginAndroidDisplay(this, this, screenManager);
 /*Generated! Do not modify!*/             screenManager.setLoginDisplay(loginDisplay);
-/*Generated! Do not modify!*/             markdownHelpDisplay = new MarkdownHelpAndroidDisplay(this, this);
+/*Generated! Do not modify!*/             markdownHelpDisplay = new MarkdownHelpAndroidDisplay(this, this, screenManager);
 /*Generated! Do not modify!*/             screenManager.setMarkdownHelpDisplay(markdownHelpDisplay);
-/*Generated! Do not modify!*/             overviewDisplay = new OverviewAndroidDisplay(this, this);
+/*Generated! Do not modify!*/             overviewDisplay = new OverviewAndroidDisplay(this, this, screenManager);
 /*Generated! Do not modify!*/             screenManager.setOverviewDisplay(overviewDisplay);
 /*Generated! Do not modify!*/             mainLayout = createMainLayout();
 /*Generated! Do not modify!*/             setContentView(mainLayout);
@@ -120,7 +120,7 @@
 /*Generated! Do not modify!*/             super.onResume();
 /*Generated! Do not modify!*/             fluiOnResume();
 /*Generated! Do not modify!*/             if (activeScreenID == null){
-/*Generated! Do not modify!*/                 clientProperties = new FLUIClientPropertiesDTO();
+/*Generated! Do not modify!*/                 clientProperties = FLUIAndroidUtil.createClientPropertiesDTO(this);
 /*Generated! Do not modify!*/                 loginDisplay.onLoaded(clientProperties);
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/             aboutDisplay.onResume();
@@ -136,15 +136,20 @@
 /*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     protected void onPause() {
 /*Generated! Do not modify!*/         try {
-/*Generated! Do not modify!*/         aboutDisplay.onPause();
-/*Generated! Do not modify!*/         detailsDisplay.onPause();
-/*Generated! Do not modify!*/         loginDisplay.onPause();
-/*Generated! Do not modify!*/         markdownHelpDisplay.onPause();
-/*Generated! Do not modify!*/         overviewDisplay.onPause();
-/*Generated! Do not modify!*/             fluiOnPause();
-/*Generated! Do not modify!*/             super.onPause();
+/*Generated! Do not modify!*/             aboutDisplay.onPause();
+/*Generated! Do not modify!*/             detailsDisplay.onPause();
+/*Generated! Do not modify!*/             loginDisplay.onPause();
+/*Generated! Do not modify!*/             markdownHelpDisplay.onPause();
+/*Generated! Do not modify!*/             overviewDisplay.onPause();
 /*Generated! Do not modify!*/         } catch (Throwable t){
 /*Generated! Do not modify!*/             fluiOnError(t);
+/*Generated! Do not modify!*/         } finally {
+/*Generated! Do not modify!*/             try{
+/*Generated! Do not modify!*/                fluiOnPause();
+/*Generated! Do not modify!*/             } catch(Throwable t2){
+/*Generated! Do not modify!*/                 fluiOnError(t2);
+/*Generated! Do not modify!*/             }
+/*Generated! Do not modify!*/             super.onPause();
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 

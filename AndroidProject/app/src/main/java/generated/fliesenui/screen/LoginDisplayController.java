@@ -103,6 +103,10 @@
 /*Generated! Do not modify!*/         if (reply.getScreenToOpen() != null){
 /*Generated! Do not modify!*/             openScreen(reply.getScreenToOpen(), reply.getOpenParameter());
 /*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/         if (reply.getDownloadFileStreamID() != null){
+/*Generated! Do not modify!*/             display.downloadFile(reply.getDownloadFileStreamID());
+/*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private CallbackMethodCall readCallbackMethodCall(String callbackDataJSON) {

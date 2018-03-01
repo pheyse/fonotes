@@ -33,23 +33,15 @@
             </cell>
         </bar>
         <bar position="center">
+            <!-- <cell size="5" /> -->
             <cell size="100">
-                <container orientation="row">
-                	<bar>
-                        <cell size="5" />
-                        <cell size="90">
-                            <table id="notesTable" dto="items.items" idDTOField="id" style="normal" backgroundColorDTOField="color" showColumnHeaders="false" showFilter="true">
-                                <column size="100" text="Note">
-                                    <tableLabel textDTOField="label" />
-                                </column>
-                                <eventParameter value="parameter" />
-                            </table>
-                        </cell>
-                        <cell size="5" />
-                    </bar>
-                </container>
+                <table id="notesTable" dto="items.items" idDTOField="id" style="normal" backgroundColorDTOField="color" showColumnHeaders="false" showFilter="true">
+                    <column size="100" text="Note">
+                        <tableLabel textDTOField="label" />
+                    </column>
+                    <eventParameter value="parameter" />
+                </table>
             </cell>
-            
         </bar>
     </container>
 </screen>

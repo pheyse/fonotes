@@ -52,6 +52,7 @@
 /*Generated! Do not modify!*/ import java.io.IOException;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIString.StringLanguage;
+/*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIScreenManagerAndroid;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.TextHighlighting;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.FLUIMessage;
 /*Generated! Do not modify!*/ import generated.fliesenui.core.CursorPos;
@@ -89,9 +90,13 @@
 /*Generated! Do not modify!*/     private Activity activity;
 /*Generated! Do not modify!*/     private Context context;
 /*Generated! Do not modify!*/     private FLUIDisplayManager displayManager;
+/*Generated! Do not modify!*/     private FLUIScreenManagerAndroid screenManager;
 /*Generated! Do not modify!*/     private DetailsDisplayEventHandler eventHandler;
 /*Generated! Do not modify!*/     private boolean screenActive = false;
 /*Generated! Do not modify!*/     private float density = 1f;
+/*Generated! Do not modify!*/     private float xdpi = 1f;
+/*Generated! Do not modify!*/     private float ydpi = 1f;
+/*Generated! Do not modify!*/     private static final double CM_TO_INCH_FACTOR = 0.393701;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private Timer autosaveTimerTimer;
 /*Generated! Do not modify!*/     private TimerTask autosaveTimerTimerTask;
@@ -122,6 +127,7 @@
 /*Generated! Do not modify!*/     private LinearLayout layoutContainerEditNotePanel;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private LinearLayout layoutBarButtonBar;
+/*Generated! Do not modify!*/     private LinearLayout layoutBarEditNoteButtonBar;
 /*Generated! Do not modify!*/     private LinearLayout layoutBarViewNotePanel;
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     private LinearLayout layoutCellColorBar;
@@ -134,15 +140,26 @@
 /*Generated! Do not modify!*/     private Map<Integer, String> colorSelectBoxPosToIDMap = new TreeMap<Integer, String>();
 /*Generated! Do not modify!*/     private Map<String, Integer> colorSelectBoxIDToPosMap = new TreeMap<String, Integer>();
 /*Generated! Do not modify!*/     private boolean colorSelectBoxItemUpdateFinished = true;
-/*Generated! Do not modify!*/     public DetailsAndroidDisplay(final Activity activity, FLUIDisplayManager displayManager){
+/*Generated! Do not modify!*/     public DetailsAndroidDisplay(final Activity activity, FLUIDisplayManager displayManager, FLUIScreenManagerAndroid screenManager){
 /*Generated! Do not modify!*/         super(activity);
 /*Generated! Do not modify!*/         this.context = activity;
 /*Generated! Do not modify!*/         this.activity = activity;
 /*Generated! Do not modify!*/         this.displayManager = displayManager;
+/*Generated! Do not modify!*/         this.screenManager = screenManager;
 /*Generated! Do not modify!*/         this.density = activity.getResources().getDisplayMetrics().density;
+/*Generated! Do not modify!*/         this.xdpi = activity.getResources().getDisplayMetrics().xdpi;
+/*Generated! Do not modify!*/         this.ydpi = activity.getResources().getDisplayMetrics().ydpi;
 /*Generated! Do not modify!*/         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 /*Generated! Do not modify!*/         setOrientation(LinearLayout.VERTICAL);
 /*Generated! Do not modify!*/         addView(createView(), params);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setScreenActive(boolean active) {
+/*Generated! Do not modify!*/         screenActive = active;
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void onResume() {
+/*Generated! Do not modify!*/         autosaveTimerTimer = new Timer();
 /*Generated! Do not modify!*/         autosaveTimerTimerTask = new TimerTask(){
 /*Generated! Do not modify!*/             @Override
 /*Generated! Do not modify!*/             public void run(){
@@ -156,20 +173,14 @@
 /*Generated! Do not modify!*/                 }
 /*Generated! Do not modify!*/             }
 /*Generated! Do not modify!*/         };
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void setScreenActive(boolean active) {
-/*Generated! Do not modify!*/         screenActive = active;
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void onResume() {
-/*Generated! Do not modify!*/         autosaveTimerTimer = new Timer();
 /*Generated! Do not modify!*/         autosaveTimerTimer.scheduleAtFixedRate(autosaveTimerTimerTask, 0, 5000);
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void onPause() {
-/*Generated! Do not modify!*/         autosaveTimerTimer.cancel();
-/*Generated! Do not modify!*/         autosaveTimerTimer = null;
+/*Generated! Do not modify!*/         if (autosaveTimerTimer != null){
+/*Generated! Do not modify!*/             autosaveTimerTimer.cancel();
+/*Generated! Do not modify!*/             autosaveTimerTimer = null;
+/*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void onBackPressed() {
@@ -184,6 +195,7 @@
 /*Generated! Do not modify!*/         layoutCellColorBar.setVisibility(View.VISIBLE);
 /*Generated! Do not modify!*/         layoutCellViewNoteName.setVisibility(View.VISIBLE);
 /*Generated! Do not modify!*/         layoutBarButtonBar.setVisibility(View.VISIBLE);
+/*Generated! Do not modify!*/         layoutBarEditNoteButtonBar.setVisibility(View.GONE);
 /*Generated! Do not modify!*/         layoutBarViewNotePanel.setVisibility(View.VISIBLE);
 /*Generated! Do not modify!*/         layoutContainerEditNotePanel.setVisibility(View.GONE);
 /*Generated! Do not modify!*/         eventHandler.onLoaded(clientProperties, parameter);
@@ -323,11 +335,53 @@
 /*Generated! Do not modify!*/         cell4.addView(imageButtonMenuButton, paramsImageButton);
 /*Generated! Do not modify!*/         layoutBarButtonBar.addView(cell4, paramsMatchMatch);
 /*Generated! Do not modify!*/         container5.addView(layoutBarButtonBar, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout bar5 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar5.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout cell6 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell6.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         bar5.addView(cell6, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.05f));
+/*Generated! Do not modify!*/         layoutBarEditNoteButtonBar = new LinearLayout(context);
+/*Generated! Do not modify!*/         layoutBarEditNoteButtonBar.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell5 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell5.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         textButtonSaveNoteTextButton = new Button(context);
+/*Generated! Do not modify!*/         imageButtonSaveNoteTextButton = new ImageButton(context);
+/*Generated! Do not modify!*/         textButtonSaveNoteTextButton.setText("Save");
+/*Generated! Do not modify!*/         imageButtonSaveNoteTextButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/         textButtonSaveNoteTextButton.setOnClickListener(new View.OnClickListener() {
+/*Generated! Do not modify!*/             @Override
+/*Generated! Do not modify!*/             public void onClick(View view) {
+/*Generated! Do not modify!*/                 eventHandler.onSaveNoteTextButtonClicked(getParameterDTO(), toStringOrNull(textAreaEditNoteTextArea.getText()));
+/*Generated! Do not modify!*/             };
+/*Generated! Do not modify!*/         });
+/*Generated! Do not modify!*/         imageButtonSaveNoteTextButton.setOnClickListener(new View.OnClickListener() {
+/*Generated! Do not modify!*/             @Override
+/*Generated! Do not modify!*/             public void onClick(View view) {
+/*Generated! Do not modify!*/                 eventHandler.onSaveNoteTextButtonClicked(getParameterDTO(), toStringOrNull(textAreaEditNoteTextArea.getText()));
+/*Generated! Do not modify!*/             };
+/*Generated! Do not modify!*/         });
+/*Generated! Do not modify!*/         cell5.addView(textButtonSaveNoteTextButton, paramsWrapWrap);
+/*Generated! Do not modify!*/         cell5.addView(imageButtonSaveNoteTextButton, paramsImageButton);
+/*Generated! Do not modify!*/         textButtonCancelEditNoteTextButton = new Button(context);
+/*Generated! Do not modify!*/         imageButtonCancelEditNoteTextButton = new ImageButton(context);
+/*Generated! Do not modify!*/         textButtonCancelEditNoteTextButton.setText("Cancel");
+/*Generated! Do not modify!*/         imageButtonCancelEditNoteTextButton.setVisibility(View.GONE);
+/*Generated! Do not modify!*/         textButtonCancelEditNoteTextButton.setOnClickListener(new View.OnClickListener() {
+/*Generated! Do not modify!*/             @Override
+/*Generated! Do not modify!*/             public void onClick(View view) {
+/*Generated! Do not modify!*/                 eventHandler.onCancelEditNoteTextButtonClicked(getParameterDTO());
+/*Generated! Do not modify!*/             };
+/*Generated! Do not modify!*/         });
+/*Generated! Do not modify!*/         imageButtonCancelEditNoteTextButton.setOnClickListener(new View.OnClickListener() {
+/*Generated! Do not modify!*/             @Override
+/*Generated! Do not modify!*/             public void onClick(View view) {
+/*Generated! Do not modify!*/                 eventHandler.onCancelEditNoteTextButtonClicked(getParameterDTO());
+/*Generated! Do not modify!*/             };
+/*Generated! Do not modify!*/         });
+/*Generated! Do not modify!*/         cell5.addView(textButtonCancelEditNoteTextButton, paramsWrapWrap);
+/*Generated! Do not modify!*/         cell5.addView(imageButtonCancelEditNoteTextButton, paramsImageButton);
+/*Generated! Do not modify!*/         layoutBarEditNoteButtonBar.addView(cell5, paramsMatchMatch);
+/*Generated! Do not modify!*/         container5.addView(layoutBarEditNoteButtonBar, paramsMatchWrap);
+/*Generated! Do not modify!*/         LinearLayout bar6 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar6.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell7 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell7.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         bar6.addView(cell7, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.05f));
 /*Generated! Do not modify!*/         layoutCellColorBar = new LinearLayout(context);
 /*Generated! Do not modify!*/         layoutCellColorBar.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         labelColorLabel = new TextView(context);
@@ -354,10 +408,10 @@
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/         });
 /*Generated! Do not modify!*/         layoutCellColorBar.addView(selectBoxColorSelectBox, paramsWrapWrap);
-/*Generated! Do not modify!*/         bar5.addView(layoutCellColorBar, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.95f));
-/*Generated! Do not modify!*/         container5.addView(bar5, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout bar7 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar7.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         bar6.addView(layoutCellColorBar, new LayoutParams(0, LayoutParams.MATCH_PARENT, 0.95f));
+/*Generated! Do not modify!*/         container5.addView(bar6, paramsMatchWrap);
+/*Generated! Do not modify!*/         LinearLayout bar8 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar8.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         layoutCellViewNoteName = new LinearLayout(context);
 /*Generated! Do not modify!*/         layoutCellViewNoteName.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         labelNoteNameLabel = new TextView(context);
@@ -365,116 +419,76 @@
 /*Generated! Do not modify!*/         labelNoteNameLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25.0f);
 /*Generated! Do not modify!*/         labelNoteNameLabel.setTypeface(labelNoteNameLabel.getTypeface(), Typeface.BOLD);
 /*Generated! Do not modify!*/         layoutCellViewNoteName.addView(labelNoteNameLabel, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar7.addView(layoutCellViewNoteName, paramsMatchMatch);
-/*Generated! Do not modify!*/         container5.addView(bar7, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout bar8 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar8.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout cell9 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell9.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/     TextView cellItemWithoutID10WithClassBasicWidgetAndTypeSPACE = new TextView(context);
-/*Generated! Do not modify!*/     cellItemWithoutID10WithClassBasicWidgetAndTypeSPACE.setMinimumHeight(30);
-/*Generated! Do not modify!*/         cell9.addView(cellItemWithoutID10WithClassBasicWidgetAndTypeSPACE, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar8.addView(cell9, paramsMatchMatch);
+/*Generated! Do not modify!*/         bar8.addView(layoutCellViewNoteName, paramsMatchMatch);
 /*Generated! Do not modify!*/         container5.addView(bar8, paramsMatchWrap);
+/*Generated! Do not modify!*/         LinearLayout bar9 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar9.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell10 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell10.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/     TextView cellItemWithoutID11WithClassBasicWidgetAndTypeSPACE = new TextView(context);
+/*Generated! Do not modify!*/     cellItemWithoutID11WithClassBasicWidgetAndTypeSPACE.setMinimumHeight(30);
+/*Generated! Do not modify!*/         cell10.addView(cellItemWithoutID11WithClassBasicWidgetAndTypeSPACE, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar9.addView(cell10, paramsMatchMatch);
+/*Generated! Do not modify!*/         container5.addView(bar9, paramsMatchWrap);
 /*Generated! Do not modify!*/         cell3.addView(container5, paramsMatchWrap);
 /*Generated! Do not modify!*/         bar2.addView(cell3, paramsMatchWrap);
-/*Generated! Do not modify!*/         container0.addView(bar2, paramsWrapWrap);
 /*Generated! Do not modify!*/         bar2.setId(container0PositionTop);
+/*Generated! Do not modify!*/         container0.addView(bar2, new LayoutParams(LayoutParams.MATCH_PARENT, (int)(CM_TO_INCH_FACTOR * 2.0 * ydpi)));
 /*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)bar2.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_TOP);
-/*Generated! Do not modify!*/         LinearLayout bar11 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar11.setOrientation(LinearLayout.VERTICAL);
-/*Generated! Do not modify!*/         LinearLayout cell12 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell12.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout container14 = new LinearLayout(context);
-/*Generated! Do not modify!*/         container14.setOrientation(LinearLayout.VERTICAL);
-/*Generated! Do not modify!*/         layoutBarViewNotePanel = new LinearLayout(context);
-/*Generated! Do not modify!*/         layoutBarViewNotePanel.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout bar12 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar12.setOrientation(LinearLayout.VERTICAL);
+/*Generated! Do not modify!*/         ScrollView bar12ScrollView = new ScrollView(context);
+/*Generated! Do not modify!*/         bar12.addView(bar12ScrollView, paramsMatchMatch);
 /*Generated! Do not modify!*/         LinearLayout cell13 = new LinearLayout(context);
 /*Generated! Do not modify!*/         cell13.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout container15 = new LinearLayout(context);
+/*Generated! Do not modify!*/         container15.setOrientation(LinearLayout.VERTICAL);
+/*Generated! Do not modify!*/         layoutBarViewNotePanel = new LinearLayout(context);
+/*Generated! Do not modify!*/         layoutBarViewNotePanel.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell14 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell14.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         markdownViewNoteView = new WebView(context);
 /*Generated! Do not modify!*/         try{
 /*Generated! Do not modify!*/             markdownViewNoteView.loadData(new BrightMarkdown().createHTML("My note text"), "text/html; charset=utf-8", "UTF-8");
 /*Generated! Do not modify!*/         } catch (Exception ignored){
 /*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/         cell13.addView(markdownViewNoteView, paramsMatchWrap);
-/*Generated! Do not modify!*/         layoutBarViewNotePanel.addView(cell13, paramsMatchMatch);
-/*Generated! Do not modify!*/         container14.addView(layoutBarViewNotePanel, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout bar14 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar14.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout cell15 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell15.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         cell14.addView(markdownViewNoteView, paramsMatchWrap);
+/*Generated! Do not modify!*/         layoutBarViewNotePanel.addView(cell14, paramsMatchMatch);
+/*Generated! Do not modify!*/         container15.addView(layoutBarViewNotePanel, paramsMatchWrap);
+/*Generated! Do not modify!*/         LinearLayout bar15 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar15.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell16 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell16.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         layoutContainerEditNotePanel = new LinearLayout(context);
 /*Generated! Do not modify!*/         layoutContainerEditNotePanel.setOrientation(LinearLayout.VERTICAL);
 /*Generated! Do not modify!*/         layoutContainerEditNotePanel.setVisibility(View.GONE);
-/*Generated! Do not modify!*/         LinearLayout bar16 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar16.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout cell17 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell17.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         textButtonSaveNoteTextButton = new Button(context);
-/*Generated! Do not modify!*/         imageButtonSaveNoteTextButton = new ImageButton(context);
-/*Generated! Do not modify!*/         textButtonSaveNoteTextButton.setText("Save");
-/*Generated! Do not modify!*/         imageButtonSaveNoteTextButton.setVisibility(View.GONE);
-/*Generated! Do not modify!*/         textButtonSaveNoteTextButton.setOnClickListener(new View.OnClickListener() {
-/*Generated! Do not modify!*/             @Override
-/*Generated! Do not modify!*/             public void onClick(View view) {
-/*Generated! Do not modify!*/                 eventHandler.onSaveNoteTextButtonClicked(getParameterDTO(), toStringOrNull(textAreaEditNoteTextArea.getText()));
-/*Generated! Do not modify!*/             };
-/*Generated! Do not modify!*/         });
-/*Generated! Do not modify!*/         imageButtonSaveNoteTextButton.setOnClickListener(new View.OnClickListener() {
-/*Generated! Do not modify!*/             @Override
-/*Generated! Do not modify!*/             public void onClick(View view) {
-/*Generated! Do not modify!*/                 eventHandler.onSaveNoteTextButtonClicked(getParameterDTO(), toStringOrNull(textAreaEditNoteTextArea.getText()));
-/*Generated! Do not modify!*/             };
-/*Generated! Do not modify!*/         });
-/*Generated! Do not modify!*/         cell17.addView(textButtonSaveNoteTextButton, paramsWrapWrap);
-/*Generated! Do not modify!*/         cell17.addView(imageButtonSaveNoteTextButton, paramsImageButton);
-/*Generated! Do not modify!*/         textButtonCancelEditNoteTextButton = new Button(context);
-/*Generated! Do not modify!*/         imageButtonCancelEditNoteTextButton = new ImageButton(context);
-/*Generated! Do not modify!*/         textButtonCancelEditNoteTextButton.setText("Cancel");
-/*Generated! Do not modify!*/         imageButtonCancelEditNoteTextButton.setVisibility(View.GONE);
-/*Generated! Do not modify!*/         textButtonCancelEditNoteTextButton.setOnClickListener(new View.OnClickListener() {
-/*Generated! Do not modify!*/             @Override
-/*Generated! Do not modify!*/             public void onClick(View view) {
-/*Generated! Do not modify!*/                 eventHandler.onCancelEditNoteTextButtonClicked(getParameterDTO());
-/*Generated! Do not modify!*/             };
-/*Generated! Do not modify!*/         });
-/*Generated! Do not modify!*/         imageButtonCancelEditNoteTextButton.setOnClickListener(new View.OnClickListener() {
-/*Generated! Do not modify!*/             @Override
-/*Generated! Do not modify!*/             public void onClick(View view) {
-/*Generated! Do not modify!*/                 eventHandler.onCancelEditNoteTextButtonClicked(getParameterDTO());
-/*Generated! Do not modify!*/             };
-/*Generated! Do not modify!*/         });
-/*Generated! Do not modify!*/         cell17.addView(textButtonCancelEditNoteTextButton, paramsWrapWrap);
-/*Generated! Do not modify!*/         cell17.addView(imageButtonCancelEditNoteTextButton, paramsImageButton);
-/*Generated! Do not modify!*/         bar16.addView(cell17, paramsMatchMatch);
-/*Generated! Do not modify!*/         layoutContainerEditNotePanel.addView(bar16, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout bar18 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar18.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout cell19 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell19.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout bar17 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar17.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell18 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell18.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         textAreaEditNoteTextArea = new EditText(context);
 /*Generated! Do not modify!*/         textAreaEditNoteTextArea.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 /*Generated! Do not modify!*/         textAreaEditNoteTextArea.setText("my note text");
-/*Generated! Do not modify!*/         cell19.addView(textAreaEditNoteTextArea, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar18.addView(cell19, paramsMatchMatch);
-/*Generated! Do not modify!*/         layoutContainerEditNotePanel.addView(bar18, paramsMatchWrap);
-/*Generated! Do not modify!*/         LinearLayout bar20 = new LinearLayout(context);
-/*Generated! Do not modify!*/         bar20.setOrientation(LinearLayout.HORIZONTAL);
-/*Generated! Do not modify!*/         LinearLayout cell21 = new LinearLayout(context);
-/*Generated! Do not modify!*/         cell21.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         cell18.addView(textAreaEditNoteTextArea, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar17.addView(cell18, paramsMatchMatch);
+/*Generated! Do not modify!*/         layoutContainerEditNotePanel.addView(bar17, paramsMatchWrap);
+/*Generated! Do not modify!*/         LinearLayout bar19 = new LinearLayout(context);
+/*Generated! Do not modify!*/         bar19.setOrientation(LinearLayout.HORIZONTAL);
+/*Generated! Do not modify!*/         LinearLayout cell20 = new LinearLayout(context);
+/*Generated! Do not modify!*/         cell20.setOrientation(LinearLayout.HORIZONTAL);
 /*Generated! Do not modify!*/         labelEditNoteInfoLabel = new TextView(context);
 /*Generated! Do not modify!*/         labelEditNoteInfoLabel.setText("");
-/*Generated! Do not modify!*/         cell21.addView(labelEditNoteInfoLabel, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar20.addView(cell21, paramsMatchMatch);
-/*Generated! Do not modify!*/         layoutContainerEditNotePanel.addView(bar20, paramsMatchWrap);
-/*Generated! Do not modify!*/         cell15.addView(layoutContainerEditNotePanel, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar14.addView(cell15, paramsMatchMatch);
-/*Generated! Do not modify!*/         container14.addView(bar14, paramsMatchWrap);
-/*Generated! Do not modify!*/         cell12.addView(container14, paramsMatchWrap);
-/*Generated! Do not modify!*/         bar11.addView(cell12, paramsMatchWrap);
-/*Generated! Do not modify!*/         container0.addView(bar11, paramsWrapWrap);
-/*Generated! Do not modify!*/         bar11.setId(container0PositionCenter);
-/*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)bar11.getLayoutParams()).addRule(RelativeLayout.BELOW, container0PositionTop);
+/*Generated! Do not modify!*/         cell20.addView(labelEditNoteInfoLabel, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar19.addView(cell20, paramsMatchMatch);
+/*Generated! Do not modify!*/         layoutContainerEditNotePanel.addView(bar19, paramsMatchWrap);
+/*Generated! Do not modify!*/         cell16.addView(layoutContainerEditNotePanel, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar15.addView(cell16, paramsMatchMatch);
+/*Generated! Do not modify!*/         container15.addView(bar15, paramsMatchWrap);
+/*Generated! Do not modify!*/         cell13.addView(container15, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar12ScrollView.addView(cell13, paramsMatchWrap);
+/*Generated! Do not modify!*/         bar12.setId(container0PositionCenter);
+/*Generated! Do not modify!*/         container0.addView(bar12, paramsWrapWrap);
+/*Generated! Do not modify!*/         ((RelativeLayout.LayoutParams)bar12.getLayoutParams()).addRule(RelativeLayout.BELOW, container0PositionTop);
 /*Generated! Do not modify!*/         topView.addView(container0, paramsMatchWrap);
 /*Generated! Do not modify!*/         return topView;
 /*Generated! Do not modify!*/     }
@@ -654,49 +668,6 @@
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setColorLabelText(String text){
-/*Generated! Do not modify!*/         labelColorLabel.setText(text);
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setColorLabelVisible(boolean visible){
-/*Generated! Do not modify!*/         labelColorLabel.setVisibility(visible ? View.VISIBLE: View.GONE);
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setNoteNameLabelText(String text){
-/*Generated! Do not modify!*/         labelNoteNameLabel.setText(text);
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setNoteNameLabelVisible(boolean visible){
-/*Generated! Do not modify!*/         labelNoteNameLabel.setVisibility(visible ? View.VISIBLE: View.GONE);
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setNoteViewText(String text){
-/*Generated! Do not modify!*/         markdownViewNoteView.loadData(text, "text/html; charset=utf-8", "UTF-8");
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setNoteViewVisible(boolean visible){
-/*Generated! Do not modify!*/         markdownViewNoteView.setVisibility(visible ? View.VISIBLE: View.GONE);
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
-/*Generated! Do not modify!*/     public void setNoteViewBackgroundColor(String color){
-/*Generated! Do not modify!*/         if ((color == null) || (color.isEmpty())){
-/*Generated! Do not modify!*/         markdownViewNoteView.setBackgroundColor(Color.WHITE);
-/*Generated! Do not modify!*/             return;
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/         try{
-/*Generated! Do not modify!*/             markdownViewNoteView.setBackgroundColor(Color.parseColor(color));
-/*Generated! Do not modify!*/         } catch (Exception e){
-/*Generated! Do not modify!*/             new Exception("Could not read color '" + color + "'").printStackTrace();
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setSaveNoteTextButtonText(String text){
 /*Generated! Do not modify!*/         textButtonSaveNoteTextButton.setText(text);
 /*Generated! Do not modify!*/         if ((textButtonSaveNoteTextButton.getVisibility() == View.GONE) && (imageButtonSaveNoteTextButton.getVisibility() == View.GONE)){
@@ -759,6 +730,49 @@
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setColorLabelText(String text){
+/*Generated! Do not modify!*/         labelColorLabel.setText(text);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setColorLabelVisible(boolean visible){
+/*Generated! Do not modify!*/         labelColorLabel.setVisibility(visible ? View.VISIBLE: View.GONE);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setNoteNameLabelText(String text){
+/*Generated! Do not modify!*/         labelNoteNameLabel.setText(text);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setNoteNameLabelVisible(boolean visible){
+/*Generated! Do not modify!*/         labelNoteNameLabel.setVisibility(visible ? View.VISIBLE: View.GONE);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setNoteViewText(String text){
+/*Generated! Do not modify!*/         markdownViewNoteView.loadDataWithBaseURL("same://ur/l/tat/does/not/work", text, "text/html; charset=utf-8", "UTF-8", null);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setNoteViewVisible(boolean visible){
+/*Generated! Do not modify!*/         markdownViewNoteView.setVisibility(visible ? View.VISIBLE: View.GONE);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setNoteViewBackgroundColor(String color){
+/*Generated! Do not modify!*/         if ((color == null) || (color.isEmpty())){
+/*Generated! Do not modify!*/         markdownViewNoteView.setBackgroundColor(Color.WHITE);
+/*Generated! Do not modify!*/             return;
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         try{
+/*Generated! Do not modify!*/             markdownViewNoteView.setBackgroundColor(Color.parseColor(color));
+/*Generated! Do not modify!*/         } catch (Exception e){
+/*Generated! Do not modify!*/             new Exception("Could not read color '" + color + "'").printStackTrace();
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setEditNoteTextAreaText(String text){
 /*Generated! Do not modify!*/         textAreaEditNoteTextArea.setText(text);
 /*Generated! Do not modify!*/     }
@@ -804,6 +818,11 @@
 /*Generated! Do not modify!*/     @Override
 /*Generated! Do not modify!*/     public void setButtonBarVisible(boolean visible){
 /*Generated! Do not modify!*/         layoutBarButtonBar.setVisibility(visible ? View.VISIBLE: View.GONE);
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void setEditNoteButtonBarVisible(boolean visible){
+/*Generated! Do not modify!*/         layoutBarEditNoteButtonBar.setVisibility(visible ? View.VISIBLE: View.GONE);
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     @Override
@@ -1099,4 +1118,8 @@
 /*Generated! Do not modify!*/         return result;
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     @Override
+/*Generated! Do not modify!*/     public void downloadFile(String downloadFileStreamID) {
+/*Generated! Do not modify!*/         FLUIAndroidUtil.downloadFile(activity, screenManager, downloadFileStreamID);
+/*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ }

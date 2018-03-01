@@ -162,6 +162,46 @@
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setSaveNoteTextButtonText(String text){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_saveNoteTextButton_propertyText");
+/*Generated! Do not modify!*/         if (text == null) {
+/*Generated! Do not modify!*/             replyDTO.getVariableValues().remove("details_saveNoteTextButton_propertyText");
+/*Generated! Do not modify!*/         } else {
+/*Generated! Do not modify!*/             replyDTO.getVariableValues().put("details_saveNoteTextButton_propertyText", text);
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setSaveNoteTextButtonText(" + escapeString(text) + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setSaveNoteTextButtonVisible(boolean visible){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_saveNoteTextButton_propertyVisible");
+/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_saveNoteTextButton_propertyVisible", visible);
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setSaveNoteTextButtonVisible(" + visible + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonText(String text){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_cancelEditNoteTextButton_propertyText");
+/*Generated! Do not modify!*/         if (text == null) {
+/*Generated! Do not modify!*/             replyDTO.getVariableValues().remove("details_cancelEditNoteTextButton_propertyText");
+/*Generated! Do not modify!*/         } else {
+/*Generated! Do not modify!*/             replyDTO.getVariableValues().put("details_cancelEditNoteTextButton_propertyText", text);
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setCancelEditNoteTextButtonText(" + escapeString(text) + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonVisible(boolean visible){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_cancelEditNoteTextButton_propertyVisible");
+/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_cancelEditNoteTextButton_propertyVisible", visible);
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setCancelEditNoteTextButtonVisible(" + visible + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void setColorLabelText(String text){
 /*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_colorLabel_propertyText");
 /*Generated! Do not modify!*/         if (text == null) {
@@ -245,46 +285,6 @@
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void setSaveNoteTextButtonText(String text){
-/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_saveNoteTextButton_propertyText");
-/*Generated! Do not modify!*/         if (text == null) {
-/*Generated! Do not modify!*/             replyDTO.getVariableValues().remove("details_saveNoteTextButton_propertyText");
-/*Generated! Do not modify!*/         } else {
-/*Generated! Do not modify!*/             replyDTO.getVariableValues().put("details_saveNoteTextButton_propertyText", text);
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/         if (recordMode){
-/*Generated! Do not modify!*/             addRecordedAction("setSaveNoteTextButtonText(" + escapeString(text) + ");");
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void setSaveNoteTextButtonVisible(boolean visible){
-/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_saveNoteTextButton_propertyVisible");
-/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_saveNoteTextButton_propertyVisible", visible);
-/*Generated! Do not modify!*/         if (recordMode){
-/*Generated! Do not modify!*/             addRecordedAction("setSaveNoteTextButtonVisible(" + visible + ");");
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonText(String text){
-/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_cancelEditNoteTextButton_propertyText");
-/*Generated! Do not modify!*/         if (text == null) {
-/*Generated! Do not modify!*/             replyDTO.getVariableValues().remove("details_cancelEditNoteTextButton_propertyText");
-/*Generated! Do not modify!*/         } else {
-/*Generated! Do not modify!*/             replyDTO.getVariableValues().put("details_cancelEditNoteTextButton_propertyText", text);
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/         if (recordMode){
-/*Generated! Do not modify!*/             addRecordedAction("setCancelEditNoteTextButtonText(" + escapeString(text) + ");");
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
-/*Generated! Do not modify!*/     public void setCancelEditNoteTextButtonVisible(boolean visible){
-/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_cancelEditNoteTextButton_propertyVisible");
-/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_cancelEditNoteTextButton_propertyVisible", visible);
-/*Generated! Do not modify!*/         if (recordMode){
-/*Generated! Do not modify!*/             addRecordedAction("setCancelEditNoteTextButtonVisible(" + visible + ");");
-/*Generated! Do not modify!*/         }
-/*Generated! Do not modify!*/     }
-/*Generated! Do not modify!*/ 
 /*Generated! Do not modify!*/     public void setEditNoteTextAreaText(String text){
 /*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_editNoteTextArea_propertyText");
 /*Generated! Do not modify!*/         if (text == null) {
@@ -364,6 +364,14 @@
 /*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_buttonBar_propertyVisible", visible);
 /*Generated! Do not modify!*/         if (recordMode){
 /*Generated! Do not modify!*/             addRecordedAction("setButtonBarVisible(" + visible + ");");
+/*Generated! Do not modify!*/         }
+/*Generated! Do not modify!*/     }
+/*Generated! Do not modify!*/ 
+/*Generated! Do not modify!*/     public void setEditNoteButtonBarVisible(boolean visible){
+/*Generated! Do not modify!*/         replyDTO.getVariablesToSet().add("details_editNoteButtonBar_propertyVisible");
+/*Generated! Do not modify!*/         replyDTO.getVariableValues().put("details_editNoteButtonBar_propertyVisible", visible);
+/*Generated! Do not modify!*/         if (recordMode){
+/*Generated! Do not modify!*/             addRecordedAction("setEditNoteButtonBarVisible(" + visible + ");");
 /*Generated! Do not modify!*/         }
 /*Generated! Do not modify!*/     }
 /*Generated! Do not modify!*/ 
